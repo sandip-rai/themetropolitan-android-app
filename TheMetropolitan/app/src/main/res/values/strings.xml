@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">The Metropolitan</string>
+
+    <!--Names for Nav Drawer -->
+    <string name="nav_darktheme">Dark Theme</string>
+    <string name="nav_news">News</string>
+    <string name="nav_opinion">Opinion</string>
+    <string name="nav_studentlife">Student Life</string>
+    <string name="nav_arts">Arts</string>
+    <string name="nav_tech">Tech</string>
+    <string name="nav_support">Support</string>
+    <string name="nav_appteam">App Team</string>
+    <string name="nav_category">Categories</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment"></string>
+
+</resources>
