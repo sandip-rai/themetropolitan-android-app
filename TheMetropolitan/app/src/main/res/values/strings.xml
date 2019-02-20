@@ -9,7 +9,7 @@
     <string name="nav_arts">Arts</string>
     <string name="nav_tech">Tech</string>
     <string name="nav_support">Support</string>
-    <string name="nav_appteam">App Team</string>
+    <string name="nav_appteam">About</string>
     <string name="nav_category">Categories</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
