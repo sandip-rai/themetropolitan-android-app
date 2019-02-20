@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--This file doesn't have a concrete purpose as of now, but will be important if we want
+    to display all labels for the bottom navigation items.-->
+    <item
+        android:state_checked="true"
+        android:color="@color/colorPrimary" />
+
+    <item
+        android:state_checked="false"
+        android:color="@color/colorPrimary"/>
+
+</selector>

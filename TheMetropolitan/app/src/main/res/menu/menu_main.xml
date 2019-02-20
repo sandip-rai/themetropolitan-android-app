@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:amdroid="http://schemas.android.com/tools">
+
+    <!--<item android:id="@+id/action_sync_now"-->
+        <!--android:title="Sync Now"-->
+        <!--android:icon="@drawable/sync1"-->
+        <!--amdroid:orderInCategory="1"-->
+        <!--app:showAsAction="always"-->
+        <!--/>-->
+
+</menu>
