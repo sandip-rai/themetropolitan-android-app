@@ -5,4 +5,9 @@
     <color name="colorPrimary">#448AFF</color>
     <color name="colorPrimaryDark">#448AFF</color>
     <color name="colorAccent">#FFFFFF</color>
+
+    <!--Colors for Dark Theme-->
+    <color name="darkColorPrimary">#1e2756</color>
+    <color name="darkColorPrimaryDark">#141831</color>
+    <color name="darkColorAccent">#000000</color>
 </resources>

@@ -16,8 +16,10 @@
         app:contentPadding="5dp"
         app:contentPaddingTop="10dp"
         android:layout_marginLeft="@dimen/mtrl_card_spacing"
-        android:layout_marginTop="@dimen/mtrl_card_spacing"
-        android:layout_marginRight="@dimen/mtrl_card_spacing">
+        android:layout_marginTop="11dp"
+        android:layout_marginRight="@dimen/mtrl_card_spacing"
+        android:layout_marginBottom="11dp"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Enter article names, keywords, authors, tags">
+                android:hint="Enter article names or keywords">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -77,6 +79,7 @@
         android:layout_marginLeft="@dimen/mtrl_card_spacing"
         android:layout_marginTop="@dimen/mtrl_card_spacing"
         android:layout_marginRight="@dimen/mtrl_card_spacing">
+        android:layout_marginBottom="@dimen/mtrl_card_spacing">
 
         <LinearLayout
             android:layout_width="match_parent"

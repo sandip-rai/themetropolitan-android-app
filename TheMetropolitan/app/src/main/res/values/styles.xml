@@ -1,13 +1,27 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <!--style has to inherit from the MaterialComponents parent for the material
-    components to work in the app-->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+<!-- Base application theme. -->
+<!--style has to inherit from the MaterialComponents parent for the material
+components to work in the app-->
+<style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <!-- Customize your theme here. -->
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
+</style>
+
+<!--Dark Theme-->
+<style name="AppTheme.Dark" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <!-- Dark theme base colours -->
+    <item name="colorPrimary">@color/darkColorPrimary</item>
+    <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
+    <item name="colorAccent">@color/darkColorAccent</item>
+</style>
+
+    <style name="Widget.TheMetropolitan.Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">?attr/colorAccent</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
 </resources>
