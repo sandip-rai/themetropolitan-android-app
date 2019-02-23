@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--This is the main layout file for our app. Everything gets loaded to this layout.-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,33 +8,39 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!--Inside the FrameLayout, everything gets arranged in a vertical LinearLayout-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <!--First thing in the LinearLayout is the appbar/toolbar that has the title on it-->
         <!--Wrapping the toolbar within AppBarLayout creates the dropdown shadow and elevation-->
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!--The toolbar has been created on a separate xml file called toolbar_main and is
+            included here. Remember the id.-->
             <include
                 layout="@layout/toolbar_main"
                 android:id="@+id/toolbar" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
-
+        <!--This frame is where all the components get loaded when various pages are browsed
+        including News, Search, Saved, and Settings. All of those components are created as
+        fragments for modular purpose. Fragments are separate layout/xml files.
+        Remember the id of this frame.-->
         <FrameLayout
             android:id="@+id/frame_saved"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-
         </FrameLayout>
     </LinearLayout>
 
-
+    <!--This is our bottom navigation bar. It's contents/menu is loaded from a separate xml file
+    called menu_bottom located on menu directory-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
@@ -44,6 +51,7 @@
         app:itemTextColor="@drawable/bottom_item_color"
         app:menu="@menu/menu_bottom" />
 
+    <!--This was our old navigation bar. Will be deleted eventually.-->
     <!--<android.support.design.widget.NavigationView-->
     <!--android:id="@+id/nav_view"-->
     <!--android:layout_width="wrap_content"-->

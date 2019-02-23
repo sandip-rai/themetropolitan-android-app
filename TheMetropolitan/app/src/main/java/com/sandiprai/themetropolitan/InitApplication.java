@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-
+/*USED FOR TEST PURPOSE*/
 public class InitApplication extends Application {
     public static final String NIGHT_MODE = "NIGHT_MODE";
     private boolean isNightModeEnabled = false;

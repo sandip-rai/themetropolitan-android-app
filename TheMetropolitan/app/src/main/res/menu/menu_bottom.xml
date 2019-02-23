@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Menu items used in the bottom nav bar-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <!--Menu resource file for the bottom navigation-->
     <!--This currently has 4 items; icons subject to further changes-->

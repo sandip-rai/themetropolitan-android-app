@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context=".SettingsFragment">
 
+    <!--Two cards; one for account user and other for app settings-->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="340dp"
         android:layout_height="wrap_content"
@@ -39,6 +40,7 @@
                 android:orientation="horizontal"
                 android:layout_gravity="center">
 
+                <!--Using material button as it is visually appealing-->
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -108,6 +110,7 @@
                     android:textSize="20sp" />
 
                 <!--<com.google.android.material.switchmaterial.SwitchMaterial-->
+                <!--The switches don't respond as of now-->
                 <Switch
                     android:id="@+id/themeSwitch"
                     android:layout_width="match_parent"

@@ -1,4 +1,5 @@
 <resources>
+<!--THIS IS FOR THE DARK THEME-->
 
     <!-- Base application theme. -->
     <!--style has to inherit from the MaterialComponents parent for the material

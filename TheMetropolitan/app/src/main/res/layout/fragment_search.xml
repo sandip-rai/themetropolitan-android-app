@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context=".SearchFragment">
 
+    <!--Two material cards here; one for search input and another to display recent searches-->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="340dp"
         android:layout_height="wrap_content"
@@ -68,7 +69,8 @@
     </com.google.android.material.card.MaterialCardView>
 
 
-
+<!--Card for recent searches. Data is set here manually. Will be replaced with a ListView
+to accommodate dynamic data-->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="340dp"
         android:layout_height="400dp"

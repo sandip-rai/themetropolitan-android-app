@@ -36,9 +36,10 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        //This line changes the app's theme. Change the MODE_NIGHT to NO for light theme.
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         super.onCreate(savedInstanceState);
+
         //setContentView(R.layout.activity_main);
 //        if (InitApplication.getInstance().isNightModeEnabled()) {
 //            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -47,8 +48,19 @@ public class MainActivity extends AppCompatActivity{
 //        }
         setContentView(R.layout.activity_main);
 
+        //Get the toolbar and load it as the main toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        setSupportActionBar(toolbar);
+        //Following code is for having the title in the center; otherwise it would be aligned to
+        //left as default
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        String appName = "The Metropolitan";
+        toolbarTitle.setText(appName.toUpperCase());
 
-        Switch switchCompat = findViewById(R.id.themeSwitch);
+//        These code are being used as test for changing app's theme and loading fragment purposes.
+
+        //Switch switchCompat = findViewById(R.id.themeSwitch);
 
 //        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
 //            switchCompat.setChecked(true);
@@ -80,15 +92,6 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        //String appName = String.valueOf(R.string.app_name);
-        String appName = "The Metropolitan";
-        toolbarTitle.setText(appName.toUpperCase());
-
 //        TabLayout tabLayout = findViewById(R.id.newsTab);
 //        LinearLayout container = findViewById(R.id.fragmentContainerInNews);
 //
@@ -116,6 +119,8 @@ public class MainActivity extends AppCompatActivity{
 
         //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         //navigationView.setNavigationItemSelectedListener(this);
+
+        //Call this method to setup the bottom navbar
         setupBottomNavigationView();
 
     }
@@ -157,9 +162,12 @@ public class MainActivity extends AppCompatActivity{
 //        }
 //    }
 
+    /*This method setsup the bottom nav bar*/
     private void setupBottomNavigationView(){
+        //Get the bottom navbar
         BottomNavigationView bottomNavigationView =
                 (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        //Listener for the bottom navbar
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -167,6 +175,8 @@ public class MainActivity extends AppCompatActivity{
                 FragmentTransaction fragmentTransaction;
                 switch (item.getItemId()){
                     case R.id.bottom_news:
+                        //If news is clicked, load the NewsFragment to the Framelayout named
+                        //frame_saved in the activity_main xml
                         fragment = new NewsFragment();
                         loadFragment(fragment);
 //                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -174,6 +184,7 @@ public class MainActivity extends AppCompatActivity{
 //                        fragmentTransaction.commit();
                         break;
                     case R.id.bottom_saved:
+                        //For the saved
                         fragment = new SavedFragment();
                         loadFragment(fragment);
 //                        Intent intent = new Intent(MainActivity.this, TestSavedActivity.class);
@@ -183,10 +194,12 @@ public class MainActivity extends AppCompatActivity{
 //                        fragmentTransaction.commit();
                         break;
                     case R.id.bottom_search:
+                        //For the search
                         fragment = new SearchFragment();
                         loadFragment(fragment);
                         break;
                     case R.id.bottom_settings:
+                        //For the settings
                         fragment = new SettingsFragment();
                         loadFragment(fragment);
                         break;
@@ -196,6 +209,8 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
+    /*This method loads a passed fragment to the layout frame_saved in the activity_main xml
+    * Will be changed eventually to be more dynamic */
     private void loadFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frame_saved, fragment);
@@ -203,6 +218,7 @@ public class MainActivity extends AppCompatActivity{
         fragmentTransaction.commit();
     }
 
+    /*Below methods are automatically created*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
