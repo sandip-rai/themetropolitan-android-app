@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 public class SearchFragment extends Fragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
 
@@ -39,7 +41,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
                 break;
 
             case R.id.buttonClear:
-                CharSequence text1 = "Clear button clicked!";
+                TextInputEditText searchText = getView().findViewById(R.id.textInputSearch);
+                searchText.setText("");
+                CharSequence text1 = "Search text cleared!";
                 showToast(text1);
                 break;
         }
