@@ -35,9 +35,18 @@
         <FrameLayout
             android:id="@+id/frame_saved"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </FrameLayout>
+            android:layout_height="match_parent"/>
+
     </LinearLayout>
+
+    <!--<com.google.android.material.button.MaterialButton-->
+        <!--android:id="@+id/goto_article_page_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:insetLeft="130dp"-->
+        <!--android:insetRight="10dp"-->
+        <!--android:text="Go to Article Page" />-->
 
     <!--This is our bottom navigation bar. It's contents/menu is loaded from a separate xml file
     called menu_bottom located on menu directory-->

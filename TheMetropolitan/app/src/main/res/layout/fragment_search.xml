@@ -46,6 +46,7 @@
                 android:layout_gravity="center">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonSearch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
@@ -55,6 +56,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:id="@+id/buttonClear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

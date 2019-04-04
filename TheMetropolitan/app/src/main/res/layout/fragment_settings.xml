@@ -42,14 +42,17 @@
 
                 <!--Using material button as it is visually appealing-->
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonSignIn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:insetLeft="70dp"
                     android:insetRight="10dp"
-                    android:text="Sign In" />
+                    android:text="Sign In"
+                    />
 
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:id="@+id/buttonSignUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -85,7 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="7dp"
-                android:text="App Settings"
+                android:text="App Settings - YOLO"
                 android:gravity="center"
                 android:textAppearance="?attr/textAppearanceHeadline6" />
 

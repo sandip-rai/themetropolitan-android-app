@@ -3,6 +3,7 @@ package com.sandiprai.themetropolitan;
 import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.tabs.TabLayout;
@@ -16,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //This line changes the app's theme. Change the MODE_NIGHT to NO for light theme.
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
         super.onCreate(savedInstanceState);
 
         //setContentView(R.layout.activity_main);
@@ -57,6 +59,16 @@ public class MainActivity extends AppCompatActivity{
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         String appName = "The Metropolitan";
         toolbarTitle.setText(appName.toUpperCase());
+
+        //Test for article page button
+//        MaterialButton articleButton = findViewById(R.id.goto_article_page_button);
+//        articleButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MainActivity.this,ArticlePage.class);
+//                MainActivity.this.startActivity(intent);
+//            }
+//        });
 
 //        These code are being used as test for changing app's theme and loading fragment purposes.
 
@@ -167,6 +179,8 @@ public class MainActivity extends AppCompatActivity{
         //Get the bottom navbar
         BottomNavigationView bottomNavigationView =
                 (BottomNavigationView) findViewById(R.id.bottom_navigation);
+
+
         //Listener for the bottom navbar
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
             @Override
@@ -207,6 +221,9 @@ public class MainActivity extends AppCompatActivity{
                 return true;
             }
         });
+
+        //Set the default view in the bottom navigation
+        bottomNavigationView.setSelectedItemId(R.id.bottom_news);
     }
 
     /*This method loads a passed fragment to the layout frame_saved in the activity_main xml
@@ -246,4 +263,15 @@ public class MainActivity extends AppCompatActivity{
 //    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 //        return false;
 //    }
+
+    private void toggleTheme(boolean darkTheme){
+        SharedPreferences.Editor editor = getSharedPreferences("prefs", MODE_PRIVATE).edit();
+        editor.putBoolean("dark_theme", darkTheme);
+        editor.apply();
+
+        Intent intent = getIntent();
+        finish();
+
+        startActivity(intent);
+    }
 }

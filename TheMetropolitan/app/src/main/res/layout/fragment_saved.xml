@@ -24,6 +24,8 @@
             android:text="Saved Articles"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
+
+
         <com.google.android.material.card.MaterialCardView
             android:layout_width="340dp"
             android:layout_height="wrap_content"

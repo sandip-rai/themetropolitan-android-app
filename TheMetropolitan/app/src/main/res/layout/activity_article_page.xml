@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ArticlePage">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--Including the article toolbar-->
+        <include
+            layout="@layout/toolbar_article"
+            android:id="@+id/toolbar_article" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:src="@drawable/logo"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:padding="4dp"
+        android:text="Calling all artists: MetroState wants to buy your work"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="Students and alumni are invited to enter Metropolitan State University’s annual art purchase award competition. Artists may submit up to six works for consideration. All subjects, media and art forms are accepted.
+
+“The awards serve our students by supporting them financially through the purchase of the artwork,” said Amy Sands, assistant professor of studio arts. “Plus they can put on their resumes that their work is part of the permanent collection of Metropolitan State.”
+
+The submissions will be reviewed by the Art Exhibition Committee. Members include staff, faculty and students.
+
+The committee will select four works to purchase for $1,000 each. Funds for the award are donated by the Office of the President, Academic Affairs, Alumni Association, Library Endowment and Student Senate.
+
+This year funds from the Library will also support the purchase of a faculty-submitted artwork.
+
+Winning works of art will be displayed in hallways and common spaces in all the Metro State campuses, said Sands. “It is really great to see the many talents present here and I think it livens up our walls,” she said.
+
+Applications are due April 1. The Art Exhibition Committee will make its selections by the end of spring semester. Entry forms are available online at this link, and at the Gordon Parks Gallery on the third floor of the Library and Learning Center, St. Paul campus.
+
+For more information, contact Professor Amy Sands at 651-999-5963 or amy.sands@metrostate.edu."
+        android:textAppearance="?attr/textAppearanceBody2" />
+
+
+</LinearLayout>
