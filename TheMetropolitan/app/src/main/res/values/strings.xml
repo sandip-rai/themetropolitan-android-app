@@ -13,6 +13,14 @@
     <string name="nav_category">Categories</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="blank"> </string>
+    <string name="search_title">Search</string>
+    <string name="Clear_title">Clear</string>
+    <string name="recent_searches">Recent Searches</string>
+    <string name="search_page">Search</string>
+    <string name="saved_page">Saved</string>
+    <string name="settings_page">Settings</string>
+    <string name="news_page">News</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment"></string>

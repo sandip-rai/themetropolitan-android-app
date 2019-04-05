@@ -6,21 +6,21 @@
     <item
         android:id="@+id/bottom_news"
         android:icon="@drawable/news1"
-        android:title="@string/nav_news" />
+        android:title="@string/news_page" />
 
     <item
         android:id="@+id/bottom_search"
         android:icon="@drawable/search"
-        android:title="Search" />
+        android:title="@string/search_page" />
 
     <item
         android:id="@+id/bottom_saved"
         android:icon="@drawable/saved"
-        android:title="Saved" />
+        android:title="@string/saved_page" />
 
     <item
         android:id="@+id/bottom_settings"
         android:icon="@drawable/settings1"
-        android:title="Settings" />
+        android:title="@string/settings_page" />
 
 </menu>

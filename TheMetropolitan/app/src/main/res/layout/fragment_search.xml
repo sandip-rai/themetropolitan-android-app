@@ -12,15 +12,14 @@
         android:layout_width="340dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="2dp"
-        app:contentPadding="5dp"
-        app:contentPaddingTop="10dp"
         android:layout_marginLeft="@dimen/mtrl_card_spacing"
         android:layout_marginTop="11dp"
         android:layout_marginRight="@dimen/mtrl_card_spacing"
         android:layout_marginBottom="11dp"
-        >
+        app:cardCornerRadius="4dp"
+        app:cardElevation="2dp"
+        app:contentPadding="5dp"
+        app:contentPaddingTop="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,24 +27,25 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Enter article names or keywords">
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/textInputSearch"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:hint="Enter article names or keywords"
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonSearch"
@@ -63,7 +63,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:insetRight="20dp"
-                    android:text="Clear" />
+                    android:text="Clear"
+                    android:onClick="clear"/>
+                <!--   android:onClick="clear" -->
+
 
             </LinearLayout>
 
