@@ -1,13 +1,35 @@
 package com.sandiprai.themetropolitan;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +37,24 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
+
+    //String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts?fields=id,excerpt,title,content,date";
+    String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts";
+    TextView articleList;
+    List<Object> list;
+    ArrayList<HashMap<String,String>> arraysList;
+    //Gson gson;
+    ProgressDialog progressDialog;
+    private ListView postList;
+    private RequestQueue rQueue;
+   // Map<String,Object> mapPost;
+    //Map<String,Object> mapTitle;
+    int postID;
+    String postExerpt[];
+    String postTitle[];
+    String postContent[];
+    Date postDate[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +69,19 @@ public class MainActivity extends AppCompatActivity{
 //            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 //        }
         setContentView(R.layout.activity_main);
+
+        articleList = (TextView)findViewById(R.id.articles);
+        postList = (ListView)findViewById(R.id.postList);
+        arraysList = new ArrayList<>();
+        rQueue = Volley.newRequestQueue(MainActivity.this);
+        //rQueue.start();
+        //progressDialog = new ProgressDialog(MainActivity.this);
+        ///progressDialog.setMessage("Loading...");
+       // progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        //progressDialog.show();
+        jsonParse();
+
+
 
         //Get the toolbar and load it as the main toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -118,6 +170,97 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+
+    private void jsonParse() {
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                response = response.substring(1,response.length()-1);
+                //articleList.setText(response);
+                try {
+                    //turning the full string response from the url get into a JSON object
+                    JSONObject mainObject = new JSONObject(response);
+                    //get the first article's ID
+                    String id = mainObject.getString("id");
+                    //get the title
+                    String titleMain = mainObject.getString("title");
+                    String titleSub [] = titleMain.split(":");
+                    String title = titleSub[1].substring(1,titleSub[1].length()-2);
+                    //get the date
+                    String date = mainObject.getString("date");
+                    //append the pieces together to print
+                    String output = "Response is: success! id: " + id + " \ntitle: " + title + " \ndate: " + date;
+                    /*for (int i = 0; i < first.length(); i++){
+                        JSONObject c = first.getJSONObject(i);
+                        String id = c.getString("id");
+                        String content = c.getString("content");
+
+                    }//*/
+                    articleList.setText(output);
+                    //String id = mainObject.getString("title");
+                    //String output = "Response is: " + id;
+                   //articleList.setText(output);
+                } catch (JSONException e){
+                    articleList.append("Response is: error!");
+                }
+
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "Some error occurred", Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+        rQueue.add(request);
+        //rQueue.stop();
+/*
+        postList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mapPost = (Map<String,Object>)list.get(position);
+                postID = ((Double)mapPost.get("id")).intValue();
+
+                Intent intent = new Intent(getApplicationContext(),Article.class);
+                intent.putExtra("id", ""+postID);
+                startActivity(intent);
+            }
+        });*/
+    }
+
+    public class CustomJsonRequest<T> extends JsonRequest<JSONObject> {
+
+        private JSONObject mRequestObject;
+        private Response.Listener<JSONObject> mResponseListener;
+
+        public CustomJsonRequest(int method, String url, JSONObject requestObject, Response.Listener<JSONObject> responseListener,  Response.ErrorListener errorListener) {
+            super(method, url, (requestObject == null) ? null : requestObject.toString(), responseListener, errorListener);
+            mRequestObject = requestObject;
+            mResponseListener = responseListener;
+        }
+
+        @Override
+        protected void deliverResponse(JSONObject response) {
+            mResponseListener.onResponse(response);
+        }
+
+        @Override
+        protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+            try {
+                String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                try {
+                    return Response.success(new JSONObject(json),
+                            HttpHeaderParser.parseCacheHeaders(response));
+                } catch (JSONException e) {
+                    return Response.error(new ParseError(e));
+                }
+            } catch (UnsupportedEncodingException e) {
+                return Response.error(new ParseError(e));
+            }
+        }
+    }
 //    private void setupViewPager(ViewPager viewPager){
 //        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 //        adapter.addFragment(new TopStoriesFragment(), "Top Stories");
