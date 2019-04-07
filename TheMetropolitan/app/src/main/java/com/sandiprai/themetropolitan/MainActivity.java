@@ -4,20 +4,17 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -25,7 +22,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,6 +31,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -184,23 +182,70 @@ public class MainActivity extends AppCompatActivity {
                     //get the first article's ID
                     String id = mainObject.getString("id");
                     //get the title
-                    String titleMain = mainObject.getString("title");
-                    String titleSub [] = titleMain.split(":");
-                    String title = titleSub[1].substring(1,titleSub[1].length()-2);
-                    //get the date
-                    String date = mainObject.getString("date");
+                    String titleFull = mainObject.getString("title");
+                    JSONObject titleMain = new JSONObject(titleFull);
+                    String title = titleMain.getString("rendered");
+                    //get the author's name from the article's name url
+                    String name1 = mainObject.getString("_links");
+                    JSONObject nameMain = new JSONObject(name1);
+                    String name2 = nameMain.getString("author");
+                    name2 = name2.substring(1,name2.length()-1);
+                    JSONObject nameMain2 = new JSONObject(name2);
+                    String name3 = nameMain2.getString("href");
+                    getAuthorFromURL(name3); //call the name url to get the author's name from it
+                    //get the date the article was made
+                    String dateMain = mainObject.getString("date");
+                    String dateSub [] = dateMain.split("T");
+                    String date = dateSub[0];
+                    String time = dateSub[1];
+                    //get the current date
+                    Date now = new Date();
+                    SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz"); //HH (0-23 hours), hh (normal hrs), a (AM/PM), z (timezone)
+                    //dateFormater.format(now);
+                    //get the category
+                    String cat = mainObject.getString("categories");
+                    switch (cat){
+                        case "[12]":
+                            cat = "Tech";
+                            break;
+                        case "[11]":
+                            cat = "Student Life";
+                            break;
+                        case "[10]":
+                            cat = "Opinion";
+                            break;
+                        case "[5]":
+                            cat = "Arts & Entertainment";
+                            break;
+                        case "[8]":
+                            cat = "News";
+                            break;
+                        case "[159]":
+                            cat = "Jobs";
+                            break;
+                        default:
+                            cat = "unknown";
+                    }
+                    //get the excerpt
+                    String excerptFull = mainObject.getString("excerpt");
+                    JSONObject excerptMain = new JSONObject(excerptFull);
+                    String excerpt = excerptMain.getString("rendered");
+                    excerpt = excerpt.substring(3,excerpt.length()-5);
+                    //get the article's content
+                    String contentFull = mainObject.getString("content");
+                    JSONObject contentMain = new JSONObject(contentFull);
+                    String content = contentMain.getString("rendered");
+                    String contentArr [] = content.split("clearfix");
+                    String contentArr2 [] = contentArr[2].split("div");
+                    content = contentArr2[0].substring(5, contentArr2[0].length()-6);
+                    Spanned str = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY);
+                    content = str.toString();
                     //append the pieces together to print
-                    String output = "Response is: success! id: " + id + " \ntitle: " + title + " \ndate: " + date;
-                    /*for (int i = 0; i < first.length(); i++){
-                        JSONObject c = first.getJSONObject(i);
-                        String id = c.getString("id");
-                        String content = c.getString("content");
+                    String output = "Response is: success! \nId: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
+                    output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt + "\nContent: " + content + "\n\n\n\n\n\n";
 
-                    }//*/
                     articleList.setText(output);
-                    //String id = mainObject.getString("title");
-                    //String output = "Response is: " + id;
-                   //articleList.setText(output);
+
                 } catch (JSONException e){
                     articleList.append("Response is: error!");
                 }
@@ -213,54 +258,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         rQueue.add(request);
-        //rQueue.stop();
-/*
-        postList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    }
+
+    private void getAuthorFromURL(String authorURL) {
+        StringRequest requestA = new StringRequest(Request.Method.GET, authorURL, new Response.Listener<String>() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mapPost = (Map<String,Object>)list.get(position);
-                postID = ((Double)mapPost.get("id")).intValue();
-
-                Intent intent = new Intent(getApplicationContext(),Article.class);
-                intent.putExtra("id", ""+postID);
-                startActivity(intent);
+            public void onResponse(String response) {
+                String name = response.substring(10,52);
+                String nameSub [] = name.split(":");
+                String nameSub2 [] = nameSub[1].split(",");
+                name = nameSub2[0].substring(1, nameSub2[0].length()-1);
+                String output = "\nAuthor: " + name;
+                articleList.append(output);
             }
-        });*/
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "Some error occurred", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        rQueue.add(requestA);
     }
 
-    public class CustomJsonRequest<T> extends JsonRequest<JSONObject> {
 
-        private JSONObject mRequestObject;
-        private Response.Listener<JSONObject> mResponseListener;
 
-        public CustomJsonRequest(int method, String url, JSONObject requestObject, Response.Listener<JSONObject> responseListener,  Response.ErrorListener errorListener) {
-            super(method, url, (requestObject == null) ? null : requestObject.toString(), responseListener, errorListener);
-            mRequestObject = requestObject;
-            mResponseListener = responseListener;
-        }
-
-        @Override
-        protected void deliverResponse(JSONObject response) {
-            mResponseListener.onResponse(response);
-        }
-
-        @Override
-        protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-            try {
-                String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                try {
-                    return Response.success(new JSONObject(json),
-                            HttpHeaderParser.parseCacheHeaders(response));
-                } catch (JSONException e) {
-                    return Response.error(new ParseError(e));
-                }
-            } catch (UnsupportedEncodingException e) {
-                return Response.error(new ParseError(e));
-            }
-        }
-    }
 //    private void setupViewPager(ViewPager viewPager){
 //        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 //        adapter.addFragment(new TopStoriesFragment(), "Top Stories");
