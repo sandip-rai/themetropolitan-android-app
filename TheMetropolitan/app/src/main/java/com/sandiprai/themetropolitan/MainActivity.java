@@ -234,12 +234,14 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject excerptMain = new JSONObject(excerptFull);
                     String excerpt = excerptMain.getString("rendered");
                     excerpt = excerpt.substring(3,excerpt.length()-5);
+                    Spanned excerptStr = HtmlCompat.fromHtml(excerpt, HtmlCompat.FROM_HTML_MODE_LEGACY);
+                    excerpt = excerptStr.toString();
                     //get the article's content
                     String contentFull = mainObject.getString("content");
                     JSONObject contentMain = new JSONObject(contentFull);
                     String content = contentMain.getString("rendered");
                     String contentArr [] = content.split("clearfix");
-                    String contentArr2 [] = contentArr[2].split("div");
+                    String contentArr2 [] = contentArr[2].split("div>");
                     content = contentArr2[0].substring(5, contentArr2[0].length()-6);
                     Spanned str = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY);
                     content = str.toString();
