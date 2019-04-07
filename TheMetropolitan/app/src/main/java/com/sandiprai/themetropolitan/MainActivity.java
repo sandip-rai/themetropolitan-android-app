@@ -38,7 +38,7 @@ import androidx.fragment.app.FragmentTransaction;
 public class MainActivity extends AppCompatActivity {
 
     //String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts?fields=id,excerpt,title,content,date";
-    String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts";
+    String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/1489";
     TextView articleList;
     List<Object> list;
     ArrayList<HashMap<String,String>> arraysList;
@@ -174,7 +174,10 @@ public class MainActivity extends AppCompatActivity {
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                response = response.substring(1,response.length()-1);
+                if(response.charAt(0) == '['){
+                    response = response.substring(1,response.length()-1);
+                }
+
                 //articleList.setText(response);
                 try {
                     //turning the full string response from the url get into a JSON object
@@ -242,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
                     content = str.toString();
                     //append the pieces together to print
                     String output = "Response is: success! \nId: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
-                    output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt + "\nContent: " + content + "\n\n\n\n\n\n";
+                    output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt + "\nContent: " + content + "\n\n\n\n";
 
                     articleList.setText(output);
 
