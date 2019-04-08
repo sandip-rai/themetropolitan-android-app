@@ -16,8 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TestSavedActivity" />
-        <activity android:name=".ArticlePage"></activity>
+        <activity android:name=".ArticlePage" />
+        <activity android:name=".DummyArticleDetail"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>

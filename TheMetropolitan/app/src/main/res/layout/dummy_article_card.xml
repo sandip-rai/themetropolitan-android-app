@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dummy_cardview"
+    android:orientation="vertical"
+    android:layout_width="340dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginLeft="@dimen/mtrl_card_spacing"
+    android:layout_marginTop="@dimen/mtrl_card_spacing"
+    android:layout_marginRight="@dimen/mtrl_card_spacing"
+    android:layout_marginBottom="@dimen/mtrl_card_spacing"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="2dp"
+    app:contentPadding="5dp"
+    app:contentPaddingTop="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/dummyarticle_image"
+            android:layout_width="100dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/dummyarticle_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="Secondary Title"
+                android:textAppearance="?attr/textAppearanceBody2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="0.8"
+                android:gravity="center|right"
+                android:orientation="horizontal">
+
+                <!--Tint sets the color of icon. ?attr is being used so that
+                     the color changes in respect to the app's theme current primary color-->
+                <ImageView
+                    android:id="@+id/likeImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:padding="5dp"
+                    android:src="@drawable/saved"
+                    android:tint="?attr/colorPrimary" />
+
+                <ImageView
+                    android:id="@+id/shareImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:padding="5dp"
+                    android:src="@android:drawable/ic_menu_share" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
