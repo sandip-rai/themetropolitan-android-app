@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //This line changes the app's theme. Change the MODE_NIGHT to NO for light theme.
-
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
 
 
@@ -450,7 +450,7 @@ public class MainActivity extends AppCompatActivity {
                         //For the saved
                         fragment = new SavedFragment();
                         loadFragment(fragment);
-//                        Intent intent = new Intent(MainActivity.this, TestSavedActivity.class);
+
 //                        startActivity(intent);
 //                        fragmentTransaction = getSupportFragmentManager().beginTransaction();
 //                        fragmentTransaction.add(R.id.frame_saved, fragment);
@@ -527,6 +527,18 @@ public class MainActivity extends AppCompatActivity {
         finish();
 
         startActivity(intent);
+    }
+
+    public void themeDarkOn(){
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        Intent i = new Intent(MainActivity.this, ArticlePage.class);
+        startActivity(i);
+    }
+
+    public void themeLightOn(){
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        Intent i = new Intent(MainActivity.this, ArticlePage.class);
+        startActivity(i);
     }
 }
 
