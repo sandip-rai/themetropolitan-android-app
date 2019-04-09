@@ -25,7 +25,7 @@ public class DummyArticle extends AppCompatActivity {
     private static String articleTitle;
     private static String articleContent;
     private int imageId;
-    
+
 
     public static final DummyArticle[]  articles = {
             new DummyArticle(articleTitle,  articleContent,
@@ -50,7 +50,7 @@ public class DummyArticle extends AppCompatActivity {
         final TextView titleContent = (TextView)findViewById(R.id.title);
         final TextView mainContent = (TextView)findViewById(R.id.textBody);
 
-        String url = ;
+        String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/1489";
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
