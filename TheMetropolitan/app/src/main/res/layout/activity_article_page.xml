@@ -13,8 +13,8 @@
 
         <!--Including the article toolbar-->
         <include
-            layout="@layout/toolbar_article"
-            android:id="@+id/toolbar_article" />
+            android:id="@+id/toolbar_article"
+            layout="@layout/toolbar_article" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -22,22 +22,28 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="15dp"
         android:layout_gravity="center"
+        android:layout_marginTop="15dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/logo"/>
+        android:src="@drawable/logo" />
 
     <TextView
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5sp"
         android:layout_marginTop="15dp"
+        android:layout_marginRight="5sp"
         android:padding="4dp"
         android:text="Calling all artists: MetroState wants to buy your work"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/textBody"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8sp"
+        android:layout_marginRight="8sp"
         android:padding="4dp"
         android:text="Students and alumni are invited to enter Metropolitan State University’s annual art purchase award competition. Artists may submit up to six works for consideration. All subjects, media and art forms are accepted.
 
