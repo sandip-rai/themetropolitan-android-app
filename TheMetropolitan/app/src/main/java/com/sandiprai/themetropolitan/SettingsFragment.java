@@ -11,6 +11,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -62,12 +63,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
             case R.id.buttonSignIn:
                 CharSequence text = "Sign In button clicked!";
                 showToast(text);
+                startActivity(new Intent(view.getContext(), SignIn.class));
                 break;
                 //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
             case R.id.buttonSignUp:
                 CharSequence text1 = "Sign Up button clicked!";
                 showToast(text1);
+                startActivity(new Intent(view.getContext(), SignUp.class));
 
                 //Snackbar.make(getView().findViewById(R.id.buttonSignUp), text1, Snackbar.LENGTH_SHORT).show();
                 break;
