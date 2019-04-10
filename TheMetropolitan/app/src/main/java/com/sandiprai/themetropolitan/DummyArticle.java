@@ -28,15 +28,15 @@ public class DummyArticle extends AppCompatActivity {
 
 
     public static final DummyArticle[]  articles = {
-            new DummyArticle(articleTitle,  articleContent,
+            new DummyArticle(articleTitle+"",  articleContent+"",
                     R.drawable.logo2),
-            new DummyArticle(articleTitle,  articleContent,
+            new DummyArticle(articleTitle+"",  articleContent+"",
                     R.drawable.logo2),
-            new DummyArticle(articleTitle,  articleContent,
+            new DummyArticle(articleTitle+"",  articleContent+"",
                     R.drawable.logo2),
-            new DummyArticle(articleTitle,  articleContent,
+            new DummyArticle(articleTitle+"",  articleContent+"",
                     R.drawable.logo2),
-            new DummyArticle(articleTitle,  articleContent,
+            new DummyArticle(articleTitle+"",  articleContent+"",
                     R.drawable.logo2),
     };
 
@@ -186,9 +186,10 @@ public class DummyArticle extends AppCompatActivity {
                     //String output = "Response is: success! \nId: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
                    // output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt + "\n\nContent: " + content + "\n\n\n\n";
 
-                    new DummyArticle(title, content, 1000);
-                    //titleContent.append(title);
-                    //mainContent.append(content);
+                    //new DummyArticle(title, content, 1000);
+                    putArticleTitle(title);
+                    putArticleContent(content);
+
 
                 } catch (JSONException e){
                     mainContent.append("Response is: error!");
@@ -202,6 +203,10 @@ public class DummyArticle extends AppCompatActivity {
         });
     }
 
+
+    public void putArticleTitle(String title) { this.articleTitle = title; }
+
+    public void putArticleContent(String content) { this.articleContent = content; }
 
     public String getArticleTitle() {
         return articleTitle;
