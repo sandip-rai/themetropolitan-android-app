@@ -44,6 +44,7 @@
         android:layout_marginLeft="8sp"
         android:layout_marginRight="8sp"
         android:padding="4dp"
+        android:text="Stuffs and things and more stuff"
         android:textAppearance="?attr/textAppearanceBody2" />
 
 </LinearLayout>
