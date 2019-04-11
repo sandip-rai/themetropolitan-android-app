@@ -21,44 +21,49 @@ import androidx.core.text.HtmlCompat;
 
 public class DummyArticle extends AppCompatActivity {
     //This class can be used as reference and this is used to just test the RecycleView
-    private static String articleTitle;
-    private static String articleContent = "more really interesting contents for the article body";
+    private String articleTitle = "Initialized title";
+    private String articleContent = "Initialized more really interesting contents for the article body";
     private int imageId;
     //TextView textView = (TextView) findViewById(R.id.textBody);
 
-    public static final DummyArticle[] articles = {
-            new DummyArticle("Clickbait Title! Wow!", "Test article main contents text is what this is here.",
-                    R.drawable.logo2),
-            new DummyArticle(""+getArticleTitle(), ""+getArticleContent(),
-                    R.drawable.logo2),
-            new DummyArticle(articleTitle + "", articleContent + "",
-                    R.drawable.logo2),
-            new DummyArticle(articleTitle + "", articleContent + "",
-                    R.drawable.logo2),
-            new DummyArticle(articleTitle + "", articleContent + "",
-                    R.drawable.logo2),
-    };
+    public DummyArticle[] articles = {};
+//    DummyArticle.articles = {
+//            new DummyArticle(getArticleTitle() + "", getArticleContent() + "",
+//                    R.drawable.logo2),
+//            new DummyArticle(getArticleTitle() + "", getArticleContent() + "",
+//                    R.drawable.logo2),
+//            new DummyArticle(getArticleTitle() + "", getArticleContent() + "",
+//                    R.drawable.logo2),
+//            new DummyArticle(getArticleTitle() + "", getArticleContent() + "",
+//                    R.drawable.logo2),
+//            new DummyArticle(getArticleTitle() + "", getArticleContent() + "",
+//                    R.drawable.logo2),
+//    };
 
     private DummyArticle(String articleTitle, String articleContent, int imageId) {
-        Article("", "");
+        Article("Should not display", "Not correct text value");
         this.articleContent = articleContent;
-        this.articleTitle = articleTitle;
+        this.articleTitle = getArticleTitle();
         this.imageId = imageId;
+        for (int i = 0; i < 4; i++) {
+            articles[i] = new DummyArticle(getArticleTitle(), getArticleContent(), R.drawable.logo2);
+        }
+
     }
 
-    public static void setArticleTitle(String articleTitle) {
-        DummyArticle.articleTitle = articleTitle;
+    public void setArticleTitle(String ArticleTitle) {
+        this.articleTitle = ArticleTitle;
     }
 
-    public static void setArticleContent(String articleContent) {
-        DummyArticle.articleContent = articleContent;
+    public void setArticleContent(String ArticleContent) {
+        this.articleContent = ArticleContent;
     }
 
-    public static String getArticleTitle() {
+    public String getArticleTitle() {
         return articleTitle;
     }
 
-    public static String getArticleContent() {
+    public String getArticleContent() {
         return articleContent;
     }
 
@@ -95,7 +100,7 @@ public class DummyArticle extends AppCompatActivity {
                     JSONObject nameMain2 = new JSONObject(name2);
                     String name3 = nameMain2.getString("href");
                     getAuthorFromURL(name3); //call the name url to get the author's name from it
-                    String Author = nestedArticleInfo.getAuthor();
+                    String Author = getAuthor();
 //*/
                     //get the date the article was made
                     String dateMain = mainObject.getString("date");
@@ -215,6 +220,8 @@ public class DummyArticle extends AppCompatActivity {
 
                     //new DummyArticle(title, content, 1000);
                     //titleContent.setText(title);
+                    title = "New title";
+                    content = "A bunch of new content from the JSON parsing method";
                     setArticleTitle(title);
                     setArticleContent(content);
 

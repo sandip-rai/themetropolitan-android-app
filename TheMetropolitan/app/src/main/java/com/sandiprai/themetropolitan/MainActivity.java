@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -21,20 +18,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,11 +36,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     //private ListView postList;
     private RequestQueue rQueue;
-    int postID;
-    String postExerpt[];
-    String postTitle[];
-    String postContent[];
-    Date postDate[];
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         ///progressDialog.setMessage("Loading...");
        // progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         //progressDialog.show();
-        jsonParse();
+
 
 
 
