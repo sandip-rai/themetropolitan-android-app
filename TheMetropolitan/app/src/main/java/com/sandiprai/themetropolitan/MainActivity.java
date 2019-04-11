@@ -3,11 +3,12 @@ package com.sandiprai.themetropolitan;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -39,8 +41,10 @@ public class MainActivity extends AppCompatActivity {
     //String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts?fields=id,excerpt,title,content,date";
     String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/1489";
     TextView articleList;
+    Bitmap testImg;
+    ImageView theImg;
     ProgressDialog progressDialog;
-    private ListView postList;
+    //private ListView postList;
     private RequestQueue rQueue;
     int postID;
     String postExerpt[];
@@ -64,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         articleList = (TextView)findViewById(R.id.articles);
-        postList = (ListView)findViewById(R.id.postList);
+        theImg = (ImageView)findViewById(R.id.imageView);
         rQueue = Volley.newRequestQueue(MainActivity.this);
         //rQueue.start();
         //progressDialog = new ProgressDialog(MainActivity.this);
@@ -163,6 +167,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void setTestImg(Bitmap testImg) {
+        this.testImg = testImg;
+    }
+
+    public Bitmap getTestImg() {
+        return testImg;
+    }
+
     private void jsonParse() {
 
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -249,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
                     //find and get any pictures in the article's content
                     Pattern pattern = Pattern.compile("<figure");
                     Matcher matcher = pattern.matcher(content);
-                    String txt[] = new String[10];
+                    String txt = "";
                     String pic[] = new String[10];
                     String imageArr[] = new String[10];
                     int picPosStart[] = new int[10];
@@ -280,25 +292,35 @@ public class MainActivity extends AppCompatActivity {
                             picPosStart[i] = content.length();
                         }
                         // set to be the String of where end is plus 1 of that position
+                        lastPicEnd += 7;
 
-                        if (i > 0){
-                            lastPicEnd += 7;
+                        //build the text content back up delimited by a square
+                        if (i != count) {
+                            txt += content.substring(lastPicEnd, picPosStart[i])+"\u25a1";
+                        } else {
+                            txt += content.substring(lastPicEnd, picPosStart[i]);
                         }
-                        txt[i] = content.substring(lastPicEnd, picPosStart[i]);
+
                         lastPicStart = picPosStart[i];
                         lastPicEnd = picPosEnd[i];
                     }
 
+                    getTextImageFromURL(pic[0]);
 
-                    String outpt = "pic: " + imageArr[1] + ", ";
-                    articleList.append(outpt);
+                    String tisNull = "Pic is null";
+                    Bitmap cpyPic = getTestImg();
+                    theImg.setImageBitmap(cpyPic);
+                    if (cpyPic != null){ tisNull = "Pic not null\n"; }
 
+                    //String outpt = "pic: " + imageArr[1] + ", ";
+                    //articleList.append(outpt);
 
-                    Spanned str = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY);
+                    Spanned str = HtmlCompat.fromHtml(txt, HtmlCompat.FROM_HTML_MODE_LEGACY);
                     content = str.toString();
                     //append the pieces together to print
                     String output = "Response is: success! \nId: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
-                    output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n"+Author+"\nCategory: " + cat + "\nExcerpt: " + excerpt + "\n\nContent: " + content + "\n\n\n\n";
+                    output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\nAuthor: "+Author+"\nCategory: " + cat + "\nExcerpt: " + excerpt;
+                    output += "\n\nContent: " + content + "\n"+tisNull+"\n"+pic[0]+"\n\n\n";
 
                     articleList.append(output);
 
@@ -310,9 +332,11 @@ public class MainActivity extends AppCompatActivity {
         }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainActivity.this, "Some error occurred", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "URL GET error occurred", Toast.LENGTH_LONG).show();
             }
         });
+
+
 
         rQueue.add(request);
     }
@@ -342,22 +366,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //gets an in-line article image and returns a bitmap as a string
-    private String getTextImageFromURL(String imgURL) {
-/*        ImageRequest request = new ImageRequest(Request.Method.GET, imgURL, new Response.Listener<Bitmap>() {
-            @Override
-            public void onResponse(Bitmap response) {
-                ;
-            }
-        }, Bitmap.Config.RGB_565, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainActivity.this, "Error occurred in getImage", Toast.LENGTH_LONG).show();
-            }
-        });
+    private void getTextImageFromURL(String imgURL) {
+        ImageRequest request = new ImageRequest(imgURL,
+                new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        setTestImg(response);
+                    }
+                }, 1920, 1080, ImageView.ScaleType.FIT_CENTER, Bitmap.Config.RGB_565,
+                new Response.ErrorListener() {
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(MainActivity.this, "Error occurred in getImage", Toast.LENGTH_LONG).show();
+                    }
+                });
 
-        rQueue.add(request);*/
+        rQueue.add(request);//*/
         //Bitmap blank = new Bitmap();
-        return "[image here]";
+        //return "[image here]";
     }
 
 
@@ -454,7 +479,7 @@ public class MainActivity extends AppCompatActivity {
     * Will be changed eventually to be more dynamic */
     private void loadFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frame_saved, fragment);
+        //fragmentTransaction.replace(R.id.frame_saved, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

@@ -32,10 +32,10 @@
         including News, Search, Saved, and Settings. All of those components are created as
         fragments for modular purpose. Fragments are separate layout/xml files.
         Remember the id of this frame.-->
-        <FrameLayout
-            android:id="@+id/frame_saved"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+        <!--<FrameLayout-->
+            <!--android:id="@+id/frame_saved"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="586dp" />-->
 
 
 
@@ -43,30 +43,6 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <!-- for the articles prototype -->
-        <ListView
-            android:id="@+id/postList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-        />
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TextView
-                android:id="@+id/articles"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
-
-        </ScrollView>
-
-
-    </RelativeLayout>
     <!--<com.google.android.material.button.MaterialButton-->
         <!--android:id="@+id/goto_article_page_button"-->
         <!--android:layout_width="wrap_content"-->
@@ -78,6 +54,36 @@
 
     <!--This is our bottom navigation bar. It's contents/menu is loaded from a separate xml file
     called menu_bottom located on menu directory-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="592dp"
+        android:layout_marginTop="60dp">
+
+        <!-- for the articles prototype -->
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="168dp"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="0dp">
+
+            <TextView
+                android:id="@+id/articles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </ScrollView>
+
+
+
+
+    </RelativeLayout>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
