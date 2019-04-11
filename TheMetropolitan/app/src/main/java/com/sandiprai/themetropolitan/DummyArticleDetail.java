@@ -15,6 +15,32 @@ public class DummyArticleDetail extends AppCompatActivity {
 
     public static final String EXTRA_ARTICLE_ID ="articleId";
     private String articleTitle;
+    private String articleContent;
+    private String articleImage;
+
+    public String getArticleTitle() {
+        return articleTitle;
+    }
+
+    public void setArticleTitle(String articleTitle) {
+        this.articleTitle = articleTitle;
+    }
+
+    public String getArticleContent() {
+        return articleContent;
+    }
+
+    public void setArticleContent(String articleContent) {
+        this.articleContent = articleContent;
+    }
+
+    public String getArticleImage() {
+        return articleImage;
+    }
+
+    public void setArticleImage(String articleImage) {
+        this.articleImage = articleImage;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +54,13 @@ public class DummyArticleDetail extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        int articleId = (int) getIntent().getExtras().get(EXTRA_ARTICLE_ID);
-        articleTitle = DummyArticle.articles[articleId].getArticleTitle();
-        String articleContent = DummyArticle.articles[articleId].getArticleContent();
-        int articleImage = DummyArticle.articles[articleId].getImageId();
+        //int articleId = (int) getIntent().getExtras().get(EXTRA_ARTICLE_ID);
+        for (int i = 0; i < 4; i++) {
+            articleTitle = DummyArticle.articles[i].getArticleTitle();
+            articleContent = DummyArticle.articles[i].getArticleContent();
+            articleImage = DummyArticle.articles[i].getImageId();
+        }
+
 
         TextView titleView = findViewById(R.id.article_title);
         titleView.setText(articleTitle);
@@ -40,7 +69,7 @@ public class DummyArticleDetail extends AppCompatActivity {
         contentView.setText(articleContent);
 
         ImageView imageView = findViewById(R.id.article_image);
-        imageView.setImageDrawable(ContextCompat.getDrawable(this,articleImage));
+        imageView.setImageDrawable(ContextCompat.getDrawable(this, Integer.parseInt(articleImage)));
 
     }
 

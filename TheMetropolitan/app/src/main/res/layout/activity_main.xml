@@ -35,7 +35,7 @@
         <FrameLayout
             android:id="@+id/frame_saved"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="618dp" />
 
 
 
@@ -43,30 +43,7 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <!-- for the articles prototype -->
-        <ListView
-            android:id="@+id/postList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-        />
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TextView
-                android:id="@+id/articles"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
-
-        </ScrollView>
-
-
-    </RelativeLayout>
     <!--<com.google.android.material.button.MaterialButton-->
         <!--android:id="@+id/goto_article_page_button"-->
         <!--android:layout_width="wrap_content"-->
