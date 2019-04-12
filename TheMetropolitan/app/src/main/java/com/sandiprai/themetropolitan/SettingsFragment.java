@@ -1,5 +1,6 @@
 package com.sandiprai.themetropolitan;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -60,8 +61,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.buttonSignIn:
-                CharSequence text = "Sign In button clicked!";
-                showToast(text);
+                /*CharSequence text = "Sign In button clicked!";
+                showToast(text);*/
+                Intent intent = new Intent(getContext(), SignInActivity.class);
+                startActivity(intent);
                 break;
                 //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 

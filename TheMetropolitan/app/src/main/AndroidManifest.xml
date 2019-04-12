@@ -17,8 +17,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".ArticlePage" />
-        <activity android:name=".DummyArticleDetail"
-            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".DummyArticleDetail"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".SignInActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".UserSettingsActivity"></activity>
     </application>
 
 </manifest>
