@@ -7,12 +7,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -21,11 +26,20 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -41,6 +55,16 @@ public class MainActivity extends AppCompatActivity {
     //private ListView postList;
     private RequestQueue rQueue;
     public SharedPreferences sharedPreferences;
+    int postID;
+    String postExerpt[];
+    String postTitle[];
+    String postContent[];
+    //Date postDate[];
+    String author = null;
+    String authorURL = null;
+    String picURL = null;
+    String mainArticleContent = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +90,14 @@ public class MainActivity extends AppCompatActivity {
        // progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         //progressDialog.show();
 
+        jsonParse();
+        //doAuthorAndPicStuff(getPicURL(),getAuthorURL());
+        getAuthorFromURL("sadf");
+        //getTextImageFromURL("afs");
+        printArticle(getAuthorURL(), "testing~testificate~ererwerv~454343gg~placeholder~ghahrah~reaeharae~rheja5j~kaaykak~dummy data~ahreh~aehh6jh");
 
 
+        PeriodicArticleCheck.enqueueWork(MainActivity.this,new Intent());
 
         //Get the toolbar and load it as the main toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -159,6 +189,48 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(Notifications.CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    public void sendNotification(View view) {
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this, Notifications.CHANNEL_ID)
+                        .setSmallIcon(R.drawable.logo2)
+                        .setContentTitle("My notification")
+                        .setContentText("Hello World!")
+                        .setAutoCancel(true);
+
+
+        // Gets an instance of the NotificationManager service//
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // When you issue multiple notifications about the same type of event,
+        // it’s best practice for your app to try to update an existing notification
+        // with this new information, rather than immediately creating a new notification.
+        // If you want to update this notification at a later date, you need to assign it an ID.
+        // You can then use this ID whenever you issue a subsequent notification.
+        // If the previous notification is still visible, the system will update this existing notification,
+        // rather than create a new one. In this example, the notification’s ID is 001//
+
+        mNotificationManager.notify(001, mBuilder.build());
+    }
+
 
     public void setTestImg(Bitmap testImg) {
         this.testImg = testImg;
@@ -168,7 +240,42 @@ public class MainActivity extends AppCompatActivity {
         return testImg;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getAuthorURL() {
+        return authorURL;
+    }
+
+    public void setAuthorURL(String authorURL) {
+        this.authorURL = authorURL;
+    }
+
+    public String getPicURL() {
+        return picURL;
+    }
+
+    public void setPicURL(String picURL) {
+        this.picURL = picURL;
+    }
+
+    public String getMainArticleContent() {
+        return mainArticleContent;
+    }
+
+    public void setMainArticleContent(String mainArticleContent) {
+        this.mainArticleContent = mainArticleContent;
+    }
+
     private void jsonParse() {
+        //get the current date
+        final Date now = new Date();
+        final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz"); //HH (0-23 hours), hh (normal hrs), a (AM/PM), z (timezone)
 
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -196,8 +303,8 @@ public class MainActivity extends AppCompatActivity {
                     name2 = name2.substring(1,name2.length()-1);
                     JSONObject nameMain2 = new JSONObject(name2);
                     String name3 = nameMain2.getString("href");
-                    getAuthorFromURL(name3); //call the name url to get the author's name from it
-                    String Author = nestedArticleInfo.getAuthor();
+                    setAuthorURL(name3); //call the name url to get the author's name from it
+                    //String Author = getAuthor();
 
                     //get the date the article was made
                     String dateMain = mainObject.getString("date");
@@ -205,9 +312,6 @@ public class MainActivity extends AppCompatActivity {
                     String date = dateSub[0];
                     String time = dateSub[1];
 
-                    //get the current date
-                    Date now = new Date();
-                    SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz"); //HH (0-23 hours), hh (normal hrs), a (AM/PM), z (timezone)
                     //dateFormater.format(now);
 
                     //get the category
@@ -269,8 +373,8 @@ public class MainActivity extends AppCompatActivity {
                         //picPosStart[count] = content.indexOf("<figure",0); // find picture start position
                         count++;
                     }
-                    strin += count + ", ";
-                    articleList.append(strin);
+                    //strin += count + ", ";
+                    //articleList.append(strin);
 
                     for (int i = 0; i <= count; i++) {
                         if (i != count) {
@@ -298,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
                         lastPicEnd = picPosEnd[i];
                     }
 
-                    getTextImageFromURL(pic[0]);
+                    setPicURL(pic[0]);
 
                     String tisNull = "Pic is null";
                     Bitmap cpyPic = getTestImg();
@@ -311,11 +415,11 @@ public class MainActivity extends AppCompatActivity {
                     Spanned str = HtmlCompat.fromHtml(txt, HtmlCompat.FROM_HTML_MODE_LEGACY);
                     content = str.toString();
                     //append the pieces together to print
-                    String output = "Response is: success! \nId: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
-                    output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\nAuthor: "+Author+"\nCategory: " + cat + "\nExcerpt: " + excerpt;
-                    output += "\n\nContent: " + content + "\n"+tisNull+"\n"+pic[0]+"\n\n\n";
+                    String output = id + "~" + title + "~" + date + "~" + time;
+                    output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
+                    output += "~" + content + "~"+name3+"~"+pic[0];//output += "~" + content + "~"+tisNull+"~"+pic[0];
 
-                    articleList.append(output);
+                    setMainArticleContent(output);
 
                 } catch (JSONException e){
                     articleList.append("Response is: error!");
@@ -334,6 +438,32 @@ public class MainActivity extends AppCompatActivity {
         rQueue.add(request);
     }
 
+//    private void doAuthorAndPicStuff(String authorURL, String picURL) {
+//        String authURL = getAuthorURL();
+//        String pictURL = getPicURL();
+//        getAuthorFromURL(authURL);
+//        getTextImageFromURL(pictURL);
+//
+//        String author = getAuthor();
+//        String articleContents = getMainArticleContent();
+//        Bitmap pic = getTestImg();
+//
+//        printArticle(author, articleContents, pic);
+//    }
+
+    private void printArticle(String author, String mainContent){//, Bitmap pic
+//        String output = "Id: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
+//        output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt;
+//        output += "\n\nContent: " + content + "\n"+tisNull+"\n"+pic[0]+"\n\n\n";
+
+        String[] theContents = mainContent.split("~");
+        String toPrint = "Id: " + theContents[0] + " \nTitle: " + theContents[2] + " \n\n\nDate made: " + theContents[3] + " \nTime made: " + theContents[4];
+        toPrint += "\nRetrieved: " + theContents[5] + "\n\n\n\n\n\nAuthor: "+author+"\nCategory: " + theContents[6] + "\nExcerpt: " + theContents[7];
+        toPrint += "\n\nContent: " + theContents[8] + "\nPic null? "+theContents[9]+"\n\n\n\n";
+        //String toPrint = "test string";
+        articleList.append(toPrint);
+    }
+
     //gets an article author's name and prints it
     private void getAuthorFromURL(String authorURL) {
         StringRequest requestA = new StringRequest(Request.Method.GET, authorURL, new Response.Listener<String>() {
@@ -345,7 +475,7 @@ public class MainActivity extends AppCompatActivity {
                 name = nameSub2[0].substring(1, nameSub2[0].length()-1);
                 //String output = "\nAuthor: " + name + "\n";
 
-                nestedArticleInfo.setAuthor(name);
+                setAuthor("[author name here]");
                 //articleList.append(output);
             }
         }, new Response.ErrorListener() {
@@ -364,7 +494,8 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap response) {
-                        setTestImg(response);
+                        Bitmap test = null;
+                        setTestImg(test);
                     }
                 }, 1920, 1080, ImageView.ScaleType.FIT_CENTER, Bitmap.Config.RGB_565,
                 new Response.ErrorListener() {
