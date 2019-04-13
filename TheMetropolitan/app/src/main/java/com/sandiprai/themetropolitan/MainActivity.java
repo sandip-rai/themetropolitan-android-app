@@ -51,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
     String postTitle[];
     String postContent[];
     Date postDate[];
+    String author = null;
+    String authorURL = null;
+    String picURL = null;
+    String mainArticleContent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,10 @@ public class MainActivity extends AppCompatActivity {
        // progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         //progressDialog.show();
         jsonParse();
+        //doAuthorAndPicStuff(getPicURL(),getAuthorURL());
+        getAuthorFromURL("sadf");
+        //getTextImageFromURL("afs");
+        printArticle(getAuthorURL(), "agrerag~sdaff ~ererwerv~454343gg~4g34ggg~ghahrah~reaeharae~rheja5j~kaaykak~ajja~ahreh~aehh6jh");
 
 
 
@@ -175,6 +183,38 @@ public class MainActivity extends AppCompatActivity {
         return testImg;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getAuthorURL() {
+        return authorURL;
+    }
+
+    public void setAuthorURL(String authorURL) {
+        this.authorURL = authorURL;
+    }
+
+    public String getPicURL() {
+        return picURL;
+    }
+
+    public void setPicURL(String picURL) {
+        this.picURL = picURL;
+    }
+
+    public String getMainArticleContent() {
+        return mainArticleContent;
+    }
+
+    public void setMainArticleContent(String mainArticleContent) {
+        this.mainArticleContent = mainArticleContent;
+    }
+
     private void jsonParse() {
 
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -203,8 +243,8 @@ public class MainActivity extends AppCompatActivity {
                     name2 = name2.substring(1,name2.length()-1);
                     JSONObject nameMain2 = new JSONObject(name2);
                     String name3 = nameMain2.getString("href");
-                    getAuthorFromURL(name3); //call the name url to get the author's name from it
-                    String Author = nestedArticleInfo.getAuthor();
+                    setAuthorURL(name3); //call the name url to get the author's name from it
+                    //String Author = getAuthor();
 
                     //get the date the article was made
                     String dateMain = mainObject.getString("date");
@@ -276,8 +316,8 @@ public class MainActivity extends AppCompatActivity {
                         //picPosStart[count] = content.indexOf("<figure",0); // find picture start position
                         count++;
                     }
-                    strin += count + ", ";
-                    articleList.append(strin);
+                    //strin += count + ", ";
+                    //articleList.append(strin);
 
                     for (int i = 0; i <= count; i++) {
                         if (i != count) {
@@ -305,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
                         lastPicEnd = picPosEnd[i];
                     }
 
-                    getTextImageFromURL(pic[0]);
+                    setPicURL(pic[0]);
 
                     String tisNull = "Pic is null";
                     Bitmap cpyPic = getTestImg();
@@ -318,11 +358,11 @@ public class MainActivity extends AppCompatActivity {
                     Spanned str = HtmlCompat.fromHtml(txt, HtmlCompat.FROM_HTML_MODE_LEGACY);
                     content = str.toString();
                     //append the pieces together to print
-                    String output = "Response is: success! \nId: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
-                    output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\nAuthor: "+Author+"\nCategory: " + cat + "\nExcerpt: " + excerpt;
-                    output += "\n\nContent: " + content + "\n"+tisNull+"\n"+pic[0]+"\n\n\n";
+                    String output = id + "~" + title + "~" + date + "~" + time;
+                    output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
+                    output += "~" + content + "~"+name3+"~"+pic[0];//output += "~" + content + "~"+tisNull+"~"+pic[0];
 
-                    articleList.append(output);
+                    setMainArticleContent(output);
 
                 } catch (JSONException e){
                     articleList.append("Response is: error!");
@@ -341,6 +381,32 @@ public class MainActivity extends AppCompatActivity {
         rQueue.add(request);
     }
 
+//    private void doAuthorAndPicStuff(String authorURL, String picURL) {
+//        String authURL = getAuthorURL();
+//        String pictURL = getPicURL();
+//        getAuthorFromURL(authURL);
+//        getTextImageFromURL(pictURL);
+//
+//        String author = getAuthor();
+//        String articleContents = getMainArticleContent();
+//        Bitmap pic = getTestImg();
+//
+//        printArticle(author, articleContents, pic);
+//    }
+
+    private void printArticle(String author, String mainContent){//, Bitmap pic
+//        String output = "Id: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
+//        output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt;
+//        output += "\n\nContent: " + content + "\n"+tisNull+"\n"+pic[0]+"\n\n\n";
+
+        String[] theContents = mainContent.split("~");
+        String toPrint = "Id: " + theContents[0] + " \nTitle: " + theContents[2] + " \n\n\nDate made: " + theContents[3] + " \nTime made: " + theContents[4];
+        toPrint += "\nRetrieved: " + theContents[5] + "\n\n\n\n\n\nAuthor: "+author+"\nCategory: " + theContents[6] + "\nExcerpt: " + theContents[7];
+        toPrint += "\n\nContent: " + theContents[8] + "\nPic null? "+theContents[9]+"\n\n\n\n";
+        //String toPrint = "test string";
+        articleList.append(toPrint);
+    }
+
     //gets an article author's name and prints it
     private void getAuthorFromURL(String authorURL) {
         StringRequest requestA = new StringRequest(Request.Method.GET, authorURL, new Response.Listener<String>() {
@@ -352,7 +418,7 @@ public class MainActivity extends AppCompatActivity {
                 name = nameSub2[0].substring(1, nameSub2[0].length()-1);
                 //String output = "\nAuthor: " + name + "\n";
 
-                nestedArticleInfo.setAuthor(name);
+                setAuthor("[author name here]");
                 //articleList.append(output);
             }
         }, new Response.ErrorListener() {
@@ -371,7 +437,8 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap response) {
-                        setTestImg(response);
+                        Bitmap test = null;
+                        setTestImg(test);
                     }
                 }, 1920, 1080, ImageView.ScaleType.FIT_CENTER, Bitmap.Config.RGB_565,
                 new Response.ErrorListener() {
