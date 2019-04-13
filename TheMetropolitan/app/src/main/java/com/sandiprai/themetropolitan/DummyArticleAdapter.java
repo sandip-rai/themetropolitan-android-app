@@ -10,15 +10,19 @@ import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
 
-import androidx.annotation.DrawableRes;
+import java.util.Map;
+
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class DummyArticleAdapter extends RecyclerView.Adapter<DummyArticleAdapter.ViewHolder> {
-    private String[] articleTitles;
-    private int[] imageIds;
+    public String[] id = null;
+    private String[] articleTitles = new String[10];
+    private int[] imageIds = new int[10];
+    private String[] keyArr;
+    private String[] strArr;
+    private DummyArticle dArticle = new DummyArticle();
 
     /**********READ CHAPTER 13 OF HEAD FIRST ANDROID FOR LEARNING THIS EASILY********/
 
@@ -31,9 +35,32 @@ public class DummyArticleAdapter extends RecyclerView.Adapter<DummyArticleAdapte
         }
     }
 
-    public DummyArticleAdapter(String[] articleTitles, int[] imageIds) {
-        this.articleTitles = articleTitles;
-        this.imageIds = imageIds;
+    public DummyArticleAdapter(Map allArticles) {
+//        Iterator<Map.Entry<String,String>> itter = allArticles.entrySet().iterator();
+//        String articleMain;
+//        String[] articleArr;
+//        int counter = 0;
+//
+//        while (itter.hasNext()){
+//            Map.Entry<String,String> entry = itter.next();
+//            this.id[counter] = entry.getKey();
+//            articleMain = entry.getValue();
+//            articleArr = articleMain.split("#");
+//            this.articleTitles[counter] = articleArr[0];
+//            this.imageIds[counter] = Integer.parseInt(articleArr[2]);
+//            counter++;
+//        }
+//        for (Map.Entry<String, String> entry : allArticles.entrySet()) {
+//            keyArr[itter] = entry.getKey();
+//            strArr[itter] = entry.getValue();
+//            itter++;
+//        }
+        //this.articleTitles = articleTitles;
+        //this.imageIds = imageIds;
+        String[] teststrarr = new String[] {"safaf","afdja","fqhosd","aioaa"};
+        int[] testintarr = new int[] {1092,3498,3422,3242};
+        this.articleTitles = teststrarr;
+        this.imageIds = testintarr;
     }
 
     @NonNull

@@ -21,9 +21,13 @@
     <string name="saved_page">Saved</string>
     <string name="settings_page">Settings</string>
     <string name="news_page">News</string>
+    <string name="channel_name">New_Articles</string>
+    <string name="channel_description">When new articles are published</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment"></string>
     <string name="title_activity_article">Article</string>
+    <string name="local_service_started">local service started</string>
+    <string name="local_service_label">test service</string>
 
 </resources>

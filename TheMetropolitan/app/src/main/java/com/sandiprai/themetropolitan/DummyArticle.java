@@ -13,6 +13,8 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,12 +23,14 @@ import androidx.core.text.HtmlCompat;
 
 public class DummyArticle extends AppCompatActivity {
     //This class can be used as reference and this is used to just test the RecycleView
+    public int articleID;
     private String articleTitle = "Initialized title";
     private String articleContent = "Initialized more really interesting contents for the article body";
-    private int imageId;
+    private int imageId = 327;
     //TextView textView = (TextView) findViewById(R.id.textBody);
 
-    public DummyArticle[] articles = {};
+    public Map<String,String> articles = new HashMap<>();
+
 //    DummyArticle.articles = {
 //            new DummyArticle(getArticleTitle() + "", getArticleContent() + "",
 //                    R.drawable.logo2),
@@ -40,15 +44,15 @@ public class DummyArticle extends AppCompatActivity {
 //                    R.drawable.logo2),
 //    };
 
-    private DummyArticle(String articleTitle, String articleContent, int imageId) {
-        Article("Should not display", "Not correct text value");
-        this.articleContent = articleContent;
-        this.articleTitle = getArticleTitle();
-        this.imageId = imageId;
+    //this constructor needs to get an article id and then we should pass that to article instead of the current stubs
+    public DummyArticle() {
+        String id = getID();
+//        for (Map.Entry<String, String> entry : articles.entrySet()) {
+//            this.articles.put(id,makeArticle(id));
+//        }
         for (int i = 0; i < 4; i++) {
-            articles[i] = new DummyArticle(getArticleTitle(), getArticleContent(), R.drawable.logo2);
+            this.articles.put(id,makeArticle(id));
         }
-
     }
 
     public void setArticleTitle(String ArticleTitle) {
@@ -67,12 +71,26 @@ public class DummyArticle extends AppCompatActivity {
         return articleContent;
     }
 
+    public String getID() {
 
-    private void Article(String title, String bodyTxt) {
+        return "1489";
+    }
+
+    public String makeArticle(String articleID) { //articles.put(articleID,makeArticle(articleID));
+        getArticle(articleID);
+        String article = "";
+        article += getArticleTitle() + "#";
+        article += getArticleContent() + "#";
+        article += getImageId();
+
+        return article;
+    }
+
+    private void getArticle(String articleID) {
         //final TextView titleContent = (TextView)findViewById(R.id.title);
         //final TextView mainContent = (TextView)findViewById(R.id.article_content); //not sure if need to be using textBody
 
-        String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/1489";
+        String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/"+articleID;
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

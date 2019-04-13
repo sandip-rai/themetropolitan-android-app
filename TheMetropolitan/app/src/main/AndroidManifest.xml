@@ -21,6 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Notifications" />
         <activity android:name=".TestSavedActivity" />
         <activity android:name=".ArticlePage" />
     </application>

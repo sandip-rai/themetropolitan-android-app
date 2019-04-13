@@ -1,6 +1,9 @@
 package com.sandiprai.themetropolitan;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -22,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -36,14 +40,14 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     //private ListView postList;
     private RequestQueue rQueue;
-
+    public SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //This line changes the app's theme. Change the MODE_NIGHT to NO for light theme.
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
-
+        sharedPreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
 
         //setContentView(R.layout.activity_main);
 //        if (InitApplication.getInstance().isNightModeEnabled()) {
@@ -74,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         String appName = "The Metropolitan";
         toolbarTitle.setText(appName.toUpperCase());
+        createNotificationChannel();
+        sendNotification(findViewById(R.id.notify));
+
 
         //Test for article page button
 //        MaterialButton articleButton = findViewById(R.id.goto_article_page_button);
