@@ -1,9 +1,5 @@
 package com.sandiprai.themetropolitan;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,12 +7,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Iterator;
+import java.util.Map;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
 public class DummyArticleDetail extends AppCompatActivity {
 
     public static final String EXTRA_ARTICLE_ID ="articleId";
     private String articleTitle;
     private String articleContent;
-    private String articleImage;
+    private int articleImage;
+    DummyArticle mainActivity = new DummyArticle();//"1489"
 
     public String getArticleTitle() {
         return articleTitle;
@@ -34,11 +38,11 @@ public class DummyArticleDetail extends AppCompatActivity {
         this.articleContent = articleContent;
     }
 
-    public String getArticleImage() {
+    public int getArticleImage() {
         return articleImage;
     }
 
-    public void setArticleImage(String articleImage) {
+    public void setArticleImage(int articleImage) {
         this.articleImage = articleImage;
     }
 
@@ -55,21 +59,32 @@ public class DummyArticleDetail extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //int articleId = (int) getIntent().getExtras().get(EXTRA_ARTICLE_ID);
-        for (int i = 0; i < 4; i++) {
-            articleTitle = DummyArticle.articles[i].getArticleTitle();
-            articleContent = DummyArticle.articles[i].getArticleContent();
-            articleImage = DummyArticle.articles[i].getImageId();
+//        for (int i = 0; i < 4; i++) {
+//            articleTitle = mainActivity.articles.get().getArticleTitle();
+//            articleContent = mainActivity.articles[i].getArticleContent();
+//            articleImage = mainActivity.articles[i].getImageId();
+//        }
+        Iterator ix = mainActivity.articles.entrySet().iterator();
+        String article;
+        while(ix.hasNext()) {
+            Map.Entry pair = (Map.Entry)ix.next();
+            article = pair.getKey() + "#" + pair.getValue();
+            String[] currArticle = article.split("#");
+            //structure of article: articleID#title#content#imageID
+
+            TextView titleView = findViewById(R.id.article_title);
+            titleView.setText(currArticle[1]);
+
+            TextView contentView = findViewById(R.id.article_content);
+            contentView.setText(currArticle[2]);
+
+            ImageView imageView = findViewById(R.id.article_image);
+            imageView.setImageDrawable(ContextCompat.getDrawable(this, Integer.parseInt(currArticle[3])));
         }
 
 
-        TextView titleView = findViewById(R.id.article_title);
-        titleView.setText(articleTitle);
 
-        TextView contentView = findViewById(R.id.article_content);
-        contentView.setText(articleContent);
 
-        ImageView imageView = findViewById(R.id.article_image);
-        imageView.setImageDrawable(ContextCompat.getDrawable(this, Integer.parseInt(articleImage)));
 
     }
 

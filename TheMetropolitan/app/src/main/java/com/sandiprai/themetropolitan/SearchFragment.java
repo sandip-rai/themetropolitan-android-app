@@ -17,6 +17,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
 
     private View view;
     private EditText textEdit;
+    public Notifications notify;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,6 +30,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
         Button buttonSearch = view.findViewById(R.id.buttonSearch);
         Button buttonClear = view.findViewById(R.id.buttonClear);
         //textEdit = view.findViewById(R.id.buttonClear);
+        //notify = new Notifications();
 
         buttonSearch.setOnClickListener(this);
         buttonClear.setOnClickListener(this);
@@ -38,6 +41,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
+
+
         switch (view.getId()){
             case R.id.buttonSearch:
                 CharSequence text = "Search button clicked!";
@@ -47,6 +52,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
             case R.id.buttonClear:
                 TextInputEditText searchText = getView().findViewById(R.id.textInputSearch);
                 searchText.setText("");
+                //notify.makeNotification();
                 //CharSequence text1 = "Search text cleared!";
                 //showToast(text1);
                 break;

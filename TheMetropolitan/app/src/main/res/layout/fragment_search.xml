@@ -63,8 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:insetRight="20dp"
-                    android:text="Clear"
-                    android:onClick="clear"/>
+                    android:text="Clear" />
                 <!--   android:onClick="clear" -->
 
 
