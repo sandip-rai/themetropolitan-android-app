@@ -13,6 +13,13 @@ public class processImage {
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
 
+    public processImage(RequestQueue mRequestQueue) {
+        this.mRequestQueue = mRequestQueue;
+    }
+
+    public processImage(ImageLoader mImageLoader) {
+        this.mImageLoader = mImageLoader;
+    }
 
     private processImage() {
         mImageLoader = new ImageLoader(this.mRequestQueue, new ImageLoader.ImageCache() {
