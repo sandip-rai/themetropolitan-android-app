@@ -10,6 +10,9 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
+import android.widget.Button;
+import android.widget.TextView;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,8 +38,19 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
 
         mAuth = FirebaseAuth.getInstance();
 
-        findViewById(R.id.textViewSignUp).setOnClickListener(this);
+        //Get the toolbar and load it as the main toolbar
+        Toolbar toolbar =  findViewById(R.id.toolbarInSignIn);
+        TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
+        setSupportActionBar(toolbar);
+        //Following code is for having the title in the center; otherwise it would be aligned to
+        //left as default
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        String appName = "Sign In";
+        toolbarTitle.setText(appName.toUpperCase());
+
+      //  findViewById(R.id.textViewSignUp).setOnClickListener(this);
         findViewById(R.id.buttonSignIn).setOnClickListener(this);
+        findViewById(R.id.buttonCancelSignIn).setOnClickListener(this);
     }
 
 
@@ -70,7 +84,8 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Intent intent = new Intent(SignIn.this, MainActivity.class);
+                    finish();
+                    Intent intent = new Intent(SignIn.this, UserSettings.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 } else{
@@ -81,13 +96,27 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        if(mAuth.getCurrentUser() != null){
+            finish();
+            startActivity(new Intent(this, UserSettings.class));
+        }
+    }
+
+    @Override
     public void onClick(View view){
         switch (view.getId()) {
             case R.id.buttonSignIn:
                 userLogin();
+
                 break;
-            case R.id.textViewSignUp:
+       /*     case R.id.textViewSignUp:
                 startActivity(new Intent(this, SignUp.class));
+                break; */
+            case R.id.buttonCancelSignIn:
+                startActivity(new Intent(this, MainActivity.class));
                 break;
 
         }

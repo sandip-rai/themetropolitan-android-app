@@ -2,6 +2,8 @@ package com.sandiprai.themetropolitan;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.content.Intent;
 // import android.support.annotation.NonNull;
 import android.os.Bundle;
@@ -16,7 +18,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
- import android.widget.Toast;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
@@ -34,9 +37,20 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
         mAuth = FirebaseAuth.getInstance();
 
+        //Get the toolbar and load it as the main toolbar
+        Toolbar toolbar = findViewById(R.id.toolbarInSignIn);
+        TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
+        setSupportActionBar(toolbar);
+        //Following code is for having the title in the center; otherwise it would be aligned to
+        //left as default
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        String appName = "Sign Up";
+        toolbarTitle.setText(appName.toUpperCase());
+
 
         findViewById(R.id.buttonSignUp).setOnClickListener(this);
-        findViewById(R.id.textViewLogin).setOnClickListener(this);
+        findViewById(R.id.buttonCancelSignIn).setOnClickListener(this);
+      //  findViewById(R.id.textViewLogin).setOnClickListener(this);
     }
 
     private void registerUser() {
@@ -69,6 +83,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(getApplicationContext(), "User Registered Successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                    startActivity(new Intent(SignUp.this, UserSettings.class));
                 } else {
                     if(task.getException() instanceof FirebaseAuthUserCollisionException) {
                         Toast.makeText(getApplicationContext(), "You are already registered", Toast.LENGTH_SHORT).show();
@@ -87,8 +103,12 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
             case R.id.buttonSignUp:
                 registerUser();
                 break;
-            case R.id.textViewLogin:
+         /*   case R.id.textViewLogin:
                 startActivity(new Intent(this, SignIn.class));
+                break; */
+            case R.id.buttonCancelSignIn:
+                finish();
+                startActivity(new Intent(this, SettingsFragment.class));
                 break;
         }
     }

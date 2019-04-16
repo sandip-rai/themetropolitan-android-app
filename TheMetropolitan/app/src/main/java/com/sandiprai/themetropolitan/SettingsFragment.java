@@ -35,6 +35,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
 
         //using AppCompatDelegate with a switch in android; still not working
 
+        //Set listener for user account settings
+        TextView userAccount = view.findViewById(R.id.accountView);
+        userAccount.setOnClickListener(this);
+
         //Set listener to the switches; see the onCheckChangedListener method below
         Switch switchTheme = view.findViewById(R.id.themeSwitch);
         switchTheme.setChecked(true);
@@ -75,6 +79,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
                 //Snackbar.make(getView().findViewById(R.id.buttonSignUp), text1, Snackbar.LENGTH_SHORT).show();
                 break;
                 //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
+            case R.id.accountView:
+                startActivity(new Intent(view.getContext(), UserSettings.class));
+                break;
 
             case R.id.fontSizeView:
                 CharSequence text2 = "Font size clicked!";
