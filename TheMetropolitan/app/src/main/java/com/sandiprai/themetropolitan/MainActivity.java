@@ -21,7 +21,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -49,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
     //String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts?fields=id,excerpt,title,content,date";
     String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/1489";
     TextView articleList;
-    Bitmap testImg;
-    ImageView theImg;
+    Bitmap articleImg;
+    NetworkImageView theImg;
     ProgressDialog progressDialog;
     //private ListView postList;
     private RequestQueue rQueue;
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         articleList = (TextView)findViewById(R.id.articles);
-        theImg = (ImageView)findViewById(R.id.imageView);
+        theImg = (NetworkImageView)findViewById(R.id.imageView);
         rQueue = Volley.newRequestQueue(MainActivity.this);
         //rQueue.start();
         //progressDialog = new ProgressDialog(MainActivity.this);
@@ -236,8 +238,8 @@ public class MainActivity extends AppCompatActivity {
         this.testImg = testImg;
     }
 
-    public Bitmap getTestImg() {
-        return testImg;
+    public Bitmap getArticleImg() {
+        return articleImg;
     }
 
     public String getAuthor() {
@@ -303,8 +305,11 @@ public class MainActivity extends AppCompatActivity {
                     name2 = name2.substring(1,name2.length()-1);
                     JSONObject nameMain2 = new JSONObject(name2);
                     String name3 = nameMain2.getString("href");
-                    setAuthorURL(name3); //call the name url to get the author's name from it
+                    //setAuthorURL(name3); //call the name url to get the author's name from it
+                    getAuthorFromURL(name3);
+                    articleList.append(author);
                     //String Author = getAuthor();
+
 
                     //get the date the article was made
                     String dateMain = mainObject.getString("date");
@@ -389,7 +394,10 @@ public class MainActivity extends AppCompatActivity {
                             picPosStart[i] = content.length();
                         }
                         // set to be the String of where end is plus 1 of that position
-                        lastPicEnd += 7;
+                        if (i != 0) {
+                            lastPicEnd += 7;
+                        }
+                        //lastPicEnd += 7;
 
                         //build the text content back up delimited by a square
                         if (i != count) {
@@ -402,12 +410,18 @@ public class MainActivity extends AppCompatActivity {
                         lastPicEnd = picPosEnd[i];
                     }
 
-                    setPicURL(pic[0]);
+                    //setPicURL(pic[0]);
+                    //getTextImageFromURL(pic[0]);
+                    mImageLoader = processImage.getInstance().getmImageLoader();
+                    theImg.setErrorImageResId(720);
+                    //theImg.setImageUrl(pic[0],mImageLoader);
+
 
                     String tisNull = "Pic is null";
-                    Bitmap cpyPic = getTestImg();
-                    theImg.setImageBitmap(cpyPic);
-                    if (cpyPic != null){ tisNull = "Pic not null\n"; }
+                    //Bitmap cpyPic = getArticleImg();
+                    //theImg.setImageBitmap(cpyPic);
+                    Bitmap bit = getArticleImg();
+                    if (bit != null){ tisNull = "Pic not null\n"; }
 
                     //String outpt = "pic: " + imageArr[1] + ", ";
                     //articleList.append(outpt);
@@ -415,11 +429,15 @@ public class MainActivity extends AppCompatActivity {
                     Spanned str = HtmlCompat.fromHtml(txt, HtmlCompat.FROM_HTML_MODE_LEGACY);
                     content = str.toString();
                     //append the pieces together to print
+//                    String output = id + "~" + title + "~" + date + "~" + time;
+//                    output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
+//                    output += "~" + content + "~"+getAuthor()+"~"+pic[0];//output += "~" + content + "~"+tisNull+"~"+pic[0];
+
                     String output = id + "~" + title + "~" + date + "~" + time;
                     output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
-                    output += "~" + content + "~"+name3+"~"+pic[0];//output += "~" + content + "~"+tisNull+"~"+pic[0];
+                    output += "~" + content + "~"+tisNull+"~"+pic[0];
 
-                    setMainArticleContent(output);
+                    printArticle(getAuthor(), output);
 
                 } catch (JSONException e){
                     articleList.append("Response is: error!");
@@ -446,20 +464,32 @@ public class MainActivity extends AppCompatActivity {
 //
 //        String author = getAuthor();
 //        String articleContents = getMainArticleContent();
-//        Bitmap pic = getTestImg();
+//        Bitmap pic = getArticleImg();
 //
 //        printArticle(author, articleContents, pic);
 //    }
 
-    private void printArticle(String author, String mainContent){//, Bitmap pic
+    private void printArticle(String author1, String mainContent){//, Bitmap pic
 //        String output = "Id: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
 //        output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt;
 //        output += "\n\nContent: " + content + "\n"+tisNull+"\n"+pic[0]+"\n\n\n";
+        //String author = getAuthor();
+        String variable = getAuthorURL();
+        if (variable == null){
+            author1 = "this is null";
+        } else {
+
+            author1 = variable;
+        }
+
+        //author1 = getAuthor();
 
         String[] theContents = mainContent.split("~");
-        String toPrint = "Id: " + theContents[0] + " \nTitle: " + theContents[2] + " \n\n\nDate made: " + theContents[3] + " \nTime made: " + theContents[4];
-        toPrint += "\nRetrieved: " + theContents[5] + "\n\n\n\n\n\nAuthor: "+author+"\nCategory: " + theContents[6] + "\nExcerpt: " + theContents[7];
-        toPrint += "\n\nContent: " + theContents[8] + "\nPic null? "+theContents[9]+"\n\n\n\n";
+        String toPrint = "Id: " + theContents[0] + " \nTitle: " + theContents[1] + " \n\n\nDate made: " + theContents[2] + " \nTime made: " + theContents[3];
+        toPrint += "\nRetrieved: " + theContents[4] + "\n\n\n\n\n\nAuthor: "+author1;
+        //getAuthorFromURL(authorURL);
+        toPrint += "\nCategory: " + theContents[5] + "\nExcerpt: " + theContents[6];
+        toPrint += "\n\nContent: " + theContents[7] +"\nPic null? "+theContents[8]+"\nImg URL: "+theContents[9]+"\n\n\n\n";
         //String toPrint = "test string";
         articleList.append(toPrint);
     }
@@ -475,8 +505,9 @@ public class MainActivity extends AppCompatActivity {
                 name = nameSub2[0].substring(1, nameSub2[0].length()-1);
                 //String output = "\nAuthor: " + name + "\n";
 
-                setAuthor("[author name here]");
-                //articleList.append(output);
+                //setAuthor(name);
+                author = name;
+                articleList.append(name);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -495,7 +526,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Bitmap response) {
                         Bitmap test = null;
-                        setTestImg(test);
+                        setArticleImg(response);
+                        //theImg.setImageBitmap(response);
+                        //theImg.getDrawable();
                     }
                 }, 1920, 1080, ImageView.ScaleType.FIT_CENTER, Bitmap.Config.RGB_565,
                 new Response.ErrorListener() {
@@ -503,6 +536,22 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Error occurred in getImage", Toast.LENGTH_LONG).show();
                     }
                 });
+
+        // https://cypressnorth.com/mobile-application-development/setting-android-google-volley-imageloader-networkimageview/
+//        theImg.setImageUrl(imgURL,mImageLoader);
+//
+//        mImageLoader = new ImageLoader(this.rQueue, new ImageLoader.ImageCache() {
+//            private final HashMap<String, Bitmap> mCache = new HashMap<>(10);
+//            @Override
+//            public Bitmap getBitmap(String url) {
+//                return mCache.get(url);
+//            }
+//
+//            @Override
+//            public void putBitmap(String url, Bitmap bitmap) {
+//                mCache.put(url, bitmap);
+//            }
+//        });
 
         rQueue.add(request);//*/
         //Bitmap blank = new Bitmap();
