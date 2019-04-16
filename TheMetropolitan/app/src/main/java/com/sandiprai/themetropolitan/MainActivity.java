@@ -33,6 +33,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     TextView articleList;
     Bitmap articleImg;
     NetworkImageView theImg;
+    HashMap<Integer,String> allArticles = new HashMap<>();
     ProgressDialog progressDialog;
     //private ListView postList;
     private RequestQueue rQueue;
@@ -93,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         //progressDialog.show();
 
         jsonParse();
+        //allArticles.put(1489,tmpMap.get(1489));
         //doAuthorAndPicStuff(getPicURL(),getAuthorURL());
         getAuthorFromURL("sadf");
         //getTextImageFromURL("afs");
@@ -286,41 +289,66 @@ public class MainActivity extends AppCompatActivity {
                     response = response.substring(1,response.length()-1);
                 }
 
+                int id = 0;
+                String titleFull;
+                String title = "";
+                String name1;
+                String name2;
+                String authorName = "";
+                String dateMain;
+                SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz"); //HH (0-23 hours), hh (normal hrs), a (AM/PM), z (timezone);
+                String date = "";
+                String time = "";
+                //get the current date
+                Date now = new Date();
+                String cat = "";
+                String excerptFull;
+                String excerpt = "";
+                Spanned excerptStr;
+                String contentFull;
+                String content = "";
+                Pattern pattern;
+                Matcher matcher;
+                String tisNull = "";
+                String txt;
+                String pic[] = new String[10];
+
                 //articleList.setText(response);
                 try {
                     //turning the full string response from the url get into a JSON object
                     JSONObject mainObject = new JSONObject(response);
                     //get the first article's ID
-                    String id = mainObject.getString("id");
+                    id = Integer.parseInt(mainObject.getString("id"));
 
                     //get the title
-                    String titleFull = mainObject.getString("title");
+                    titleFull = mainObject.getString("title");
                     JSONObject titleMain = new JSONObject(titleFull);
-                    String title = titleMain.getString("rendered");
+                    title = titleMain.getString("rendered");
 
                     //get the author's name from the article's name url
-                    String name1 = mainObject.getString("_links");
+                    name1 = mainObject.getString("_links");
                     JSONObject nameMain = new JSONObject(name1);
-                    String name2 = nameMain.getString("author");
+                    name2 = nameMain.getString("author");
                     name2 = name2.substring(1,name2.length()-1);
                     JSONObject nameMain2 = new JSONObject(name2);
-                    String name3 = nameMain2.getString("href");
+                    authorURL = nameMain2.getString("href");
                     //setAuthorURL(name3); //call the name url to get the author's name from it
-                    getAuthorFromURL(name3);
-                    articleList.append(author);
+                    getAuthorFromURL(authorURL);
+                    authorName = author;
+                    //articleList.append(authorName);
                     //String Author = getAuthor();
 
 
                     //get the date the article was made
-                    String dateMain = mainObject.getString("date");
+                    dateMain = mainObject.getString("date");
                     String dateSub [] = dateMain.split("T");
-                    String date = dateSub[0];
-                    String time = dateSub[1];
+                    date = dateSub[0];
+                    time = dateSub[1];
 
                     //dateFormater.format(now);
 
                     //get the category
-                    String cat = mainObject.getString("categories");
+                    cat = mainObject.getString("categories");
                     switch (cat){
                         case "[12]":
                             cat = "Tech";
@@ -345,26 +373,28 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     //get the excerpt
-                    String excerptFull = mainObject.getString("excerpt");
+                    excerptFull = mainObject.getString("excerpt");
                     JSONObject excerptMain = new JSONObject(excerptFull);
-                    String excerpt = excerptMain.getString("rendered");
+                    excerpt = excerptMain.getString("rendered");
                     excerpt = excerpt.substring(3,excerpt.length()-5);
-                    Spanned excerptStr = HtmlCompat.fromHtml(excerpt, HtmlCompat.FROM_HTML_MODE_LEGACY);
+                    excerptStr = HtmlCompat.fromHtml(excerpt, HtmlCompat.FROM_HTML_MODE_LEGACY);
                     excerpt = excerptStr.toString();
 
                     //get the article's content
-                    String contentFull = mainObject.getString("content");
+                    contentFull = mainObject.getString("content");
                     JSONObject contentMain = new JSONObject(contentFull);
-                    String content = contentMain.getString("rendered");
+                    content = contentMain.getString("rendered");
                     String contentArr [] = content.split("clearfix"); //find beginning of article content
                     String contentArr2 [] = contentArr[2].split("/div>"); //find end of article content
                     content = contentArr2[0].substring(5, contentArr2[0].length()-5);
 
+            } catch (JSONException e){
+                articleList.append("Error, article URL GET ran into an error.");
+            }
                     //find and get any pictures in the article's content
-                    Pattern pattern = Pattern.compile("<figure");
-                    Matcher matcher = pattern.matcher(content);
-                    String txt = "";
-                    String pic[] = new String[10];
+                    pattern = Pattern.compile("<figure");
+                    matcher = pattern.matcher(content);
+                    txt = "";
                     String imageArr[] = new String[10];
                     int picPosStart[] = new int[10];
                     int picPosEnd[] = new int[10];
@@ -412,12 +442,15 @@ public class MainActivity extends AppCompatActivity {
 
                     //setPicURL(pic[0]);
                     //getTextImageFromURL(pic[0]);
+                    //mImageLoader = new processImage();
+                    //rQueue.add(processImage.getInstance().getmRequestQueue());
                     mImageLoader = processImage.getInstance().getmImageLoader();
-                    theImg.setErrorImageResId(720);
+                    theImg.setDefaultImageResId(R.drawable.logo2);
+                    //theImg.setErrorImageResId(720);
                     //theImg.setImageUrl(pic[0],mImageLoader);
 
 
-                    String tisNull = "Pic is null";
+                    tisNull = "Pic is null";
                     //Bitmap cpyPic = getArticleImg();
                     //theImg.setImageBitmap(cpyPic);
                     Bitmap bit = getArticleImg();
@@ -433,15 +466,14 @@ public class MainActivity extends AppCompatActivity {
 //                    output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
 //                    output += "~" + content + "~"+getAuthor()+"~"+pic[0];//output += "~" + content + "~"+tisNull+"~"+pic[0];
 
-                    String output = id + "~" + title + "~" + date + "~" + time;
+                    String output = authorName + "~" + title + "~" + date + "~" + time;
                     output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
                     output += "~" + content + "~"+tisNull+"~"+pic[0];
 
-                    printArticle(getAuthor(), output);
 
-                } catch (JSONException e){
-                    articleList.append("Response is: error!");
-                }
+
+                    allArticles.put(id,output);
+                    printArticle(id, output);
 
             }
         }, new com.android.volley.Response.ErrorListener() {
@@ -452,8 +484,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
         rQueue.add(request);
+        //return allArticles;
     }
 
 //    private void doAuthorAndPicStuff(String authorURL, String picURL) {
@@ -469,30 +501,24 @@ public class MainActivity extends AppCompatActivity {
 //        printArticle(author, articleContents, pic);
 //    }
 
-    private void printArticle(String author1, String mainContent){//, Bitmap pic
+
+    private void printArticle(int id, String mainContent){//, Bitmap pic
 //        String output = "Id: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
 //        output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt;
 //        output += "\n\nContent: " + content + "\n"+tisNull+"\n"+pic[0]+"\n\n\n";
         //String author = getAuthor();
-        String variable = getAuthorURL();
-        if (variable == null){
-            author1 = "this is null";
-        } else {
 
-            author1 = variable;
-        }
-
-        //author1 = getAuthor();
 
         String[] theContents = mainContent.split("~");
-        String toPrint = "Id: " + theContents[0] + " \nTitle: " + theContents[1] + " \n\n\nDate made: " + theContents[2] + " \nTime made: " + theContents[3];
-        toPrint += "\nRetrieved: " + theContents[4] + "\n\n\n\n\n\nAuthor: "+author1;
+        String toPrint = "Id: " + id + " \nTitle: " + theContents[1] + " \n\n\nDate made: " + theContents[2] + " \nTime made: " + theContents[3];
+        toPrint += "\nRetrieved: " + theContents[4] + "\n\n\n\n\n\nAuthor: "+theContents[0];
         //getAuthorFromURL(authorURL);
         toPrint += "\nCategory: " + theContents[5] + "\nExcerpt: " + theContents[6];
         toPrint += "\n\nContent: " + theContents[7] +"\nPic null? "+theContents[8]+"\nImg URL: "+theContents[9]+"\n\n\n\n";
         //String toPrint = "test string";
         articleList.append(toPrint);
     }
+
 
     //gets an article author's name and prints it
     private void getAuthorFromURL(String authorURL) {
@@ -507,7 +533,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //setAuthor(name);
                 author = name;
-                articleList.append(name);
+                //articleList.append(name);
             }
         }, new Response.ErrorListener() {
             @Override
