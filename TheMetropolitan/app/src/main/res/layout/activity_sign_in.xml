@@ -7,7 +7,115 @@
     android:orientation="vertical"
     tools:context=".SignIn">
 
-    <RelativeLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--The toolbar has been created on a separate xml file called toolbar_main and is
+        included here. Remember the id.-->
+        <include
+            layout="@layout/toolbar_main"
+            android:id="@+id/toolbarInSignIn" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="2dp"
+        app:contentPadding="5dp"
+        app:contentPaddingTop="30dp"
+        android:paddingBottom="30dp"
+        android:layout_marginLeft="@dimen/mtrl_card_spacing"
+        android:layout_marginTop="11dp"
+        android:layout_marginRight="@dimen/mtrl_card_spacing"
+        android:layout_marginBottom="11dp"
+
+        >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:hint="Email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:hint="Password">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonCancelSignIn"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_toStartOf="@id/buttonSignIn"
+                android:layout_toLeftOf="@id/buttonSignIn"
+                android:insetLeft="110dp"
+                android:insetRight="10dp"
+                android:text="Cancel" />
+
+            <com.google.android.material.button.MaterialButton
+
+                android:id="@+id/buttonSignIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd= "true"
+                android:layout_alignParentRight= "true"
+                android:insetRight="20dp"
+                android:text="Sign In" />
+
+
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+</com.google.android.material.card.MaterialCardView>
+
+
+
+
+
+
+
+  <!--  <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1">
@@ -36,7 +144,7 @@
             android:paddingRight="15dp">
 
             <EditText
-                android:id="@+id/editTextEmail"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
@@ -45,7 +153,7 @@
                 android:paddingBottom="15dp"
                 android:textColor="@color/colorAccent"/>
             <EditText
-                android:id="@+id/editTextPassword"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
@@ -54,9 +162,10 @@
                 android:paddingBottom="15dp"
                 android:textColor="@color/colorAccent"/>
 
-            !--Using material button as it is visually appealing-->
+            Using material button as it is visually appealing-->
+<!--
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonSignIn"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -78,13 +187,8 @@
 
         </LinearLayout>
 
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:visibility="gone"/>
+
 
     </RelativeLayout>
-
+-->
 </LinearLayout>
