@@ -34,6 +34,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -496,6 +497,9 @@ public class MainActivity extends AppCompatActivity {
 //                        articleList.append("This inner content is empty\n");
 //                    }
 //                    printArticle(Integer.toString(id), allArticles);
+
+                    allArticles.put(id,output);
+                    printArticle(id, output);
 
             }
         }, new com.android.volley.Response.ErrorListener() {
