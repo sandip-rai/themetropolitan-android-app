@@ -27,8 +27,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
     TextView articleList;
     Bitmap articleImg;
     NetworkImageView theImg;
-    HashMap<Integer,String> allArticles = new HashMap<>();
+    ArrayList<String> allArticles = new ArrayList<>();
+    String tmpList;
     ProgressDialog progressDialog;
     //private ListView postList;
     private RequestQueue rQueue;
@@ -54,11 +55,16 @@ public class MainActivity extends AppCompatActivity {
     int postID;
     String postExerpt[];
     String postTitle[];
-    String postContent[];
+    String postContent;
+    String postIDs[] = new String[1000];
+    int postIndex;
+    String postElements[];
     Date postDate[];
     String author = null;
     String authorURL = null;
-    String picURL = null;
+    String picURL = "";
+    String mainPicURL = "";
+    String titlePic = null;
     String mainArticleContent = null;
 
     @Override
@@ -79,18 +85,22 @@ public class MainActivity extends AppCompatActivity {
        // progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         //progressDialog.show();
         articleList.clearComposingText();
-        jsonParse();
-        //allArticles.put(1489,tmpMap.get(1489));
-        //doAuthorAndPicStuff(getPicURL(),getAuthorURL());
+        tmpList = jsonParse();
+        //String itter = tmpList.iterator().toString();
+        //allArticles.set(Integer.parseInt(itter),tmpList.get(Integer.parseInt(itter)));
         //getAuthorFromURL("http://themetropolitan.metrostate.edu/wp-json/wp/v2/users/22");
-        if(allArticles.isEmpty()){
+        if(tmpList == null){
             articleList.append("The list is empty in onCreate\n");
+//        } else {
+//            for (int i = 0; i < allArticles.size(); i++) {
+//                postContent = allArticles.get(i);
+//                postElements = postContent.split("~");
+//                postIDs[postIDs.length-1] = postElements[0];
+//                postIndex = i;
+//                //printArticle(postIDs[i],allArticles);
+//            }
         }
-        for (String i: allArticles.values()){
-            printArticle(Integer.parseInt(i),allArticles.get(i));
-            //articleList.append("id: "+i+"\n "+allArticles.get(i));
 
-        }
         //articleList.append("author is not set\n");
         //none of the getters working at all
         //printArticle(tmpVar+"", "test~testing~tst~moar test~tests n stuff~moar tests and stuff~test~test~even more testing~testing initiative~aperture~science");
@@ -225,7 +235,8 @@ public class MainActivity extends AppCompatActivity {
         this.mainArticleContent = mainArticleContent;
     }
 
-    private void jsonParse() {
+    private String jsonParse() {
+        final String[] theArticles = new String[1];
 
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -237,9 +248,9 @@ public class MainActivity extends AppCompatActivity {
                 int id = 0;
                 String titleFull;
                 String title = "";
-                String name1;
+                String links;
                 String name2;
-                String authorName = "";
+                String authorName = null;
                 String dateMain;
                 SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz"); //HH (0-23 hours), hh (normal hrs), a (AM/PM), z (timezone);
                 String date = "";
@@ -254,8 +265,10 @@ public class MainActivity extends AppCompatActivity {
                 String content = "";
                 Pattern pattern;
                 Matcher matcher;
-                String tisNull = "";
+                String tisNull;
                 String txt;
+                String link;
+                String subLink;
                 String pic[] = new String[10];
 
                 //articleList.setText(response);
@@ -271,8 +284,8 @@ public class MainActivity extends AppCompatActivity {
                     title = titleMain.getString("rendered");
 
                     //get the author's name from the article's name url
-                    name1 = mainObject.getString("_links");
-                    JSONObject nameMain = new JSONObject(name1);
+                    links = mainObject.getString("_links");
+                    JSONObject nameMain = new JSONObject(links);
                     name2 = nameMain.getString("author");
                     name2 = name2.substring(1,name2.length()-1);
                     JSONObject nameMain2 = new JSONObject(name2);
@@ -332,9 +345,18 @@ public class MainActivity extends AppCompatActivity {
                     String contentArr2 [] = contentArr[2].split("/div>"); //find end of article content
                     content = contentArr2[0].substring(5, contentArr2[0].length()-5);
 
-            } catch (JSONException e){
-                articleList.append("Error, article URL GET ran into an error.");
-            }
+                    //get the main article picture by first getting the URL from the JSON got by the its URL in the Main JSON
+//                    JSONObject picMain = new JSONObject(links);
+//                    link = picMain.getString("wp:featuredmedia");
+//                    subLink = link.substring(1,link.length()-1);
+//                    JSONObject link2 = new JSONObject(subLink);
+//                    picURL = link2.getString("href");
+//                    getImageURL(mainPicURL);
+//                    mainPicURL = picURL;
+
+                } catch (JSONException e){
+                    articleList.append("Error, article URL GET ran into an error.");
+                }
                     //find and get any pictures in the article's content
                     pattern = Pattern.compile("<figure");
                     matcher = pattern.matcher(content);
@@ -363,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
                             tmpPic = pic[i].split("srcset=");
                             tmpPic = tmpPic[1].split("w,");
                             pic[i] = tmpPic[1].substring(1, tmpPic[1].length()-4);
-                            //imageArr[i] = getTextImageFromURL(pic[i]);
+                            //imageArr[i] = getImageFromURL(pic[i]);
                         } else {
                             picPosStart[i] = content.length();
                         }
@@ -385,7 +407,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     //setPicURL(pic[0]);
-                    //getTextImageFromURL(pic[0]);
+                    getImageFromURL(pic[0]);
                     //mImageLoader = new processImage();
                     //rQueue.add(processImage.getInstance().getmRequestQueue());
                     mImageLoader = processImage.getInstance().getmImageLoader();
@@ -410,14 +432,22 @@ public class MainActivity extends AppCompatActivity {
 //                    output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
 //                    output += "~" + content + "~"+getAuthor()+"~"+pic[0];//output += "~" + content + "~"+tisNull+"~"+pic[0];
 
-                    String output = authorName + "~" + title + "~" + date + "~" + time;
+                    String output = id + "~" + authorName + "~" + title + "~" + date + "~" + time;
                     output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
-                    output += "~" + content + "~"+tisNull+"~"+pic[0];
+                    output += "~" + content + "~"+tisNull+"~"+mainPicURL+"~"+pic[0];
+                    //articleList.append(output+"\n");
 
+                    //List<String> outputList = null;
+                    //outputList.add(output);
 
-
-                    allArticles.put(id,output);
-                    printArticle(id, output);
+                    //allArticles.set(id, output);
+                    theArticles[0] = output;
+                    articleList.append("This is an inner append\n");
+                    //allArticles.add(output);
+//                    if (allArticles.isEmpty()) {
+//                        articleList.append("This inner content is empty\n");
+//                    }
+//                    printArticle(Integer.toString(id), allArticles);
 
             }
         }, new com.android.volley.Response.ErrorListener() {
@@ -429,14 +459,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         rQueue.add(request);
-        //return allArticles;
+        return theArticles[0];
     }
 
 //    private void doAuthorAndPicStuff(String authorURL, String picURL) {
 //        String authURL = getAuthorURL();
 //        String pictURL = getPicURL();
 //        getAuthorFromURL(authURL);
-//        getTextImageFromURL(pictURL);
+//        getImageFromURL(pictURL);
 //
 //        String author = getAuthor();
 //        String articleContents = getMainArticleContent();
@@ -446,19 +476,28 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
 
-    private void printArticle(int id, String mainContent){//, Bitmap pic
+    private void printArticle(String id, ArrayList<String> mainContent){//, Bitmap pic
 //        String output = "Id: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
 //        output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt;
 //        output += "\n\nContent: " + content + "\n"+tisNull+"\n"+pic[0]+"\n\n\n";
         //String author = getAuthor();
+        String theContents[] = new String[12];
+        String tmpArticle;
+        String articleElements[];
 
-
-        String[] theContents = mainContent.split("~");
-        String toPrint = "Id: " + id + " \nTitle: " + theContents[1] + " \n\n\nDate made: " + theContents[2] + " \nTime made: " + theContents[3];
-        toPrint += "\nRetrieved: " + theContents[4] + "\n\n\n\n\n\nAuthor: "+theContents[0];
+        for (int i = 0; i < mainContent.size(); i++) {
+            tmpArticle = mainContent.get(i);
+            articleElements = tmpArticle.split("~");
+            if (articleElements[0] == id) {
+                theContents = articleElements;
+            }
+        }
+        //String[] theContents = mainContent.split("~");
+        String toPrint = "Id: " + theContents[0] + " \nTitle: " + theContents[2] + " \n\n\nDate made: " + theContents[3] + " \nTime made: " + theContents[4];
+        toPrint += "\nRetrieved: " + theContents[5] + "\n\n\n\n\n\nAuthor: "+theContents[1];
         //getAuthorFromURL(authorURL);
-        toPrint += "\nCategory: " + theContents[5] + "\nExcerpt: " + theContents[6];
-        toPrint += "\n\nContent: " + theContents[7] +"\nPic null? "+theContents[8]+"\nImg URL: "+theContents[9]+"\n\n\n\n";
+        toPrint += "\nCategory: " + theContents[6] + "\nExcerpt: " + theContents[7];
+        toPrint += "\n\nContent: " + theContents[8] +"\nPic null? "+theContents[9]+"\nArticle Image URL: "+theContents[10]+"\nIn-text pic: "+theContents[11]+"\n\n\n\n";
         //String toPrint = "test string";
         articleList.append(toPrint);
     }
@@ -489,21 +528,79 @@ public class MainActivity extends AppCompatActivity {
         rQueue.add(requestA);
     }
 
+
+    private void getImageURL(String imgURL) {
+        StringRequest request = new StringRequest(Request.Method.GET, imgURL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if(response.charAt(0) == '['){
+                    response = response.substring(1,response.length()-1);
+                }
+
+                int id = 0;
+                String picURLFull;
+                String pictureURL;
+                String captionFull;
+                String caption;
+                //String txt;
+                //String pic[] = new String[10];
+
+                //articleList.setText(response);
+                try {
+                    //turning the full string response from the url get into a JSON object
+                    JSONObject mainObject = new JSONObject(response);
+                    //get the first article's ID
+                    id = Integer.parseInt(mainObject.getString("id"));
+
+                    //get the caption
+                    captionFull = mainObject.getString("caption");
+                    JSONObject captionMain = new JSONObject(captionFull);
+                    caption = captionMain.getString("rendered");
+                    Spanned str = HtmlCompat.fromHtml(caption, HtmlCompat.FROM_HTML_MODE_LEGACY);
+                    caption = str.toString();
+
+                    //get the final picture's URL
+                    picURLFull = mainObject.getString("description");
+                    JSONObject picMain = new JSONObject(picURLFull);
+                    pictureURL = picMain.getString("rendered");
+                    //pictureURL = pictureURL.substring(1,name2.length()-1);
+                    picURL = pictureURL;
+                    //setAuthorURL(name3); //call the name url to get the author's name from it
+                    //getImageFromURL(picURL);
+                    // = articleImg;
+
+                } catch (JSONException e){
+                    articleList.append("Error, picture URL GET ran into an error.");
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "Error occurred in getImageURL", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        rQueue.add(request);
+    }
+
+
     //gets an in-line article image and returns a bitmap as a string
-    private void getTextImageFromURL(String imgURL) {
-        ImageRequest request = new ImageRequest(imgURL,
+    private void getImageFromURL(String imgJsonURL) {
+        ImageRequest request = new ImageRequest(imgJsonURL,
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap response) {
-                        Bitmap test = null;
+                        //Bitmap test = null;
                         setArticleImg(response);
-                        //theImg.setImageBitmap(response);
+                        articleImg = response;
+                        theImg.setImageBitmap(response);
                         //theImg.getDrawable();
                     }
                 }, 1920, 1080, ImageView.ScaleType.FIT_CENTER, Bitmap.Config.RGB_565,
                 new Response.ErrorListener() {
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MainActivity.this, "Error occurred in getImage", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Error occurred in getting the image", Toast.LENGTH_LONG).show();
                     }
                 });
 
