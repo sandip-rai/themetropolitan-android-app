@@ -2,6 +2,7 @@ package com.sandiprai.themetropolitan;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -17,11 +18,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.text.HtmlCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
@@ -36,15 +45,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
-import androidx.core.text.HtmlCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     //private ListView postList;
     private RequestQueue rQueue;
     public SharedPreferences sharedPreferences;
-    int postID;
+    int postID = 1489;
     String postExerpt[];
     String postTitle[];
     String postContent[];
@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     String mainPicURL = "";
     String titlePic = null;
     String mainArticleContent = null;
+
 
 
     @Override
@@ -98,19 +99,22 @@ public class MainActivity extends AppCompatActivity {
        // progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         //progressDialog.show();
 
-        jsonParse();
+        jsonParse(postID);
         //allArticles.put(1489,tmpMap.get(1489));
         //doAuthorAndPicStuff(getPicURL(),getAuthorURL());
-        getAuthorFromURL("sadf");
+        //getAuthorFromURL("sadf");
         //getTextImageFromURL("afs");
-        printArticle(getAuthorURL(), "testing~testificate~ererwerv~454343gg~placeholder~ghahrah~reaeharae~rheja5j~kaaykak~dummy data~ahreh~aehh6jh");
+        //printArticle(getAuthorURL(), "testing~testificate~ererwerv~454343gg~placeholder~ghahrah~reaeharae~rheja5j~kaaykak~dummy data~ahreh~aehh6jh");
 
         //articleList.append("author is not set\n");
         //none of the getters working at all
         //printArticle(tmpVar+"", "test~testing~tst~moar test~tests n stuff~moar tests and stuff~test~test~even more testing~testing initiative~aperture~science");
+        //Notifications newArticleNotify = new Notifications();
 
-        PeriodicArticleCheck.enqueueWork(MainActivity.this,new Intent());
+        PeriodicArticleCheck.enqueueWork(MainActivity.this,new Intent()); //start the background service to periodically check for new articles
 
+
+        //newArticleNotify.makeNotification();
 
         //Get the toolbar and load it as the main toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -122,7 +126,13 @@ public class MainActivity extends AppCompatActivity {
         String appName = "The Metropolitan";
         toolbarTitle.setText(appName.toUpperCase());
         createNotificationChannel();
-        sendNotification(findViewById(R.id.notify));
+//        for (int i = 0; i < 4; i++) {
+            sendNotification(findViewById(R.id.notify)); //send a notification from the main activity method
+//            SystemClock.sleep(10000);
+//        }
+        //get new instance of notifications class
+        Notifications notify = new Notifications();
+        //notify.makeNotification(findViewById(R.id.notify));
 
 
         //Test for article page button
@@ -219,15 +229,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendNotification(View view) {
-
+        Intent actionIntent = new Intent(this, MainActivity.class);
+        PendingIntent actionPendingIntent = PendingIntent.getActivity(this,0,actionIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this, Notifications.CHANNEL_ID)
                         .setSmallIcon(R.drawable.logo2)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World!")
+                        .setContentTitle("When app opens")
+                        .setContentText("This will check for new articles.")
                         .setAutoCancel(true);
 
 
+        mBuilder.setContentIntent(actionPendingIntent);
         // Gets an instance of the NotificationManager service//
 
         NotificationManager mNotificationManager =
@@ -285,41 +297,10 @@ public class MainActivity extends AppCompatActivity {
         this.mainArticleContent = mainArticleContent;
     }
 
-    private void jsonParse() {
-        //get the current date
-        final Date now = new Date();
-        final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz"); //HH (0-23 hours), hh (normal hrs), a (AM/PM), z (timezone)
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getAuthorURL() {
-        return authorURL;
-    }
-
-    public void setAuthorURL(String authorURL) {
-        this.authorURL = authorURL;
-    }
-
-    public String getPicURL() {
-        return picURL;
-    }
-
-    public void setPicURL(String picURL) {
-        this.picURL = picURL;
-    }
-
-    public String getMainArticleContent() {
-        return mainArticleContent;
-    }
-
-    public void setMainArticleContent(String mainArticleContent) {
-        this.mainArticleContent = mainArticleContent;
-    }
 
     private void jsonParse(int postID) {
-        final ArrayList<String> theArticles = new ArrayList<String>();
+        //final ArrayList<String> theArticles = new ArrayList<String>();
+        String theArticles;
         url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/"+postID;
 
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -436,7 +417,7 @@ public class MainActivity extends AppCompatActivity {
                     subLink = link.substring(1,link.length()-1);
                     JSONObject link2 = new JSONObject(subLink);
                     picURL = link2.getString("href");
-                    getImageURL(picURL);//the current implementation without a class does not allow the variable to be set in the scope of the method called here
+                    //getImageURL(picURL);//the current implementation without a class does not allow the variable to be set in the scope of the method called here
                     mainPicURL = picURL;
 
                 } catch (JSONException e){
@@ -492,7 +473,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     //setPicURL(pic[0]);
-                    getImageFromURL(pic[0]);
+                    //getImageFromURL(pic[0]);
 
                     //mImageLoader = new processImage();
                     //rQueue.add(processImage.getInstance().getmRequestQueue());
@@ -532,13 +513,13 @@ public class MainActivity extends AppCompatActivity {
 //                    }
                     printArticle(Integer.toString(id), articles);
 
-                    theArticles.add(output);
+                    //theArticles.add(output);
                     //articleList.append("This is an inner append\n"+theArticles.get(0)+"\n");
                     //allArticles.add(output);
 //                    if (allArticles.isEmpty()) {
 //                        articleList.append("This inner content is empty\n");
 //                    }
-                    printArticle(Integer.toString(id), theArticles);
+                //printArticle(Integer.toString(id), theArticles);
 
             }
         }, new com.android.volley.Response.ErrorListener() {
@@ -555,7 +536,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void printArticle(String id, String mainContent){//, Bitmap pic
+    private void printArticle(String id, String mainContent) {//, Bitmap pic
 //        String output = "Id: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
 //        output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt;
 //        output += "\n\nContent: " + content + "\n"+tisNull+"\n"+pic[0]+"\n\n\n";
@@ -569,12 +550,13 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }
 
-
-        String toPrint = "Id: " + theContents[0] + " \nTitle: " + theContents[2] + " \n\n\nDate made: " + theContents[3] + " \nTime made: " + theContents[4];
-        toPrint += "\nRetrieved: " + theContents[5] + "\n\n\n\n\n\nAuthor: "+theContents[1];
-        toPrint += "\nCategory: " + theContents[6] + "\nExcerpt: " + theContents[7];
-        toPrint += "\n\nContent: " + theContents[8] +"\nArticle Image URL: "+theContents[9]+"\nIn-text pic: "+theContents[10]+"\n\n\n\n";
-        //String toPrint = "test string";
+        theImg.setDefaultImageResId(R.drawable.logo2);
+        String toPrint = "Id: " + theContents[0] + " \nTitle: " + theContents[2] + " \n\nDate made: " + theContents[3] + " \nTime made: " + theContents[4];
+        toPrint += "\nRetrieved: " + theContents[5] + "\n\n\n"+"Excerpt: " + theContents[7]+"\n\nAuthor: "+theContents[1];
+        toPrint += "                                                Category: " + theContents[6] + "\n\n";
+        toPrint += "\n\nContent: " + theContents[8] +"\n\n";
+        toPrint += "Article Image URL: "+theContents[9]+"\nIn-text pic: "+theContents[10]+"\n\n";
+                //String toPrint = "test string";
         articleList.append(toPrint);
     }
 
@@ -592,7 +574,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //setAuthor(name);
                 author = name;
-                //articleList.append("In getAuthorFromURL, the name is: "+name+"\n\n\n\n");
+                articleList.append("In getAuthorFromURL, the author's name is: "+name+"\n\n\n\n");
             }
         }, new Response.ErrorListener() {
             @Override
