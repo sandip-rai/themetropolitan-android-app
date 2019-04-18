@@ -21,7 +21,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
@@ -53,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     String url;
     TextView articleList;
     Bitmap articleImg;
+    Bitmap testImg;
     NetworkImageView theImg;
     ArrayList<String> allArticles = new ArrayList<>();
     String tmpList;
@@ -459,8 +459,8 @@ public class MainActivity extends AppCompatActivity {
 
                     //mImageLoader = new processImage();
                     //rQueue.add(processImage.getInstance().getmRequestQueue());
-                    mImageLoader = processImage.getInstance().getmImageLoader();
-                    theImg.setDefaultImageResId(R.drawable.logo2);
+//                    mImageLoader = processImage.getInstance().getmImageLoader();
+//                    theImg.setDefaultImageResId(R.drawable.logo2);
                     //theImg.setErrorImageResId(720);
                     //theImg.setImageUrl(pic[0],mImageLoader);
 
@@ -486,14 +486,14 @@ public class MainActivity extends AppCompatActivity {
                     output += "~" + content + "~"+mainPicURL+"~"+pic[1];
                     //articleList.append(output+"\n");
 
-
-                    theArticles.add(output);
+                    String articles = output;
+                    //theArticles.add(output);
                     //articleList.append("This is an inner append\n"+theArticles.get(0)+"\n");
                     //allArticles.add(output);
 //                    if (allArticles.isEmpty()) {
 //                        articleList.append("This inner content is empty\n");
 //                    }
-                    printArticle(Integer.toString(id), theArticles);
+                    printArticle(Integer.toString(id), articles);
 
             }
         }, new com.android.volley.Response.ErrorListener() {
@@ -510,19 +510,19 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void printArticle(String id, ArrayList<String> mainContent){//, Bitmap pic
+    private void printArticle(String id, String mainContent){//, Bitmap pic
 //        String output = "Id: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
 //        output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt;
 //        output += "\n\nContent: " + content + "\n"+tisNull+"\n"+pic[0]+"\n\n\n";
-        String theContents[] = new String[11];
+        String theContents[] = mainContent.split("~");
 
         //grab the article with the given ID from the List of articles
-        for (String article: mainContent) {
-            theContents = article.split("~");
-            if (theContents[0] == id) {
-                continue;
-            }
-        }
+//        for (String article: mainContent) {
+//            theContents = article.split("~");
+//            if (theContents[0] == id) {
+//                continue;
+//            }
+//        }
 
 
         String toPrint = "Id: " + theContents[0] + " \nTitle: " + theContents[2] + " \n\n\nDate made: " + theContents[3] + " \nTime made: " + theContents[4];
@@ -617,7 +617,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Bitmap response) {
                         //Bitmap test = null;
-                        setArticleImg(response);
+                        //setArticleImg(response);
                         articleImg = response;
                         theImg.setImageBitmap(response);
                         //theImg.getDrawable();
