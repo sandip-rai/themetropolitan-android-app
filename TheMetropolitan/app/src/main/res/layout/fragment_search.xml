@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".SearchFragment">
+    tools:context=".UI.MainUI.SearchFragment">
 
     <!--Two material cards here; one for search input and another to display recent searches-->
     <com.google.android.material.card.MaterialCardView
@@ -116,59 +116,19 @@ to accommodate dynamic data-->
                 android:text="President Ginny Arthur"
                 android:textAppearance="?attr/textAppearanceBody2" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="Fall Fest 2018"
-                android:textAppearance="?attr/textAppearanceBody2" />
 
-            <TextView
+            <ImageView
+                android:id="@+id/imageView1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="Data Analytics Club"
-                android:textAppearance="?attr/textAppearanceBody2" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="Metrostate participation in CCDC competition"
-                android:textAppearance="?attr/textAppearanceBody2" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="Tech Tips"
-                android:textAppearance="?attr/textAppearanceBody2" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="Gordon Parks Gallery"
-                android:textAppearance="?attr/textAppearanceBody2" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="Student Leadership Development"
-                android:textAppearance="?attr/textAppearanceBody2" />
+                android:layout_height="wrap_content" />
 
 
         </LinearLayout>
 
 
     </com.google.android.material.card.MaterialCardView>
+
+
 
 
 </LinearLayout>

@@ -6,7 +6,22 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".NewsFragment">
+    tools:context=".UI.MainUI.NewsFragment">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabsCategory"
+        app:tabMode="scrollable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabBackground="?attr/colorAccent"
+        app:tabTextColor="?attr/colorPrimary"
+        app:tabSelectedTextColor="@color/colorPrimary"
+        app:tabIndicatorColor="@color/colorPrimary"/>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pagerNewsCategory"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <!--<androidx.viewpager.widget.ViewPager-->
         <!--android:id="@+id/viewPager"-->
@@ -14,7 +29,7 @@
         <!--android:layout_height="match_parent">-->
 
     <!--The tablayout is for the News Categories-->
-        <com.google.android.material.tabs.TabLayout
+  <!--      <com.google.android.material.tabs.TabLayout
             android:id="@+id/newsTab"
             app:tabMode="scrollable"
             android:layout_width="match_parent"
@@ -25,12 +40,12 @@
             app:tabIndicatorColor="@color/colorPrimary">
 
 
-    <!--</androidx.viewpager.widget.ViewPager>-->
+    &lt;!&ndash;</androidx.viewpager.widget.ViewPager>&ndash;&gt;
 
-        <!--These are the components of the news categories.
-        Ids will be added for them to be accessed-->
-            <!--All the text will be added to the string resource
-            instead of being hardcoded text here-->
+        &lt;!&ndash;These are the components of the news categories.
+        Ids will be added for them to be accessed&ndash;&gt;
+            &lt;!&ndash;All the text will be added to the string resource
+            instead of being hardcoded text here&ndash;&gt;
         <com.google.android.material.tabs.TabItem
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,231 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Tech" />
-    </com.google.android.material.tabs.TabLayout>
-
-
-    <!--<LinearLayout-->
-        <!--android:id="@+id/fragmentContainerInNews"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:orientation="vertical"/>-->
-
-    <!--Below are the three cardviews shown in the news section
-    Eventually all the cards are loaded dynamically with RecyclerView-->
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="340dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="@dimen/mtrl_card_spacing"
-        android:layout_marginTop="@dimen/mtrl_card_spacing"
-        android:layout_marginRight="@dimen/mtrl_card_spacing"
-        android:layout_marginBottom="@dimen/mtrl_card_spacing"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="2dp"
-        app:contentPadding="5dp"
-        app:contentPaddingTop="10dp">
-
-        <!--Contents inside the card are arranged using LinearLayout-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="120dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"
-                android:src="@drawable/logo2"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="2dp"
-                    android:text="Title"
-                    android:textAppearance="?attr/textAppearanceHeadline6" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="2dp"
-                    android:text="Secondary Title"
-                    android:textAppearance="?attr/textAppearanceBody2" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dip"
-                    android:layout_weight="0.8"
-                    android:gravity="center|right"
-                    android:orientation="horizontal">
-
-                    <!--Tint sets the color of icon. ?attr is being used so that
-                         the color changes in respect to the app's theme current primary color-->
-                    <ImageView
-                        android:id="@+id/likeImageView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="60dp"
-                        android:padding="5dp"
-                        android:src="@drawable/saved"
-                        android:tint="?attr/colorPrimary" />
-
-                    <ImageView
-                        android:id="@+id/shareImageView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="60dp"
-                        android:padding="5dp"
-                        android:src="@android:drawable/ic_menu_share" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="340dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="@dimen/mtrl_card_spacing"
-        android:layout_marginTop="@dimen/mtrl_card_spacing"
-        android:layout_marginRight="@dimen/mtrl_card_spacing"
-        android:layout_marginBottom="@dimen/mtrl_card_spacing"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="2dp"
-        app:contentPadding="5dp"
-        app:contentPaddingTop="10dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="120dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"
-                android:src="@drawable/logo2"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="2dp"
-                    android:text="Title"
-                    android:textAppearance="?attr/textAppearanceHeadline6" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="2dp"
-                    android:text="Secondary Title"
-                    android:textAppearance="?attr/textAppearanceBody2" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dip"
-                    android:layout_weight="0.8"
-                    android:gravity="center|right"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="60dp"
-                        android:padding="5dp"
-                        android:src="@drawable/saved"
-                        android:tint="?attr/colorPrimary"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="60dp"
-                        android:padding="5dp"
-                        android:src="@android:drawable/ic_menu_share" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="340dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="@dimen/mtrl_card_spacing"
-        android:layout_marginTop="@dimen/mtrl_card_spacing"
-        android:layout_marginRight="@dimen/mtrl_card_spacing"
-        android:layout_marginBottom="@dimen/mtrl_card_spacing"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="2dp"
-        app:contentPadding="5dp"
-        app:contentPaddingTop="10dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="120dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"
-                android:src="@drawable/logo2"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="2dp"
-                    android:text="Title"
-                    android:textAppearance="?attr/textAppearanceHeadline6" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="2dp"
-                    android:text="Secondary Title"
-                    android:textAppearance="?attr/textAppearanceBody2" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dip"
-                    android:layout_weight="0.8"
-                    android:gravity="center|right"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="60dp"
-                        android:padding="5dp"
-                        android:src="@drawable/saved"
-                        android:tint="?attr/colorPrimary"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="60dp"
-                        android:padding="5dp"
-                        android:src="@android:drawable/ic_menu_share" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.tabs.TabLayout>-->
 
 
 </LinearLayout>
