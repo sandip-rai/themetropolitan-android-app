@@ -21,6 +21,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
@@ -104,8 +105,12 @@ public class MainActivity extends AppCompatActivity {
         //getTextImageFromURL("afs");
         printArticle(getAuthorURL(), "testing~testificate~ererwerv~454343gg~placeholder~ghahrah~reaeharae~rheja5j~kaaykak~dummy data~ahreh~aehh6jh");
 
+        //articleList.append("author is not set\n");
+        //none of the getters working at all
+        //printArticle(tmpVar+"", "test~testing~tst~moar test~tests n stuff~moar tests and stuff~test~test~even more testing~testing initiative~aperture~science");
 
         PeriodicArticleCheck.enqueueWork(MainActivity.this,new Intent());
+
 
         //Get the toolbar and load it as the main toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -284,6 +289,38 @@ public class MainActivity extends AppCompatActivity {
         //get the current date
         final Date now = new Date();
         final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz"); //HH (0-23 hours), hh (normal hrs), a (AM/PM), z (timezone)
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getAuthorURL() {
+        return authorURL;
+    }
+
+    public void setAuthorURL(String authorURL) {
+        this.authorURL = authorURL;
+    }
+
+    public String getPicURL() {
+        return picURL;
+    }
+
+    public void setPicURL(String picURL) {
+        this.picURL = picURL;
+    }
+
+    public String getMainArticleContent() {
+        return mainArticleContent;
+    }
+
+    public void setMainArticleContent(String mainArticleContent) {
+        this.mainArticleContent = mainArticleContent;
+    }
+
+    private void jsonParse(int postID) {
+        final ArrayList<String> theArticles = new ArrayList<String>();
+        url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/"+postID;
 
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -494,6 +531,14 @@ public class MainActivity extends AppCompatActivity {
 //                        articleList.append("This inner content is empty\n");
 //                    }
                     printArticle(Integer.toString(id), articles);
+
+                    theArticles.add(output);
+                    //articleList.append("This is an inner append\n"+theArticles.get(0)+"\n");
+                    //allArticles.add(output);
+//                    if (allArticles.isEmpty()) {
+//                        articleList.append("This inner content is empty\n");
+//                    }
+                    printArticle(Integer.toString(id), theArticles);
 
             }
         }, new com.android.volley.Response.ErrorListener() {
