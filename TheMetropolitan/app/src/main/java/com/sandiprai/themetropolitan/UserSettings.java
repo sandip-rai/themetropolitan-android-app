@@ -22,6 +22,8 @@ public class UserSettings extends AppCompatActivity implements View.OnClickListe
 
     FirebaseAuth mAuth;
     EditText username;
+    TextView emailAddress;
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,9 @@ public class UserSettings extends AppCompatActivity implements View.OnClickListe
         String appName = "User Settings";
         toolbarTitle.setText(appName.toUpperCase());
          username = (EditText) findViewById(R.id.editTextDisplayName);
+         emailAddress = (TextView) findViewById(R.id.textEmailinSettings);
+         textView = (TextView) findViewById(R.id.textViewVerified);
+
 
         setUpUserSettings();
         loadUserInformation();
@@ -63,12 +68,34 @@ public class UserSettings extends AppCompatActivity implements View.OnClickListe
 
     private void loadUserInformation(){
 
-        FirebaseUser user = mAuth.getCurrentUser();
+        final FirebaseUser user = mAuth.getCurrentUser();
         if(user != null) {
-            if (user.getDisplayName() != null) {
+            if (user.getDisplayName() != null && user.getEmail() != null) {
                 username.setText(user.getDisplayName());
+                emailAddress.setText(user.getEmail());
             }
-            String email = user.getEmail();
+           // String email = user.getEmail();
+
+        /*    if(user.getEmail() != null){
+                emailAddress.setText(user.getEmail());
+            } */
+
+            if(user.isEmailVerified()){
+                textView.setText("Email Verified");
+            } else {
+                textView.setText("Email Not Verified (Click Text to Verify)");
+                textView.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view){
+                        user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(UserSettings.this, "Verification Email Sent", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+            }
         }
 
     }
@@ -133,6 +160,11 @@ public class UserSettings extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.buttonSignOut:
+
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                startActivity(new Intent(this, MainActivity.class));
+
                 Toast.makeText(getApplicationContext(), "Sign Out button clicked!",
                         Toast.LENGTH_SHORT).show();
                 break;
