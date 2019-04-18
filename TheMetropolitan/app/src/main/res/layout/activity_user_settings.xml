@@ -54,48 +54,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Enter Display Name" />
 
-               <!-- <TextView
-                    android:id="@+id/textNameinSettings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:textSize="20sp" />
-                <TextView
-                    android:id="@+id/textViewVerified"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Verified"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                    /> -->
-              <!--  <com.google.android.material.textfield.TextInputLayout
 
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="Name">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editTextDisplayName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </com.google.android.material.textfield.TextInputLayout> -->
-
-             <!--   <EditText
-                    android:id = "@+id/editTextDisplayName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint = "Enter Display Name"
-                    />
-
-                <TextView
-                    android:id="@+id/textViewVerified"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text = "Verified"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                    /> -->
 
             </LinearLayout>
 
@@ -125,6 +84,23 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:text="Verified"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                    android:id="@+id/textViewVerified"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+            </LinearLayout>
+
+
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -147,6 +123,8 @@
 
 
     </com.google.android.material.card.MaterialCardView>
+
+
 
 
 
