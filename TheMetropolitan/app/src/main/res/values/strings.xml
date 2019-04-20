@@ -20,5 +20,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment"></string>
+    <string name="title_activity_sign_up">SignUpActivity</string>
 
 </resources>

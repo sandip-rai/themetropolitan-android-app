@@ -27,7 +27,8 @@
             android:name=".UI.UserSettings.SignInActivity"
             android:parentActivityName=".UI.MainUI.MainActivity" />
         <activity android:name=".UI.UserSettings.UserSettingsActivity" />
-        <activity android:name=".TestWordPress"></activity>
+        <activity android:name=".TestWordPress" />
+        <activity android:name=".UI.UserSettings.SignUpActivity"></activity>
     </application>
 
 </manifest>

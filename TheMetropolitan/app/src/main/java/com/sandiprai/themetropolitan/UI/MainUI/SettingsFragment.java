@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.sandiprai.themetropolitan.R;
 import com.sandiprai.themetropolitan.UI.UserSettings.SignInActivity;
+import com.sandiprai.themetropolitan.UI.UserSettings.SignUpActivity;
+import com.sandiprai.themetropolitan.UI.UserSettings.UserSettingsActivity;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener,
         CompoundButton.OnCheckedChangeListener {
@@ -72,10 +74,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
             case R.id.buttonSignUp:
                 CharSequence text1 = "Sign Up button clicked!";
                 showToast(text1);
+                startActivity(new Intent(view.getContext(), SignUpActivity.class));
 
                 //Snackbar.make(getView().findViewById(R.id.buttonSignUp), text1, Snackbar.LENGTH_SHORT).show();
                 break;
-                //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
+            case R.id.accountView:
+                startActivity(new Intent(view.getContext(), UserSettingsActivity.class));
+                break;
 
             case R.id.fontSizeView:
                 CharSequence text2 = "Font size clicked!";

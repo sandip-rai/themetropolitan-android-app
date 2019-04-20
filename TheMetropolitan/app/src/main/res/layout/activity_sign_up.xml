@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.sandiprai.themetropolitan.UI.UserSettings.SignInActivity">
+    tools:context="com.sandiprai.themetropolitan.UI.UserSettings.SignUpActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -14,27 +14,25 @@
         <!--The toolbar has been created on a separate xml file called toolbar_main and is
         included here. Remember the id.-->
         <include
-            layout="@layout/toolbar_main"
-            android:id="@+id/toolbarInSignIn" />
+            android:id="@+id/toolbarInSignUp"
+            layout="@layout/toolbar_main" />
 
     </com.google.android.material.appbar.AppBarLayout>
-
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="340dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="2dp"
-        app:contentPadding="5dp"
-        app:contentPaddingTop="30dp"
-        android:paddingBottom="30dp"
         android:layout_marginLeft="@dimen/mtrl_card_spacing"
         android:layout_marginTop="11dp"
         android:layout_marginRight="@dimen/mtrl_card_spacing"
         android:layout_marginBottom="11dp"
+        android:paddingBottom="30dp"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="2dp"
+        app:contentPadding="5dp"
+        app:contentPaddingTop="30dp">
 
-        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,66 +40,68 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="Email">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextInputSignInEmail"
+                    android:id="@+id/editTextEmailSignUp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
 
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="Password">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextPasswordSignIn"
+                    android:id="@+id/editTextPasswordSignUp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonCancelSignIn"
+                    android:id="@+id/buttonCancelSignUp"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="12dp"
                     android:layout_marginRight="12dp"
-                    android:layout_toStartOf="@id/buttonSignInConfirm"
-                    android:layout_toLeftOf="@id/buttonSignInConfirm"
+                    android:layout_toStartOf="@id/buttonSignIn"
+                    android:layout_toLeftOf="@id/buttonSignIn"
                     android:insetLeft="110dp"
                     android:insetRight="10dp"
                     android:text="Cancel" />
 
                 <com.google.android.material.button.MaterialButton
 
-                    android:id="@+id/buttonSignInConfirm"
+                    android:id="@+id/buttonSignUpConfirm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd= "true"
-                    android:layout_alignParentRight= "true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:insetRight="20dp"
-                    android:text="Sign In" />
-
+                    android:text="Sign Up" />
             </LinearLayout>
 
         </LinearLayout>
 
 
     </com.google.android.material.card.MaterialCardView>
-
 </LinearLayout>
+
+
