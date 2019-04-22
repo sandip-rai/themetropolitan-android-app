@@ -8,16 +8,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputEditText;
-
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 public class SearchFragment extends Fragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
 
     private View view;
     private EditText textEdit;
-    public Notifications notify;
+    public NotificationsHelper notify;
 
 
     @Override

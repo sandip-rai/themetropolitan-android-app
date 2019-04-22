@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.util.Log;
 
 public class BootReceiver extends BroadcastReceiver {
     /**
@@ -47,8 +48,10 @@ public class BootReceiver extends BroadcastReceiver {
     @Override //Context context, Intent intent
     public void onReceive(Context context, Intent intent) {
         //on boot start the PeriodicArticleCheck service
+        final String TAG = "onDeviceBoot";
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-            PeriodicArticleCheck.enqueueWork(context,new Intent());
+            Log.d(TAG, "THE DEVICE JUST BOOTED!!!    - - - - - - - - - - - - - - - - - - - - -");
+            //PeriodicArticleCheck.enqueueWork(context,new Intent());
         }
     }
 }

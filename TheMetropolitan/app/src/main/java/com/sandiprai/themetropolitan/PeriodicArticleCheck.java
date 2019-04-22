@@ -11,6 +11,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
+import androidx.core.app.NotificationCompat;
 
 
 /**
@@ -20,11 +21,14 @@ import androidx.core.app.JobIntentService;
  * TODO: Customize class - update intent actions and extra parameters.
  */
 public class PeriodicArticleCheck extends JobIntentService {
+    //*
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     private static final String TAG = "PeriodicArticleCheck";
     public static final String ACTION_FOO = "com.sandiprai.themetropolitan.action.FOO";
     public static final String ACTION_BAZ = "com.sandiprai.themetropolitan.action.BAZ";
+    public static final int NOTIFICATION_ID = 5567;
+    NotificationsHelper helper;
 
     // TODO: Rename parameters
     public static final int JOB_ID = 1;
@@ -49,12 +53,16 @@ public class PeriodicArticleCheck extends JobIntentService {
     @Override //equivalent to onHandleIntent
     protected void onHandleWork(@NonNull Intent intent) {
         Log.d(TAG,"onHandleWork"); //log the string message
-
+        helper = new NotificationsHelper(this);
         String input = "Will be checking for new articles here!";
+        String textTitle = "A service title";
+        String textContent = "Text content from the service";
+        NotificationCompat.Builder builder = helper.getChannelNotification(textTitle, textContent);
 
         for (int i = 0; i < 10; i++) {
-            Log.d(TAG, input + " - " + i);
             SystemClock.sleep(60000); //in milliseconds
+            Log.d(TAG, input + " - " + i);
+            helper.getManager().notify(NOTIFICATION_ID, builder.build());
         }
         //intent.setClass(getApplicationContext(),MainActivity.class);
         //Toast.makeText(context,"Will be checking for new article", Toast.LENGTH_LONG).show();
@@ -81,6 +89,26 @@ public class PeriodicArticleCheck extends JobIntentService {
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(builder.build());
     }
+//*/
+    /*
+    public static final String CHANNEL_ID = "new_articles";
+    public static final String EXTRA_MESSAGE = "message";
+    public static final int NOTIFICATION_ID = 5567;
+    NotificationsHelper helper;
+
+    public PeriodicArticleCheck() {
+        super();
+    }
+
+    @Override
+    protected void onHandleWork(Intent intent) {
+        helper = new NotificationsHelper(this);
+        String textTitle = "A service title";
+        String textContent = "Text content from the service";
+        NotificationCompat.Builder builder = helper.getChannelNotification(textTitle, textContent);
+        helper.getManager().notify(NOTIFICATION_ID, builder.build());
+    }
+//*/
 
 
 }

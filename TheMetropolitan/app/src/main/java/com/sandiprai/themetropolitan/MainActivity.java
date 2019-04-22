@@ -1,19 +1,14 @@
 package com.sandiprai.themetropolitan;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,23 +51,22 @@ public class MainActivity extends AppCompatActivity {
     Bitmap testImg;
     NetworkImageView theImg;
     ArrayList<String> allArticles = new ArrayList<>();
-    String tmpList;
+    //String articleContents = "[contents here]\n";
     ProgressDialog progressDialog;
     //private ListView postList;
     private RequestQueue rQueue;
     public SharedPreferences sharedPreferences;
     int postID = 1489;
-    String postExerpt[];
-    String postTitle[];
-    String postContent[];
-    //Date postDate[];
     String author = null;
     String authorURL = null;
     String picURL = "";
     String mainPicURL = "";
     String titlePic = null;
     String mainArticleContent = null;
-
+    StringRequest request;
+    public static final int NOTIFICATION_ID = 5453;
+    public static final String CHANNEL_ID = "new_articles";
+    NotificationsHelper helper;
 
 
     @Override
@@ -100,19 +94,16 @@ public class MainActivity extends AppCompatActivity {
         //progressDialog.show();
 
         jsonParse(postID);
-        //allArticles.put(1489,tmpMap.get(1489));
-        //doAuthorAndPicStuff(getPicURL(),getAuthorURL());
+        //articleList.append(articleContents);
         //getAuthorFromURL("sadf");
         //getTextImageFromURL("afs");
         //printArticle(getAuthorURL(), "testing~testificate~ererwerv~454343gg~placeholder~ghahrah~reaeharae~rheja5j~kaaykak~dummy data~ahreh~aehh6jh");
 
-        //articleList.append("author is not set\n");
         //none of the getters working at all
         //printArticle(tmpVar+"", "test~testing~tst~moar test~tests n stuff~moar tests and stuff~test~test~even more testing~testing initiative~aperture~science");
         //Notifications newArticleNotify = new Notifications();
 
         PeriodicArticleCheck.enqueueWork(MainActivity.this,new Intent()); //start the background service to periodically check for new articles
-
 
         //newArticleNotify.makeNotification();
 
@@ -125,136 +116,67 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         String appName = "The Metropolitan";
         toolbarTitle.setText(appName.toUpperCase());
-        createNotificationChannel();
-//        for (int i = 0; i < 4; i++) {
-            sendNotification(findViewById(R.id.notify)); //send a notification from the main activity method
-//            SystemClock.sleep(10000);
-//        }
-        //get new instance of notifications class
-        Notifications notify = new Notifications();
-        //notify.makeNotification(findViewById(R.id.notify));
 
+        //createNotificationChannel();
+        //sendNotification(findViewById(R.id.notify)); //send a notification from the main activity method
 
-        //Test for article page button
-//        MaterialButton articleButton = findViewById(R.id.goto_article_page_button);
-//        articleButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity.this,ArticlePage.class);
-//                MainActivity.this.startActivity(intent);
-//            }
-//        });
-
-//        These code are being used as test for changing app's theme and loading fragment purposes.
-
-        //Switch switchCompat = findViewById(R.id.themeSwitch);
-
-//        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
-//            switchCompat.setChecked(true);
-//        }
-
-
-/*        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    InitApplication.getInstance().setIsNightModeEnabled(true);
-                   Intent intent = getIntent();
-                    //intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                   finish();
- startActivity(intent);
-                } else {
-                   InitApplication.getInstance().setIsNightModeEnabled(false);
-                   Intent intent = getIntent();
-                   //intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                   finish();
-                   startActivity(intent);
-                }
-
-
-            }
-        });*/
-
-//
-
-
-
-//        TabLayout tabLayout = findViewById(R.id.newsTab);
-//        LinearLayout container = findViewById(R.id.fragmentContainerInNews);
-//
-//        tabLayout.addTab(tabLayout.newTab().setText("s"));
-
-
-//        ViewPager viewPager = findViewById(R.id.viewPager);
-//        setupViewPager(viewPager);
-
-//        TabLayout tabLayout = findViewById(R.id.newsTab);
-//        tabLayout.setupWithViewPager(viewPager);
-
-
-//        Fragment fragment = new HelloFragment();
-//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//        fragmentTransaction.add(R.id.frame_content, fragment);
-//        fragmentTransaction.commit();
-
-//        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,
-//                R.string.navigation_drawer_open,R.string.navigation_drawer_close);
-//        drawerLayout.addDrawerListener(toggle);
-//        toggle.syncState();
-
-
-        //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        //navigationView.setNavigationItemSelectedListener(this);
+        helper = new NotificationsHelper(this);
+        String textTitle = "Some title text";
+        String textContent = "The content text";
+        NotificationCompat.Builder builder = helper.getChannelNotification(textTitle,textContent);
+        //helper.getManager().notify(NOTIFICATION_ID,builder.build());
 
         //Call this method to setup the bottom navbar
         setupBottomNavigationView();
 
     }
 
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(Notifications.CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    public void sendNotification(View view) {
-        Intent actionIntent = new Intent(this, MainActivity.class);
-        PendingIntent actionPendingIntent = PendingIntent.getActivity(this,0,actionIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this, Notifications.CHANNEL_ID)
-                        .setSmallIcon(R.drawable.logo2)
-                        .setContentTitle("When app opens")
-                        .setContentText("This will check for new articles.")
-                        .setAutoCancel(true);
 
 
-        mBuilder.setContentIntent(actionPendingIntent);
-        // Gets an instance of the NotificationManager service//
 
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//    private void createNotificationChannel() {
+//        // Create the NotificationChannel, but only on API 26+ because
+//        // the NotificationChannel class is new and not in the support library
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            CharSequence name = getString(R.string.channel_name);
+//            String description = getString(R.string.channel_description);
+//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+//            NotificationChannel channel = new NotificationChannel(NotificationsHelper.CHANNEL_ID, name, importance);
+//            channel.setDescription(description);
+//            // Register the channel with the system; you can't change the importance
+//            // or other notification behaviors after this
+//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+//            notificationManager.createNotificationChannel(channel);
+//        }
+//    }
 
-        // When you issue multiple notifications about the same type of event,
-        // it’s best practice for your app to try to update an existing notification
-        // with this new information, rather than immediately creating a new notification.
-        // If you want to update this notification at a later date, you need to assign it an ID.
-        // You can then use this ID whenever you issue a subsequent notification.
-        // If the previous notification is still visible, the system will update this existing notification,
-        // rather than create a new one. In this example, the notification’s ID is 001//
-
-        mNotificationManager.notify(001, mBuilder.build());
-    }
+//    public void sendNotification(View view) {
+//        Intent actionIntent = new Intent(this, MainActivity.class);
+//        PendingIntent actionPendingIntent = PendingIntent.getActivity(this,0,actionIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+//        NotificationCompat.Builder mBuilder =
+//                new NotificationCompat.Builder(this, Notifications.CHANNEL_ID)
+//                        .setSmallIcon(R.drawable.logo2)
+//                        .setContentTitle("When app opens")
+//                        .setContentText("This will check for new articles.")
+//                        .setAutoCancel(true);
+//
+//
+//        mBuilder.setContentIntent(actionPendingIntent);
+//        // Gets an instance of the NotificationManager service//
+//
+//        NotificationManager mNotificationManager =
+//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//        // When you issue multiple notifications about the same type of event,
+//        // it’s best practice for your app to try to update an existing notification
+//        // with this new information, rather than immediately creating a new notification.
+//        // If you want to update this notification at a later date, you need to assign it an ID.
+//        // You can then use this ID whenever you issue a subsequent notification.
+//        // If the previous notification is still visible, the system will update this existing notification,
+//        // rather than create a new one. In this example, the notification’s ID is 001//
+//
+//        mNotificationManager.notify(001, mBuilder.build());
+//    }
 
 
     public void setTestImg(Bitmap testImg) {
@@ -302,8 +224,9 @@ public class MainActivity extends AppCompatActivity {
         //final ArrayList<String> theArticles = new ArrayList<String>();
         String theArticles;
         url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/"+postID;
+        //String articleContents;
 
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+        request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if(response.charAt(0) == '['){
@@ -541,7 +464,7 @@ public class MainActivity extends AppCompatActivity {
 //        output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt;
 //        output += "\n\nContent: " + content + "\n"+tisNull+"\n"+pic[0]+"\n\n\n";
         String theContents[] = mainContent.split("~");
-
+        //articleContents = mainContent;
         //grab the article with the given ID from the List of articles
 //        for (String article: mainContent) {
 //            theContents = article.split("~");
