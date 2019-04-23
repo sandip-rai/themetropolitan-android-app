@@ -143,6 +143,7 @@ public class TestWordPress extends AppCompatActivity {
                 }
 
                 int id = 0;
+                String articleLink = "";
                 String titleFull;
                 String title = "";
                 String links;
@@ -175,6 +176,7 @@ public class TestWordPress extends AppCompatActivity {
                     //get the first article's ID
                     id = Integer.parseInt(mainObject.getString("id"));
 
+                    articleLink = mainObject.getString("link");
 
                     //get the title
                     titleFull = mainObject.getString("title");
@@ -332,19 +334,17 @@ public class TestWordPress extends AppCompatActivity {
 
                 String output = id + "~" + authorName + "~" + title + "~" + date + "~" + time;
                 output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
-                output += "~" + content + "~"+mainPicURL+"~"+pic[1];
+                output += "~" + content;
+                String urls = mainPicURL+"~"+pic[1] + "~" + articleLink;
                 //articleList.append(output+"\n");
 
 
                 //allArticles.set(id, output);
                 //theArticles[0] = output;
                 allArticles.add(output);
-                //articleList.append("This is an inner append\n");
-                //allArticles.add(output);
-//                    if (allArticles.isEmpty()) {
-//                        articleList.append("This inner content is empty\n");
-//                    }
-                printArticle(Integer.toString(id), allArticles);
+
+                //this will be a database insert/update
+                printArticle(Integer.toString(id), allArticles, urls);
 
             }
         }, new com.android.volley.Response.ErrorListener() {
@@ -359,16 +359,18 @@ public class TestWordPress extends AppCompatActivity {
         return theArticles[0];
     }
 
-    private void printArticle(String id, ArrayList<String> mainContent){//, Bitmap pic
+    private void printArticle(String id, ArrayList<String> mainContent, String urls){//, Bitmap pic
 //        String output = "Id: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
 //        output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt;
 //        output += "\n\nContent: " + content + "\n"+tisNull+"\n"+pic[0]+"\n\n\n";
 
-        String theContents[] = new String[11];
+        String theContents[] = new String[12];
+        String theLinks[] = new String[3];
 
         //grab the article with the given ID from the List of articles
         for (String article: mainContent) {
             theContents = article.split("~");
+            theLinks = urls.split("~");
             if (theContents[0] == id) {
                 continue;
             }
@@ -390,7 +392,7 @@ public class TestWordPress extends AppCompatActivity {
         toPrint += "\nRetrieved: " + theContents[5] + "\n\n\n"+"Excerpt: " + theContents[7]+"\n\nAuthor: "+theContents[1];
         toPrint += "                                                Category: " + theContents[6] + "\n\n";
         toPrint += "\n\nContent: " + theContents[8] +"\n\n";
-        toPrint += "Article Image URL: "+theContents[9]+"\nIn-text pic: "+theContents[10]+"\n\n";
+        toPrint += "Article Image URL: "+theLinks[0]+"\nIn-text pic: "+theContents[1]+"\nLink to article: "+theContents[2]+"\n\n";
         //String toPrint = "test string";
         articleTitle.append(theContents[2]);
         articleList.append(toPrint);
