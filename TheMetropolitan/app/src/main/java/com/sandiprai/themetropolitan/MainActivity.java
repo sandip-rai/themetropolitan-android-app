@@ -41,7 +41,6 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public class MainActivity extends AppCompatActivity {
 
     //String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts?fields=id,excerpt,title,content,date";
@@ -103,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
         //printArticle(tmpVar+"", "test~testing~tst~moar test~tests n stuff~moar tests and stuff~test~test~even more testing~testing initiative~aperture~science");
         //Notifications newArticleNotify = new Notifications();
 
-        PeriodicArticleCheck.enqueueWork(MainActivity.this,new Intent()); //start the background service to periodically check for new articles
+        //start the background service to periodically check for new articles, prints after every one minute currently
+        PeriodicArticleCheck.enqueueWork(MainActivity.this,new Intent());
 
         //newArticleNotify.makeNotification();
 
@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         //createNotificationChannel();
         //sendNotification(findViewById(R.id.notify)); //send a notification from the main activity method
 
+        //create a notification from the main activity
         helper = new NotificationsHelper(this);
         String textTitle = "Some title text";
         String textContent = "The content text";
@@ -422,6 +423,7 @@ public class MainActivity extends AppCompatActivity {
 //                    output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
 //                    output += "~" + content + "~"+getAuthor()+"~"+pic[0];//output += "~" + content + "~"+tisNull+"~"+pic[0];
 
+                    //create a string output for all the information delimited by tilde
                     String output = id + "~" + authorName + "~" + title + "~" + date + "~" + time;
                     output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
                     output += "~" + content + "~"+mainPicURL+"~"+pic[1];
@@ -434,6 +436,7 @@ public class MainActivity extends AppCompatActivity {
 //                    if (allArticles.isEmpty()) {
 //                        articleList.append("This inner content is empty\n");
 //                    }
+                    //end of article main get print all pieces from a delimited string
                     printArticle(Integer.toString(id), articles);
 
                     //theArticles.add(output);
@@ -458,7 +461,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    //break the variables in the string out and display them
     private void printArticle(String id, String mainContent) {//, Bitmap pic
 //        String output = "Id: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
 //        output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt;

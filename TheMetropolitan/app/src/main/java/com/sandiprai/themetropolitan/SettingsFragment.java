@@ -1,8 +1,6 @@
 package com.sandiprai.themetropolitan;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +10,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener,
         CompoundButton.OnCheckedChangeListener {
@@ -58,6 +57,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
     //Method that listens for button clicks
     @Override
     public void onClick(View view) {
+        Fragment fragment;
         switch (view.getId()){
             case R.id.buttonSignIn:
                 CharSequence text = "Sign In button clicked!";
@@ -74,8 +74,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
                 //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
             case R.id.fontSizeView:
-                CharSequence text2 = "Font size clicked!";
-                showToast(text2);
+                fragment = new NewsFragment();
+                loadFragment(fragment);
+//                CharSequence text2 = "Font size clicked!";
+//                showToast(text2);
                 break;
 
             case R.id.reportBugsView:
@@ -90,6 +92,17 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
         }
 
     }
+
+
+    /*This method loads a passed fragment to the layout frame_saved in the activity_main xml
+     * Will be changed eventually to be more dynamic */
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        //fragmentTransaction.replace(R.id.frame_saved, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
 
     //Method that listens for switches clicks
     @Override
