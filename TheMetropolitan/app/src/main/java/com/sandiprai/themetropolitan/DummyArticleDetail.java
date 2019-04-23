@@ -1,9 +1,6 @@
 package com.sandiprai.themetropolitan;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,10 +8,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
 public class DummyArticleDetail extends AppCompatActivity {
 
     public static final String EXTRA_ARTICLE_ID ="articleId";
     private String articleTitle;
+    private String articleContent;
+    String url = "www.example.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +33,7 @@ public class DummyArticleDetail extends AppCompatActivity {
 
         int articleId = (int) getIntent().getExtras().get(EXTRA_ARTICLE_ID);
         articleTitle = DummyArticle.articles[articleId].getArticleTitle();
-        String articleContent = DummyArticle.articles[articleId].getArticleContent();
+        articleContent = DummyArticle.articles[articleId].getArticleContent();
         int articleImage = DummyArticle.articles[articleId].getImageId();
 
         TextView titleView = findViewById(R.id.article_title);
@@ -52,6 +55,11 @@ public class DummyArticleDetail extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent myIntent = new Intent(Intent.ACTION_SEND);
+        myIntent.setType("text/plain");
+        String webAddress = url;
+        String shareBody = articleContent;
+        myIntent.putExtra(Intent.EXTRA_TEXT,webAddress);
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.like_article:
@@ -63,8 +71,9 @@ public class DummyArticleDetail extends AppCompatActivity {
                 showToast(text2);
                 return true;
             case R.id.share_article:
+                startActivity(Intent.createChooser(myIntent,"Share to"));
                 CharSequence text3 = articleTitle + " shared!";
-                showToast(text3);
+                //showToast(text3);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

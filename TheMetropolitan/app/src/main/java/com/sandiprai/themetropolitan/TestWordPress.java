@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 public class TestWordPress extends AppCompatActivity {
     //String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts?fields=id,excerpt,title,content,date";
     String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/1489";
+    TextView articleTitle;
     TextView articleList;
     Bitmap articleImg;
     NetworkImageView theImg;
@@ -62,7 +63,8 @@ public class TestWordPress extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_word_press);
 
-        articleList = findViewById(R.id.textViewWordPressTitle);
+        articleTitle = findViewById(R.id.textViewWordPressTitle);
+        articleList = findViewById(R.id.textViewWordPressContent);
         //theImg = (NetworkImageView)findViewById(R.id.imageView);
         rQueue = Volley.newRequestQueue(this);
         //rQueue.start();
@@ -384,12 +386,13 @@ public class TestWordPress extends AppCompatActivity {
 //            }
 //        }
 
-        String toPrint = "Id: " + theContents[0] + " \nTitle: " + theContents[2] + " \n\nDate made: " + theContents[3] + " \nTime made: " + theContents[4];
+        String toPrint = "Id: " + theContents[0] + " \n\nDate made: " + theContents[3] + " \nTime made: " + theContents[4];
         toPrint += "\nRetrieved: " + theContents[5] + "\n\n\n"+"Excerpt: " + theContents[7]+"\n\nAuthor: "+theContents[1];
         toPrint += "                                                Category: " + theContents[6] + "\n\n";
         toPrint += "\n\nContent: " + theContents[8] +"\n\n";
         toPrint += "Article Image URL: "+theContents[9]+"\nIn-text pic: "+theContents[10]+"\n\n";
         //String toPrint = "test string";
+        articleTitle.append(theContents[2]);
         articleList.append(toPrint);
     }
 

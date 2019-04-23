@@ -2,8 +2,6 @@ package com.sandiprai.themetropolitan.UI.MainUI;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +10,10 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.sandiprai.themetropolitan.R;
 import com.sandiprai.themetropolitan.UI.UserSettings.SignInActivity;
@@ -22,6 +24,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
         CompoundButton.OnCheckedChangeListener {
 
     private View view;
+    RecyclerView savedArticlesRecycler;
+    LinearLayoutManager layoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,6 +55,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
         TextView fontSizeOption = view.findViewById(R.id.fontSizeView);
         TextView reportBugsOption = view.findViewById(R.id.reportBugsView);
         TextView aboutOption = view.findViewById(R.id.aboutView);
+        this.savedArticlesRecycler = (RecyclerView) inflater.inflate(R.layout.fragment_about,
+                container, false);
+
         fontSizeOption.setOnClickListener(this);
         reportBugsOption.setOnClickListener(this);
         aboutOption.setOnClickListener(this);
@@ -94,8 +101,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
                 break;
 
             case R.id.aboutView:
-                CharSequence text4 = "About clicked!";
-                showToast(text4);
+                //Intent intentAbout = new Intent(getContext(), SignInActivity.class);
+                //startActivity(intentAbout);
+                this.layoutManager = new LinearLayoutManager(getActivity());
+                this.savedArticlesRecycler.setLayoutManager(layoutManager);
+                //CharSequence text4 = "About clicked!";
+                //showToast(text4);
                 break;
         }
 
