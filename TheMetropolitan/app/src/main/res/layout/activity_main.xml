@@ -8,6 +8,8 @@
     android:layout_height="match_parent"
     tools:context=".UI.MainUI.MainActivity">
 
+
+
     <!--Inside the FrameLayout, everything gets arranged in a vertical LinearLayout-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,16 +30,35 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <!--This frame is where all the components get loaded when various pages are browsed
-        including News, Search, Saved, and Settings. All of those components are created as
-        fragments for modular purpose. Fragments are separate layout/xml files.
-        Remember the id of this frame.-->
+
+        <!-- SwipeRefreshLayout must be inside some frame layout or the app crashes on open -->
         <FrameLayout
-            android:id="@+id/frame_saved"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
+
+            <!-- the pull down to refresh tag -->
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swiperefresh_items"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!--This frame is where all the components get loaded when various pages are browsed
+                   including News, Search, Saved, and Settings. All of those components are created as
+                   fragments for modular purpose. Fragments are separate layout/xml files.
+                   Remember the id of this frame.-->
+                <FrameLayout
+                    android:id="@+id/frame_saved"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </FrameLayout>
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </FrameLayout>
+
 
     </LinearLayout>
+
+
 
     <!--<com.google.android.material.button.MaterialButton-->
         <!--android:id="@+id/goto_article_page_button"-->
