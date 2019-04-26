@@ -47,11 +47,13 @@ public class BootReceiver extends BroadcastReceiver {
      */
     @Override //Context context, Intent intent
     public void onReceive(Context context, Intent intent) {
-        //on boot start the PeriodicArticleCheck service
         final String TAG = "onDeviceBoot";
+        //Log.d(TAG, "onReceive of the BootReceiver.java class - - - - - - - - - - - -  - - -------------------    @@@    ---------------------");
+
+        //on boot start the PeriodicArticleCheck service
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-            Log.d(TAG, "THE DEVICE JUST BOOTED!!!    - - - - - - - - - - - - - - - - - - - - -");
-            //PeriodicArticleCheck.enqueueWork(context,new Intent());
+            Log.d(TAG, "onReceive of the BootReceiver.java class - scheduling The Metropolitan new article check service");
+            PeriodicArticleCheck.enqueueWork(context,new Intent());
         }
     }
 }

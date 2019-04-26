@@ -13,6 +13,7 @@ import java.util.Random;
 
 import androidx.annotation.Nullable;
 
+//depreciated should use PeriodicCheckArticles instead
 public class PingCheckArticles_service extends Service {
 
     Random rand = new Random();
