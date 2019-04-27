@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 
 public class TestWordPress extends AppCompatActivity {
     //String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts?fields=id,excerpt,title,content,date";
-    String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/1489";
+    String url;
     TextView articleTitle;
     TextView articleList;
     Bitmap articleImg;
@@ -43,7 +43,7 @@ public class TestWordPress extends AppCompatActivity {
     //private ListView postList;
     private RequestQueue rQueue;
     private ImageLoader mImageLoader;
-    int postID;
+    int postID = 1489;
     String postExerpt[];
     String postTitle[];
     String postContent;
@@ -73,7 +73,7 @@ public class TestWordPress extends AppCompatActivity {
         // progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         //progressDialog.show();
         articleList.clearComposingText();
-        jsonParse();
+        jsonParse(postID);
         //String itter = tmpList.iterator().toString();
         //allArticles.set(Integer.parseInt(itter),tmpList.get(Integer.parseInt(itter)));
         //getAuthorFromURL("http://themetropolitan.metrostate.edu/wp-json/wp/v2/users/22");
@@ -132,8 +132,9 @@ public class TestWordPress extends AppCompatActivity {
 
 
 
-    private String jsonParse() {
+    private String jsonParse(int postID) {
         final String[] theArticles = new String[1];
+        url = "https://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/"+postID;
 
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -142,6 +143,8 @@ public class TestWordPress extends AppCompatActivity {
                     response = response.substring(1,response.length()-1);
                 }
 
+
+                JSONObject mainObject;
                 int id = 0;
                 String articleLink = "";
                 String titleFull;
@@ -172,7 +175,7 @@ public class TestWordPress extends AppCompatActivity {
                 //articleList.setText(response);
                 try {
                     //turning the full string response from the url get into a JSON object
-                    JSONObject mainObject = new JSONObject(response);
+                    mainObject = new JSONObject(response);
                     //get the first article's ID
                     id = Integer.parseInt(mainObject.getString("id"));
 
@@ -347,7 +350,7 @@ public class TestWordPress extends AppCompatActivity {
                 printArticle(Integer.toString(id), allArticles, urls);
 
             }
-        }, new com.android.volley.Response.ErrorListener() {
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getApplicationContext(), "URL GET error occurred", Toast.LENGTH_LONG).show();
