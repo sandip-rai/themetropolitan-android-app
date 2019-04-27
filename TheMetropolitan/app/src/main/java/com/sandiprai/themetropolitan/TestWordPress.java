@@ -143,10 +143,9 @@ public class TestWordPress extends AppCompatActivity {
                     response = response.substring(1,response.length()-1);
                 }
 
-
+                //variable declarations
                 JSONObject mainObject;
                 int id = 0;
-                String articleLink = "";
                 String titleFull;
                 String title = "";
                 String links;
@@ -154,8 +153,9 @@ public class TestWordPress extends AppCompatActivity {
                 String authorName = null;
                 String dateMain;
                 SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz"); //HH (0-23 hours), hh (normal hrs), a (AM/PM), z (timezone);
-                String date = "";
-                String time = "";
+                String date;
+                String time;
+                String datetimeP = "";
                 //get the current date
                 Date now = new Date();
                 String cat = "";
@@ -166,7 +166,7 @@ public class TestWordPress extends AppCompatActivity {
                 String content = "";
                 Pattern pattern;
                 Matcher matcher;
-                String tisNull;
+                String tmpMainPic[] = new String[2];
                 String txt;
                 String link;
                 String subLink;
@@ -178,8 +178,6 @@ public class TestWordPress extends AppCompatActivity {
                     mainObject = new JSONObject(response);
                     //get the first article's ID
                     id = Integer.parseInt(mainObject.getString("id"));
-
-                    articleLink = mainObject.getString("link");
 
                     //get the title
                     titleFull = mainObject.getString("title");
@@ -205,6 +203,7 @@ public class TestWordPress extends AppCompatActivity {
                     String dateSub [] = dateMain.split("T");
                     date = dateSub[0];
                     time = dateSub[1];
+                    datetimeP = date + " " + time;
 
 
                     //get the category
@@ -228,6 +227,8 @@ public class TestWordPress extends AppCompatActivity {
                         case "[159]":
                             cat = "Jobs";
                             break;
+                        case "[1]":
+                            cat = "Uncategorized";
                         default:
                             cat = "unknown";
                     }
@@ -255,7 +256,8 @@ public class TestWordPress extends AppCompatActivity {
                     JSONObject link2 = new JSONObject(subLink);
                     picURL = link2.getString("href");
                     //getImageURL(mainPicURL);//the current implementation without a class does not allow the variable to be set in the scope of the method called here
-                    mainPicURL = picURL;
+                    tmpMainPic = picURL.split(":");
+                    mainPicURL = "https:" + tmpMainPic[1];
 
                 } catch (JSONException e){
                     articleList.append("Error, article URL GET ran into an error.");
@@ -280,15 +282,20 @@ public class TestWordPress extends AppCompatActivity {
                 //strin += count + ", ";
                 //articleList.append(strin);
 
+                String regexStart = "768w,\\s"; //srcset=\\\\\"
+                String regexEnd = "\\s1600w"; //w,\\s
+
                 for (int i = 0; i <= count; i++) {
                     if (i != count) {
                         picPosStart[i] = content.indexOf("<figure",lastPicStart+1); // find picture start position
                         picPosEnd[i] = content.indexOf("figure>", lastPicEnd+1); // find picture start position
                         pic[i] = content.substring(picPosStart[i], picPosEnd[i] + 1);
-                        tmpPic = pic[i].split("srcset=");
-                        tmpPic = tmpPic[1].split("w,");
-                        pic[i] = tmpPic[1].substring(1, tmpPic[1].length()-4);
+                        tmpPic = pic[i].split(regexStart);
+                        tmpPic = tmpPic[1].split(regexEnd);
+                        pic[i] = tmpPic[0]; //evaluates for some reason as https which is necessary for pie and above devices
                         //imageArr[i] = getImageFromURL(pic[i]);
+//                        tmpPic = pic[i].split(":");
+//                        pic[i] = "https:" + tmpPic[1];
                     } else {
                         picPosStart[i] = content.length();
                     }
@@ -319,15 +326,6 @@ public class TestWordPress extends AppCompatActivity {
                 //theImg.setImageUrl(pic[0],mImageLoader);
 
 
-                tisNull = "Pic is null";
-                //Bitmap cpyPic = getArticleImg();
-                //theImg.setImageBitmap(cpyPic);
-//                Bitmap bit = getArticleImg();
-//                if (bit != null){ tisNull = "Pic not null\n"; }
-
-                //String outpt = "pic: " + imageArr[1] + ", ";
-                //articleList.append(outpt);
-
                 Spanned str = HtmlCompat.fromHtml(txt, HtmlCompat.FROM_HTML_MODE_LEGACY);
                 content = str.toString();
                 //append the pieces together to print
@@ -335,10 +333,11 @@ public class TestWordPress extends AppCompatActivity {
 //                    output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
 //                    output += "~" + content + "~"+getAuthor()+"~"+pic[0];//output += "~" + content + "~"+tisNull+"~"+pic[0];
 
-                String output = id + "~" + authorName + "~" + title + "~" + date + "~" + time;
+                String output = id + "~" + authorName + "~" + title + "~" + datetimeP;
                 output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
                 output += "~" + content;
-                String urls = mainPicURL+"~"+pic[1] + "~" + articleLink;
+                String urls = mainPicURL+"~"+pic[0]+"~"+pic[1];
+                //articleTitle.append(pic[1]);
                 //articleList.append(output+"\n");
 
 
@@ -362,10 +361,12 @@ public class TestWordPress extends AppCompatActivity {
         return theArticles[0];
     }
 
+
     private void printArticle(String id, ArrayList<String> mainContent, String urls){//, Bitmap pic
-//        String output = "Id: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
-//        output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt;
-//        output += "\n\nContent: " + content + "\n"+tisNull+"\n"+pic[0]+"\n\n\n";
+//        mainContent = id + "~" + authorName + "~" + title + "~" + datetimeP;
+//        mainContent += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
+//        mainContent += "~" + content;
+//        urls = mainPicURL+"~"+pic[0]+"~"+pic[1];
 
         String theContents[] = new String[12];
         String theLinks[] = new String[3];
@@ -391,13 +392,13 @@ public class TestWordPress extends AppCompatActivity {
 //            }
 //        }
 
-        String toPrint = "Id: " + theContents[0] + " \n\nDate made: " + theContents[3] + " \nTime made: " + theContents[4];
-        toPrint += "\nRetrieved: " + theContents[5] + "\n\n\n"+"Excerpt: " + theContents[7]+"\n\nAuthor: "+theContents[1];
-        toPrint += "                                                Category: " + theContents[6] + "\n\n";
-        toPrint += "\n\nContent: " + theContents[8] +"\n\n";
-        toPrint += "Article Image URL: "+theLinks[0]+"\nIn-text pic: "+theContents[1]+"\nLink to article: "+theContents[2]+"\n\n";
+        String toPrint = "Id: " + theContents[0] + " \n\nDatetime published: " + theContents[3];
+        toPrint += "\nRetrieved: " + theContents[4] + "\n\n\n"+"Excerpt: " + theContents[6]+"\n\nAuthor: "+theContents[1];
+        toPrint += "                                                Category: " + theContents[5] + "\n\n";
+        toPrint += "\n\nContent: " + theContents[7] +"\n\n";
+        toPrint += "Article Image JSON URL: "+theLinks[0]+"\nIn-text pic1: "+theLinks[1]+"\nIn-text pic2: "+ theLinks[2] +"\n\n";
         //String toPrint = "test string";
-        articleTitle.append(theContents[2]);
+        articleTitle.append("Title: " + theContents[2]); //made a separate field for the title so this is writing it there
         articleList.append(toPrint);
     }
 

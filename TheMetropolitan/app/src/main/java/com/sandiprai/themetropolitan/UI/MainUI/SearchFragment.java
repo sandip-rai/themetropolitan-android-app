@@ -1,11 +1,7 @@
 package com.sandiprai.themetropolitan.UI.MainUI;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +9,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.sandiprai.themetropolitan.R;
 import com.sandiprai.themetropolitan.TestWordPress;
@@ -37,7 +34,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
 
         ImageView imageView1 = view.findViewById(R.id.imageView1);
 
-        Picasso.get().load("https://cybersecuritybysandip.files.wordpress.com/2017/01/pushbullet-encryption-100606774-large.jpg").
+        Picasso.get().load("https://themetropolitan.metrostate.edu/wp-content/uploads/2019/03/190128_Suzanne_001-3.jpg").
                 into(imageView1);
 //https://photoshd.files.wordpress.com/2014/04/new-zealand.jpg
 //        Glide.with(view).load("https://cdn-images-1.medium.com/max/1600/1*VCQULp9m08s4dO2TgXg2Zw.png").into(imageView1);
