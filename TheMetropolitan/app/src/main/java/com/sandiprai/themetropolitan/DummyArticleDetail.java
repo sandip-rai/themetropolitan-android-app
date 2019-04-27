@@ -17,7 +17,7 @@ public class DummyArticleDetail extends AppCompatActivity {
     public static final String EXTRA_ARTICLE_ID ="articleId";
     private String articleTitle;
     private String articleContent;
-    String url = "www.example.com";
+    String url = "http://themetropolitan.metrostate.edu/?p=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class DummyArticleDetail extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent myIntent = new Intent(Intent.ACTION_SEND);
         myIntent.setType("text/plain");
-        String webAddress = url;
+        String webAddress = url; //+EXTRA_ARTICLE_ID
         String shareBody = articleContent;
         myIntent.putExtra(Intent.EXTRA_TEXT,webAddress);
         // Handle item selection
