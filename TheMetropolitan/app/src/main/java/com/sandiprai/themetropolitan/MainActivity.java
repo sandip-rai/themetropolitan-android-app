@@ -244,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
                 SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz"); //HH (0-23 hours), hh (normal hrs), a (AM/PM), z (timezone);
                 String date = "";
                 String time = "";
+                String datetimeP = "";
                 //get the current date
                 Date now = new Date();
                 String cat = "";
@@ -291,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
                     String dateSub [] = dateMain.split("T");
                     date = dateSub[0];
                     time = dateSub[1];
+                    datetimeP = date + " " + time;
 
                     //dateFormater.format(now);
 
@@ -424,7 +426,7 @@ public class MainActivity extends AppCompatActivity {
 //                    output += "~" + content + "~"+getAuthor()+"~"+pic[0];//output += "~" + content + "~"+tisNull+"~"+pic[0];
 
                     //create a string output for all the information delimited by tilde
-                    String output = id + "~" + authorName + "~" + title + "~" + date + "~" + time;
+                    String output = id + "~" + authorName + "~" + title + "~" + datetimeP;
                     output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
                     output += "~" + content + "~"+mainPicURL+"~"+pic[1];
                     //articleList.append(output+"\n");
@@ -477,11 +479,11 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
         theImg.setDefaultImageResId(R.drawable.logo2);
-        String toPrint = "Id: " + theContents[0] + " \nTitle: " + theContents[2] + " \n\nDate made: " + theContents[3] + " \nTime made: " + theContents[4];
-        toPrint += "\nRetrieved: " + theContents[5] + "\n\n\n"+"Excerpt: " + theContents[7]+"\n\nAuthor: "+theContents[1];
-        toPrint += "                                                Category: " + theContents[6] + "\n\n";
-        toPrint += "\n\nContent: " + theContents[8] +"\n\n";
-        toPrint += "Article Image URL: "+theContents[9]+"\nIn-text pic: "+theContents[10]+"\n\n";
+        String toPrint = "Id: " + theContents[0] + " \nTitle: " + theContents[2] + " \n\nDatetime: " + theContents[3];
+        toPrint += "\nRetrieved: " + theContents[4] + "\n\n\n"+"Excerpt: " + theContents[6]+"\n\nAuthor: "+theContents[1];
+        toPrint += "                                                Category: " + theContents[5] + "\n\n";
+        toPrint += "\n\nContent: " + theContents[7] +"\n\n";
+        toPrint += "Article Image URL: "+theContents[8]+"\nIn-text pic: "+theContents[9]+"\n\n";
                 //String toPrint = "test string";
         articleList.append(toPrint);
     }

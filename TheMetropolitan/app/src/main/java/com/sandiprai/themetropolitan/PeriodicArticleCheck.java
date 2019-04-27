@@ -23,6 +23,7 @@ public class PeriodicArticleCheck extends JobIntentService {
     public static final int JOB_ID = 1;
     //amounts of time in milliseconds
     public static final int ONE_MIN = 60*1000;
+    public static final int ONE_WEEK = 604800*1000;
     public static final int TWO_WEEKS = 1209600*1000;
 
     public PeriodicArticleCheck() {
@@ -47,9 +48,9 @@ public class PeriodicArticleCheck extends JobIntentService {
 
         //make a notification to display later
         helper = new NotificationsHelper(this);
-        String input = "Will be checking for new articles here!";
-        String textTitle = "A service title";
-        String textContent = "Text content from the service";
+        String input = "New Metropolitan articles found";
+        String textTitle = "New Articles Found!";
+        String textContent = "New articles were published. Press this to check them out.";
         NotificationCompat.Builder builder = helper.getChannelNotification(textTitle, textContent);
 
         for (int i = 0; i < 10; i++) {
