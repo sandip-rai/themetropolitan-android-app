@@ -343,7 +343,8 @@ public class MainActivity extends AppCompatActivity {
                     subLink = link.substring(1,link.length()-1);
                     JSONObject link2 = new JSONObject(subLink);
                     picURL = link2.getString("href");
-                    //getImageURL(picURL);//the current implementation without a class does not allow the variable to be set in the scope of the method called here
+                    //articleList.append(picURL+"\n");
+                    getImageURL(picURL);//the current implementation without a class does not allow the variable to be set in the scope of the method called here
                     mainPicURL = picURL;
 
                 } catch (JSONException e){
@@ -527,6 +528,7 @@ public class MainActivity extends AppCompatActivity {
                 String pictureURL;
                 String captionFull;
                 String caption;
+                String tmpUrlPieces[];
 
 
                 try {
@@ -534,20 +536,23 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject mainObject = new JSONObject(response);
 
                     //get the caption
-                    captionFull = mainObject.getString("caption");
-                    JSONObject captionMain = new JSONObject(captionFull);
-                    caption = captionMain.getString("rendered");
-                    Spanned str = HtmlCompat.fromHtml(caption, HtmlCompat.FROM_HTML_MODE_LEGACY);
-                    caption = str.toString();
+//                    captionFull = mainObject.getString("caption");
+//                    JSONObject captionMain = new JSONObject(captionFull);
+//                    caption = captionMain.getString("rendered");
+//                    Spanned str = HtmlCompat.fromHtml(caption, HtmlCompat.FROM_HTML_MODE_LEGACY);
+//                    caption = str.toString();
 
-                    //get the final picture's URL
-                    picURLFull = mainObject.getString("description");
+                    //get the final picture's URL as https
+                    picURLFull = mainObject.getString("guid");
                     JSONObject picMain = new JSONObject(picURLFull);
                     pictureURL = picMain.getString("rendered");
-                    //pictureURL = pictureURL.substring(1,name2.length()-1);
-                    mainPicURL = pictureURL;
-                    //setAuthorURL(name3); //call the name url to get the author's name from it
-                    //getImageFromURL(picURL);
+                    //turn url into https from http
+                    tmpUrlPieces = pictureURL.split(":");
+                    pictureURL = "https:"+tmpUrlPieces[1];
+
+                    articleList.append(pictureURL+" stuff\n\n\n\n\n\n\n");
+                    //add the image url to the first spot in the database's article picture array
+
 
                 } catch (JSONException e){
                     articleList.append("Error, picture URL GET ran into an error.");
