@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
     private void jsonParse(int postID) {
         //final ArrayList<String> theArticles = new ArrayList<String>();
         String theArticles;
-        url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/"+postID;
+        url = "https://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/"+postID;
         //String articleContents;
 
         request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {

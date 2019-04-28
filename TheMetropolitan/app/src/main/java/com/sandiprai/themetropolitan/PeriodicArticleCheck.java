@@ -44,6 +44,8 @@ public class PeriodicArticleCheck extends JobIntentService {
     @Override //onHandleWork is equivalent to onHandleIntent
     protected void onHandleWork(@NonNull Intent intent) {
         boolean newArticleFound = false;
+        String newestIdDatabase = "";
+        String newestIdWordpress = "";
         Log.d(TAG,"onHandleWork"); //log the string that we are in this function
 
         //make a notification to display later
@@ -57,8 +59,14 @@ public class PeriodicArticleCheck extends JobIntentService {
             SystemClock.sleep(ONE_MIN); //in milliseconds 1209600000ms = 2 weeks
             Log.d(TAG, input + " - " + i); //log the string message
 
-            //this will be to display a notification after finding a new article
-            if (newArticleFound != true) {
+            //database call for latest entry id
+            newestIdDatabase = "1489";
+
+            // article class call for WordPress latest article info to return id using
+            // http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/?orderby=date&per_page=1&page=1
+            newestIdWordpress = "1808";
+
+            if(newestIdDatabase != newestIdWordpress) {
                 helper.getManager().notify(NOTIFICATION_ID, builder.build());
             }
         }
