@@ -255,9 +255,9 @@ public class TestWordPress extends AppCompatActivity {
                     subLink = link.substring(1,link.length()-1);
                     JSONObject link2 = new JSONObject(subLink);
                     picURL = link2.getString("href");
-                    //getImageURL(mainPicURL);//the current implementation without a class does not allow the variable to be set in the scope of the method called here
                     tmpMainPic = picURL.split(":");
-                    mainPicURL = "https:" + tmpMainPic[1];
+                    mainPicURL = "https:" + tmpMainPic[1];//the current implementation without a class does not allow the variable to be set in the scope of the method called here
+                    getImageURL(mainPicURL);
 
                 } catch (JSONException e){
                     articleList.append("Error, article URL GET ran into an error.");
@@ -285,7 +285,7 @@ public class TestWordPress extends AppCompatActivity {
                 String regexStart = "768w,\\s"; //srcset=\\\\\"
                 String regexEnd = "\\s1600w"; //w,\\s
 
-                for (int i = 0; i <= count; i++) {
+                for (int i = 1; i < count; i++) {
                     if (i != count) {
                         picPosStart[i] = content.indexOf("<figure",lastPicStart+1); // find picture start position
                         picPosEnd[i] = content.indexOf("figure>", lastPicEnd+1); // find picture start position
@@ -437,37 +437,34 @@ public class TestWordPress extends AppCompatActivity {
                     response = response.substring(1,response.length()-1);
                 }
 
-                int id = 0;
                 String picURLFull;
                 String pictureURL;
                 String captionFull;
                 String caption;
-                //String txt;
-                //String pic[] = new String[10];
+                String tmpUrlPieces[];
 
                 //articleList.setText(response);
                 try {
                     //turning the full string response from the url get into a JSON object
                     JSONObject mainObject = new JSONObject(response);
-                    //get the first article's ID
-                    id = Integer.parseInt(mainObject.getString("id"));
 
                     //get the caption
-                    captionFull = mainObject.getString("caption");
-                    JSONObject captionMain = new JSONObject(captionFull);
-                    caption = captionMain.getString("rendered");
-                    Spanned str = HtmlCompat.fromHtml(caption, HtmlCompat.FROM_HTML_MODE_LEGACY);
-                    caption = str.toString();
+//                    captionFull = mainObject.getString("caption");
+//                    JSONObject captionMain = new JSONObject(captionFull);
+//                    caption = captionMain.getString("rendered");
+//                    Spanned str = HtmlCompat.fromHtml(caption, HtmlCompat.FROM_HTML_MODE_LEGACY);
+//                    caption = str.toString();
 
-                    //get the final picture's URL
-                    picURLFull = mainObject.getString("description");
+                    //get the final picture's URL as https
+                    picURLFull = mainObject.getString("guid");
                     JSONObject picMain = new JSONObject(picURLFull);
                     pictureURL = picMain.getString("rendered");
-                    //pictureURL = pictureURL.substring(1,name2.length()-1);
-                    mainPicURL = pictureURL;
-                    //setAuthorURL(name3); //call the name url to get the author's name from it
-                    //getImageFromURL(picURL);
-                    // = articleImg;
+                    //turn url into https from http
+                    tmpUrlPieces = pictureURL.split(":");
+                    pictureURL = "https:"+tmpUrlPieces[1];
+
+                    articleList.append(pictureURL+" stuff\n\n\n\n\n\n\n");
+                    //add the image url to the first spot in the database's article picture array
 
                 } catch (JSONException e){
                     articleList.append("Error, picture URL GET ran into an error.");
