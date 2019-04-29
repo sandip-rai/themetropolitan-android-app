@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     //private ListView postList;
     private RequestQueue rQueue;
     public SharedPreferences sharedPreferences;
-    int postID = 1489;
+    int postID = 1808; //1489
     String author = null;
     String authorURL = null;
     String picURL = "";
@@ -92,7 +92,9 @@ public class MainActivity extends AppCompatActivity {
        // progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         //progressDialog.show();
 
-        jsonParse(postID);
+        //for (int i = 0; i < 10; i++) {
+            jsonParse(postID, "id");
+        //}
         //articleList.append(articleContents);
         //getAuthorFromURL("sadf");
         //getTextImageFromURL("afs");
@@ -221,10 +223,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void jsonParse(int postID) {
+    private void jsonParse(int postID, String type) {
         //final ArrayList<String> theArticles = new ArrayList<String>();
         String theArticles;
-        url = "https://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/"+postID;
+        if (type == "age") {
+            url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/?orderby=date&per_page=1&page="+postID;
+        } else if (type == "id") {
+            url = "https://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/"+postID;
+        } else {
+            url = "https://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/?orderby=date&per_page=1&page=1";
+        }
+
         //String articleContents;
 
         request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
