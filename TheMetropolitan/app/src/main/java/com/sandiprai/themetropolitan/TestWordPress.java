@@ -279,13 +279,14 @@ public class TestWordPress extends AppCompatActivity {
                     //picPosStart[count] = content.indexOf("<figure",0); // find picture start position
                     count++;
                 }
+                count++; //offset for the loop starting at 1
                 //strin += count + ", ";
                 //articleList.append(strin);
 
                 String regexStart = "768w,\\s"; //srcset=\\\\\"
                 String regexEnd = "\\s1600w"; //w,\\s
 
-                for (int i = 1; i < count; i++) {
+                for (int i = 1; i <= count; i++) {
                     if (i != count) {
                         picPosStart[i] = content.indexOf("<figure",lastPicStart+1); // find picture start position
                         picPosEnd[i] = content.indexOf("figure>", lastPicEnd+1); // find picture start position
@@ -300,7 +301,7 @@ public class TestWordPress extends AppCompatActivity {
                         picPosStart[i] = content.length();
                     }
                     // set to be the String of where end is plus 1 of that position
-                    if (i != 0) {
+                    if (i != 1) {
                         lastPicEnd += 7;
                     }
                     //lastPicEnd += 7;
@@ -336,7 +337,7 @@ public class TestWordPress extends AppCompatActivity {
                 String output = id + "~" + authorName + "~" + title + "~" + datetimeP;
                 output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
                 output += "~" + content;
-                String urls = mainPicURL+"~"+pic[0]+"~"+pic[1];
+                String urls = mainPicURL+"~"+pic[1]+"~"+pic[2];
                 //articleTitle.append(pic[1]);
                 //articleList.append(output+"\n");
 
