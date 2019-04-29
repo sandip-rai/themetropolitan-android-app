@@ -367,10 +367,11 @@ public class MainActivity extends AppCompatActivity {
                         //picPosStart[count] = content.indexOf("<figure",0); // find picture start position
                         count++;
                     }
+                    count++; //offset for the loop starting at 1
                     //strin += count + ", ";
                     //articleList.append(strin);
 
-                    for (int i = 0; i <= count; i++) {
+                    for (int i = 1; i <= count; i++) {
                         if (i != count) {
                             picPosStart[i] = content.indexOf("<figure",lastPicStart+1); // find picture start position
                             picPosEnd[i] = content.indexOf("figure>", lastPicEnd+1); // find picture start position
@@ -383,7 +384,7 @@ public class MainActivity extends AppCompatActivity {
                             picPosStart[i] = content.length();
                         }
                         // set to be the String of where end is plus 1 of that position
-                        if (i != 0) {
+                        if (i != 1) {
                             lastPicEnd += 7;
                         }
                         //lastPicEnd += 7;
@@ -429,7 +430,7 @@ public class MainActivity extends AppCompatActivity {
                     //create a string output for all the information delimited by tilde
                     String output = id + "~" + authorName + "~" + title + "~" + datetimeP;
                     output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
-                    output += "~" + content + "~"+mainPicURL+"~"+pic[1];
+                    output += "~" + content +"~"+pic[0]+"~"+pic[1]+"~"+pic[2];
                     //articleList.append(output+"\n");
 
                     String articles = output;
@@ -484,7 +485,7 @@ public class MainActivity extends AppCompatActivity {
         toPrint += "\nRetrieved: " + theContents[4] + "\n\n\n"+"Excerpt: " + theContents[6]+"\n\nAuthor: "+theContents[1];
         toPrint += "                                                Category: " + theContents[5] + "\n\n";
         toPrint += "\n\nContent: " + theContents[7] +"\n\n";
-        toPrint += "Article Image URL: "+theContents[8]+"\nIn-text pic: "+theContents[9]+"\n\n";
+        toPrint += "first picture: "+theContents[8]+"\nIn-text pic1: "+theContents[9]+"\nIn-text pic2: "+ theContents[10]+"\n\n";
                 //String toPrint = "test string";
         articleList.append(toPrint);
     }
