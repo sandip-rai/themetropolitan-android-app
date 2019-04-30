@@ -1,6 +1,9 @@
 package com.sandiprai.themetropolitan;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Spanned;
@@ -56,12 +59,18 @@ public class TestWordPress extends AppCompatActivity {
     String picURL = "";
     String mainPicURL = "";
     String titlePic = null;
+    Editor editor;
     String mainArticleContent = null;
+
+    SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_word_press);
+
+        sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
+        editor = sharedpreferences.edit();
 
         articleTitle = findViewById(R.id.textViewWordPressTitle);
         articleList = findViewById(R.id.textViewWordPressContent);
@@ -73,7 +82,9 @@ public class TestWordPress extends AppCompatActivity {
         // progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         //progressDialog.show();
         articleList.clearComposingText();
-        jsonParse(postID);
+        //wpGetArticleByID(postID);
+        wpGetArticleByAge(1,14);
+        articleTitle.append(wpGetNewestArticle());
         //String itter = tmpList.iterator().toString();
         //allArticles.set(Integer.parseInt(itter),tmpList.get(Integer.parseInt(itter)));
         //getAuthorFromURL("http://themetropolitan.metrostate.edu/wp-json/wp/v2/users/22");
@@ -90,276 +101,300 @@ public class TestWordPress extends AppCompatActivity {
 //        }
     }
 
-    public void setArticleImg(Bitmap articleImg) {
-        this.articleImg = articleImg;
+    private String wpGetNewestArticle () {
+        jsonParse(0,"new");
+        String newestID = sharedpreferences.getString("NewestWPArticle", "");
+        return newestID;
     }
 
-    public Bitmap getArticleImg() {
-        return articleImg;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getAuthorURL() {
-        return authorURL;
-    }
-
-    public void setAuthorURL(String authorURL) {
-        this.authorURL = authorURL;
-    }
-
-    public String getPicURL() {
-        return picURL;
-    }
-
-    public void setPicURL(String picURL) {
-        this.picURL = picURL;
-    }
-
-    public String getMainArticleContent() {
-        return mainArticleContent;
-    }
-
-    public void setMainArticleContent(String mainArticleContent) {
-        this.mainArticleContent = mainArticleContent;
+    private void wpGetArticleByID (int postID) {
+        jsonParse(postID, "id");
     }
 
 
+    //amount = the number of articles to check for in sequence
+    //start = article from the newest to start getting them from, increments, starts at 1 = newest
+    private void wpGetArticleByAge (int amount, int start) {
+        int lastArticle = amount + start;
+        for (; start < lastArticle; start++) {
+            jsonParse(start,"age");
+        }
+    }
 
-    private String jsonParse(int postID) {
+
+    private int jsonParse(int postID, String type) {
         final String[] theArticles = new String[1];
-        url = "https://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/"+postID;
+        boolean justID = false;
+        if (type == "age") {
+            url = "https://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/?orderby=date&per_page=1&page="+postID;
+        } else if (type == "id") {
+            url = "https://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/"+postID;
+        } else if (type == "new") {
+            url = "https://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/?orderby=date&per_page=1&page=1";
+            justID = true;
+        }
 
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                if(response.charAt(0) == '['){
-                    response = response.substring(1,response.length()-1);
-                }
-
-                //variable declarations
-                JSONObject mainObject;
-                int id = 0;
-                String titleFull;
-                String title = "";
-                String links;
-                String name2;
-                String authorName = null;
-                String dateMain;
-                SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz"); //HH (0-23 hours), hh (normal hrs), a (AM/PM), z (timezone);
-                String date;
-                String time;
-                String datetimeP = "";
-                //get the current date
-                Date now = new Date();
-                String cat = "";
-                String excerptFull;
-                String excerpt = "";
-                Spanned excerptStr;
-                String contentFull;
-                String content = "";
-                Pattern pattern;
-                Matcher matcher;
-                String tmpMainPic[] = new String[2];
-                String txt;
-                String link;
-                String subLink;
-                String pic[] = new String[10];
-
-                //articleList.setText(response);
-                try {
-                    //turning the full string response from the url get into a JSON object
-                    mainObject = new JSONObject(response);
-                    //get the first article's ID
-                    id = Integer.parseInt(mainObject.getString("id"));
-
-                    //get the title
-                    titleFull = mainObject.getString("title");
-                    JSONObject titleMain = new JSONObject(titleFull);
-                    title = titleMain.getString("rendered");
-
-                    //get the author's name from the article's name url
-                    links = mainObject.getString("_links");
-                    JSONObject nameMain = new JSONObject(links);
-                    name2 = nameMain.getString("author");
-                    name2 = name2.substring(1,name2.length()-1);
-                    JSONObject nameMain2 = new JSONObject(name2);
-                    authorURL = nameMain2.getString("href");
-                    //setAuthorURL(name3); //call the name url to get the author's name from it
-                    getAuthorFromURL(authorURL);
-                    authorName = author;
-                    //articleList.append(authorName);
-                    //String Author = getAuthor();
-
-
-                    //get the date the article was made
-                    dateMain = mainObject.getString("date");
-                    String dateSub [] = dateMain.split("T");
-                    date = dateSub[0];
-                    time = dateSub[1];
-                    datetimeP = date + " " + time;
-
-
-                    //get the category
-                    cat = mainObject.getString("categories");
-                    switch (cat){
-                        case "[12]":
-                            cat = "Tech";
-                            break;
-                        case "[11]":
-                            cat = "Student Life";
-                            break;
-                        case "[10]":
-                            cat = "Opinion";
-                            break;
-                        case "[5]":
-                            cat = "Arts & Entertainment";
-                            break;
-                        case "[8]":
-                            cat = "News";
-                            break;
-                        case "[159]":
-                            cat = "Jobs";
-                            break;
-                        case "[1]":
-                            cat = "Uncategorized";
-                        default:
-                            cat = "unknown";
+        if (justID) {
+            StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    if (response.charAt(0) == '[') {
+                        response = response.substring(1, response.length() - 1);
                     }
 
-                    //get the excerpt
-                    excerptFull = mainObject.getString("excerpt");
-                    JSONObject excerptMain = new JSONObject(excerptFull);
-                    excerpt = excerptMain.getString("rendered");
-                    excerpt = excerpt.substring(3,excerpt.length()-5);
-                    excerptStr = HtmlCompat.fromHtml(excerpt, HtmlCompat.FROM_HTML_MODE_LEGACY);
-                    excerpt = excerptStr.toString();
+                    //variable declarations
+                    JSONObject mainObject;
+                    String id;
 
-                    //get the article's content
-                    contentFull = mainObject.getString("content");
-                    JSONObject contentMain = new JSONObject(contentFull);
-                    content = contentMain.getString("rendered");
-                    String contentArr [] = content.split("clearfix"); //find beginning of article content
-                    String contentArr2 [] = contentArr[2].split("/div>"); //find end of article content
-                    content = contentArr2[0].substring(5, contentArr2[0].length()-5);
+                    try {
+                        mainObject = new JSONObject(response);
+                        //get the first article's ID
+                        id = mainObject.getString("id");
 
-                    //get the main article picture by first getting the URL from the JSON got by the its URL in the Main JSON
-                    JSONObject picMain = new JSONObject(links);
-                    link = picMain.getString("wp:featuredmedia");
-                    subLink = link.substring(1,link.length()-1);
-                    JSONObject link2 = new JSONObject(subLink);
-                    picURL = link2.getString("href");
-                    tmpMainPic = picURL.split(":");
-                    mainPicURL = "https:" + tmpMainPic[1];//the current implementation without a class does not allow the variable to be set in the scope of the method called here
-                    getImageURL(mainPicURL);
-
-                } catch (JSONException e){
-                    articleList.append("Error, article URL GET ran into an error.");
+                        //put into shared preferences
+                        editor.putString("NewestWPArticle", id);
+                        editor.commit();
+                    } catch (JSONException e){
+                        articleList.append("Error, article URL GET ran into an error.");
+                    }
                 }
-                //find and get any pictures in the article's content
-                pattern = Pattern.compile("<figure");
-                matcher = pattern.matcher(content);
-                txt = "";
-                String imageArr[] = new String[10];
-                int picPosStart[] = new int[10];
-                int picPosEnd[] = new int[10];
-                String tmpPic [] = new String[6];
-                int lastPicStart = 0;
-                int lastPicEnd = 0;
-                String strin = "";
-
-                int count = 0;
-                while (matcher.find()){
-                    //picPosStart[count] = content.indexOf("<figure",0); // find picture start position
-                    count++;
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), "URL GET error occurred", Toast.LENGTH_LONG).show();
                 }
-                count++; //offset for the loop starting at 1
-                //strin += count + ", ";
-                //articleList.append(strin);
+            });
 
-                String regexStart = "768w,\\s"; //srcset=\\\\\"
-                String regexEnd = "\\s1600w"; //w,\\s
+            rQueue.add(request);
+        } else {
+            StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    if (response.charAt(0) == '[') {
+                        response = response.substring(1, response.length() - 1);
+                    }
 
-                for (int i = 1; i <= count; i++) {
-                    if (i != count) {
-                        picPosStart[i] = content.indexOf("<figure",lastPicStart+1); // find picture start position
-                        picPosEnd[i] = content.indexOf("figure>", lastPicEnd+1); // find picture start position
-                        pic[i] = content.substring(picPosStart[i], picPosEnd[i] + 1);
-                        tmpPic = pic[i].split(regexStart);
-                        tmpPic = tmpPic[1].split(regexEnd);
-                        pic[i] = tmpPic[0]; //evaluates for some reason as https which is necessary for pie and above devices
-                        //imageArr[i] = getImageFromURL(pic[i]);
+                    //variable declarations
+                    JSONObject mainObject;
+                    String id = "";
+                    String titleFull;
+                    String title = "";
+                    String links;
+                    String name2;
+                    String authorName = null;
+                    String dateMain;
+                    SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz"); //HH (0-23 hours), hh (normal hrs), a (AM/PM), z (timezone);
+                    String date;
+                    String time;
+                    String datetimeP = "";
+                    //get the current date
+                    Date now = new Date();
+                    String cat = "";
+                    String excerptFull;
+                    String excerpt = "";
+                    Spanned excerptStr;
+                    String contentFull;
+                    String content = "";
+                    Pattern pattern;
+                    Matcher matcher;
+                    String tmpMainPic[] = new String[2];
+                    String txt;
+                    String link;
+                    String subLink;
+                    String pic[] = new String[10];
+
+                    //articleList.setText(response);
+                    try {
+                        //turning the full string response from the url get into a JSON object
+                        mainObject = new JSONObject(response);
+                        //get the first article's ID
+                        id = mainObject.getString("id");
+
+                        //get the title
+                        titleFull = mainObject.getString("title");
+                        JSONObject titleMain = new JSONObject(titleFull);
+                        title = titleMain.getString("rendered");
+
+                        //get the author's name from the article's name url
+                        links = mainObject.getString("_links");
+                        JSONObject nameMain = new JSONObject(links);
+                        name2 = nameMain.getString("author");
+                        name2 = name2.substring(1, name2.length() - 1);
+                        JSONObject nameMain2 = new JSONObject(name2);
+                        authorURL = nameMain2.getString("href");
+                        //setAuthorURL(name3); //call the name url to get the author's name from it
+                        getAuthorFromURL(authorURL);
+                        authorName = author;
+                        //articleList.append(authorName);
+                        //String Author = getAuthor();
+
+
+                        //get the date the article was made
+                        dateMain = mainObject.getString("date");
+                        String dateSub[] = dateMain.split("T");
+                        date = dateSub[0];
+                        time = dateSub[1];
+                        datetimeP = date + " " + time;
+
+
+                        //get the category
+                        cat = mainObject.getString("categories");
+                        switch (cat) {
+                            case "[12]":
+                                cat = "Tech";
+                                break;
+                            case "[11]":
+                                cat = "Student Life";
+                                break;
+                            case "[10]":
+                                cat = "Opinion";
+                                break;
+                            case "[5]":
+                                cat = "Arts & Entertainment";
+                                break;
+                            case "[8]":
+                                cat = "News";
+                                break;
+                            case "[159]":
+                                cat = "Jobs";
+                                break;
+                            case "[1]":
+                                cat = "Uncategorized";
+                            default:
+                                cat = "unknown";
+                        }
+
+                        //get the excerpt
+                        excerptFull = mainObject.getString("excerpt");
+                        JSONObject excerptMain = new JSONObject(excerptFull);
+                        excerpt = excerptMain.getString("rendered");
+                        excerpt = excerpt.substring(3, excerpt.length() - 5);
+                        excerptStr = HtmlCompat.fromHtml(excerpt, HtmlCompat.FROM_HTML_MODE_LEGACY);
+                        excerpt = excerptStr.toString();
+
+                        //get the article's content
+                        contentFull = mainObject.getString("content");
+                        JSONObject contentMain = new JSONObject(contentFull);
+                        content = contentMain.getString("rendered");
+                        String contentArr[] = content.split("clearfix"); //find beginning of article content
+                        String contentArr2[] = contentArr[2].split("/div>"); //find end of article content
+                        content = contentArr2[0].substring(5, contentArr2[0].length() - 5);
+
+                        //get the main article picture by first getting the URL from the JSON got by the its URL in the Main JSON
+                        JSONObject picMain = new JSONObject(links);
+                        link = picMain.getString("wp:featuredmedia");
+                        subLink = link.substring(1, link.length() - 1);
+                        JSONObject link2 = new JSONObject(subLink);
+                        picURL = link2.getString("href");
+                        tmpMainPic = picURL.split(":");
+                        mainPicURL = "https:" + tmpMainPic[1];//the current implementation without a class does not allow the variable to be set in the scope of the method called here
+                        getImageURL(mainPicURL);
+
+                    } catch (JSONException e) {
+                        articleList.append("Error, article URL GET ran into an error.");
+                    }
+                    //find and get any pictures in the article's content
+                    pattern = Pattern.compile("<figure");
+                    matcher = pattern.matcher(content);
+                    txt = "";
+                    String imageArr[] = new String[10];
+                    int picPosStart[] = new int[10];
+                    int picPosEnd[] = new int[10];
+                    String tmpPic[] = new String[6];
+                    int lastPicStart = 0;
+                    int lastPicEnd = 0;
+                    String strin = "";
+
+                    int count = 0;
+                    while (matcher.find()) {
+                        //picPosStart[count] = content.indexOf("<figure",0); // find picture start position
+                        count++;
+                    }
+                    count++; //offset for the loop starting at 1
+                    //strin += count + ", ";
+                    //articleList.append(strin);
+
+                    String regexStart = "768w,\\s"; //srcset=\\\\\"
+                    String regexEnd = "\\s1600w"; //w,\\s
+
+                    for (int i = 1; i <= count; i++) {
+                        if (i != count) {
+                            picPosStart[i] = content.indexOf("<figure", lastPicStart + 1); // find picture start position
+                            picPosEnd[i] = content.indexOf("figure>", lastPicEnd + 1); // find picture start position
+                            pic[i] = content.substring(picPosStart[i], picPosEnd[i] + 1);
+                            tmpPic = pic[i].split(regexStart);
+                            tmpPic = tmpPic[1].split(regexEnd);
+                            pic[i] = tmpPic[0]; //evaluates for some reason as https which is necessary for pie and above devices
+                            //imageArr[i] = getImageFromURL(pic[i]);
 //                        tmpPic = pic[i].split(":");
 //                        pic[i] = "https:" + tmpPic[1];
-                    } else {
-                        picPosStart[i] = content.length();
-                    }
-                    // set to be the String of where end is plus 1 of that position
-                    if (i != 1) {
-                        lastPicEnd += 7;
-                    }
-                    //lastPicEnd += 7;
+                        } else {
+                            picPosStart[i] = content.length();
+                        }
+                        // set to be the String of where end is plus 1 of that position
+                        if (i != 1) {
+                            lastPicEnd += 7;
+                        }
+                        //lastPicEnd += 7;
 
-                    //build the text content back up delimited by a square
-                    if (i != count) {
-                        txt += content.substring(lastPicEnd, picPosStart[i])+"\u25a1";
-                    } else {
-                        txt += content.substring(lastPicEnd, picPosStart[i]);
+                        //build the text content back up delimited by a square
+                        if (i != count) {
+                            txt += content.substring(lastPicEnd, picPosStart[i]) + "\u25a1";
+                        } else {
+                            txt += content.substring(lastPicEnd, picPosStart[i]);
+                        }
+
+                        lastPicStart = picPosStart[i];
+                        lastPicEnd = picPosEnd[i];
                     }
 
-                    lastPicStart = picPosStart[i];
-                    lastPicEnd = picPosEnd[i];
-                }
-
-                //setPicURL(pic[0]);
+                    //setPicURL(pic[0]);
 //                getImageFromURL(pic[0]);
 //                //mImageLoader = new processImage();
 //                //rQueue.add(processImage.getInstance().getmRequestQueue());
 //                mImageLoader = processImage.getInstance().getmImageLoader();
 //                theImg.setDefaultImageResId(R.drawable.logo2);
-                //theImg.setErrorImageResId(720);
-                //theImg.setImageUrl(pic[0],mImageLoader);
+                    //theImg.setErrorImageResId(720);
+                    //theImg.setImageUrl(pic[0],mImageLoader);
 
 
-                Spanned str = HtmlCompat.fromHtml(txt, HtmlCompat.FROM_HTML_MODE_LEGACY);
-                content = str.toString();
-                //append the pieces together to print
+                    Spanned str = HtmlCompat.fromHtml(txt, HtmlCompat.FROM_HTML_MODE_LEGACY);
+                    content = str.toString();
+                    //append the pieces together to print
 //                    String output = id + "~" + title + "~" + date + "~" + time;
 //                    output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
 //                    output += "~" + content + "~"+getAuthor()+"~"+pic[0];//output += "~" + content + "~"+tisNull+"~"+pic[0];
 
-                String output = id + "~" + authorName + "~" + title + "~" + datetimeP;
-                output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
-                output += "~" + content;
-                String urls = mainPicURL+"~"+pic[1]+"~"+pic[2];
-                //articleTitle.append(pic[1]);
-                //articleList.append(output+"\n");
+                    String output = id + "~" + authorName + "~" + title + "~" + datetimeP;
+                    output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
+                    output += "~" + content;
+                    String urls = mainPicURL + "~" + pic[1] + "~" + pic[2];
+                    //articleTitle.append(pic[1]);
+                    //articleList.append(output+"\n");
 
 
-                //allArticles.set(id, output);
-                //theArticles[0] = output;
-                allArticles.add(output);
+                    //allArticles.set(id, output);
+                    //theArticles[0] = output;
+                    allArticles.add(output);
 
-                //this will be a database insert/update
-                printArticle(Integer.toString(id), allArticles, urls);
+                    //this will be a database insert/update
+                    printArticle(id, allArticles, urls);
+                    //put into shared preferences
+                    editor.putString("NewestWPArticle", id);
+                    editor.commit();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), "URL GET error occurred", Toast.LENGTH_LONG).show();
+                }
+            });
 
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "URL GET error occurred", Toast.LENGTH_LONG).show();
-            }
-        });
+            rQueue.add(request);
+        }
 
 
-        rQueue.add(request);
-        return theArticles[0];
+        return 0;
     }
 
 

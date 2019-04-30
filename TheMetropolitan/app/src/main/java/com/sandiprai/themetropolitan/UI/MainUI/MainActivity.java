@@ -1,5 +1,6 @@
 package com.sandiprai.themetropolitan.UI.MainUI;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -23,6 +24,7 @@ import com.sandiprai.themetropolitan.R;
 
 public class MainActivity extends AppCompatActivity{
 
+    public SharedPreferences sharedPreferences;
     public static final String TAG = "MainActivity";
     SwipeRefreshLayout swipeRefresh;
     //static int i = 0;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity{
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
 
+        sharedPreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
         //setContentView(R.layout.activity_main);
 //        if (InitApplication.getInstance().isNightModeEnabled()) {
 //            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
