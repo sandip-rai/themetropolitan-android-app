@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity{
     public SharedPreferences sharedPreferences;
     public static final String TAG = "MainActivity";
     SwipeRefreshLayout swipeRefresh;
+    SharedPreferences.Editor editor;
     //static int i = 0;
 
     @Override
@@ -36,6 +37,9 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         sharedPreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        //editor.remove("IsAnArticle");
+        //editor.apply();
         //setContentView(R.layout.activity_main);
 //        if (InitApplication.getInstance().isNightModeEnabled()) {
 //            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
