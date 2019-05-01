@@ -5,6 +5,7 @@ import java.util.Date;
 public class Articles {
     String title;
     String author;
+    String category;
     String date;
     Long likes;
     Date created;
@@ -15,9 +16,10 @@ public class Articles {
 
     public Articles() { }
 
-    public Articles(String title, String author, String date, Long likes, String excerpt, String body, String[] tags) {
+    public Articles(String title, String author, String date, Long likes, String excerpt, String body, String category, String[] tags) {
         this.title = title;
         this.author = author;
+        this.category = category;
         this.date = date;
         this.likes = likes;
         this.created = created;
@@ -30,6 +32,8 @@ public class Articles {
     public String getTitle() {return title;}
 
     public String getAuthor() {return author;}
+
+    public String getCategory() {return category; }
 
     public String getDate() {return date;}
 
@@ -53,6 +57,8 @@ public class Articles {
     {
         author = newAuthor;
     }
+
+    public void setCategory(String newCategory) { category = newCategory; }
 
     public void setDate(String newDate)
     {

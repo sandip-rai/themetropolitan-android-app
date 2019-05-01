@@ -63,12 +63,14 @@ public class TestWordPress extends AppCompatActivity {
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
     FirebaseController controller;
+    Articles[] articleArr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_word_press);
 
+        articleArr = new Articles[1000];
         sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
         //editor = sharedpreferences.edit();
         editor = sharedpreferences.edit();
@@ -89,10 +91,15 @@ public class TestWordPress extends AppCompatActivity {
         testList.add("url");
         //boolean result = controller.add_Tech_Article("id","title","author", "date","excerpt","body",testList);
 
-        wpGetArticleByID(postID);
-//        wpGetArticleByAge(20,20);//thru 40
-        //wpGetArticleByAge(1,126);//thru 40
+//        wpGetArticleByID(postID);
+        //do not set the amount for wpGetArticleByAge above 10
+        //wpGetArticleByAge(5,134);//thru 84
+        //wpGetArticleByAge(1,132);
 
+        String newestID = wpGetArticleIDByAge(1);
+        articleList.append(newestID);
+        articleArr[0] = controller.get_Article(newestID, articleArr);
+        //articleList.append(articleArr[0].getTitle());
         //articleTitle.append(wpGetArticleIDByAge(1));
 
     }
@@ -547,6 +554,7 @@ public class TestWordPress extends AppCompatActivity {
             public void onResponse(String response) {
                 String values[] = new String[6];
                 boolean result;
+                String category;
                 String name = response.substring(10,52);
                 String nameSub [] = name.split(":");
                 String nameSub2 [] = nameSub[1].split(",");
@@ -565,7 +573,7 @@ public class TestWordPress extends AppCompatActivity {
 
                 switch (values[5]) {
                     case "[12]": //Tech
-                        result = controller.add_Tech_Article(values[0],values[1],name, values[2],values[3],values[4],articleURLList);
+                        result = controller.add_Tech_Article(values[0],values[1],name, values[2],values[3],values[4], "Tech",articleURLList);
                         if (result) {
                             Toast.makeText(getApplicationContext(), "Error putting article into Firebase - Tech", Toast.LENGTH_LONG).show();
                         } else {
@@ -573,7 +581,7 @@ public class TestWordPress extends AppCompatActivity {
                         }
                         break;
                     case "[11]": //Student Life
-                        result = controller.add_Life_Article(values[0],values[1],name, values[2],values[3],values[4],articleURLList);
+                        result = controller.add_Life_Article(values[0],values[1],name, values[2],values[3],values[4], "Student Life",articleURLList);
                         if (result) {
                             Toast.makeText(getApplicationContext(), "Error putting article into Firebase - Student Life", Toast.LENGTH_LONG).show();
                         } else {
@@ -581,7 +589,7 @@ public class TestWordPress extends AppCompatActivity {
                         }
                         break;
                     case "[10]": //Opinion
-                        result = controller.add_Opinion_Article(values[0],values[1],name, values[2],values[3],values[4],articleURLList);
+                        result = controller.add_Opinion_Article(values[0],values[1],name, values[2],values[3],values[4], "Opinion",articleURLList);
                         if (result) {
                             Toast.makeText(getApplicationContext(), "Error putting article into Firebase - Opinion", Toast.LENGTH_LONG).show();
                         } else {
@@ -589,7 +597,7 @@ public class TestWordPress extends AppCompatActivity {
                         }
                         break;
                     case "[5]": //Arts & Entertainment
-                        result = controller.add_Art_Article(values[0],values[1],name, values[2],values[3],values[4],articleURLList);
+                        result = controller.add_Art_Article(values[0],values[1],name, values[2],values[3],values[4], "Arts & Entertainment",articleURLList);
                         if (result) {
                             Toast.makeText(getApplicationContext(), "Error putting article into Firebase - A & E", Toast.LENGTH_LONG).show();
                         } else {
@@ -597,7 +605,7 @@ public class TestWordPress extends AppCompatActivity {
                         }
                         break;
                     case "[8]": //News
-                        result = controller.add_News_Article(values[0],values[1],name, values[2],values[3],values[4],articleURLList);
+                        result = controller.add_News_Article(values[0],values[1],name, values[2],values[3],values[4], "News",articleURLList);
                         if (result) {
                             Toast.makeText(getApplicationContext(), "Error putting article into Firebase - News", Toast.LENGTH_LONG).show();
                         } else {

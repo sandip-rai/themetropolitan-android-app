@@ -28,15 +28,16 @@ class FirebaseController
     //Adds an article to the firebase cloud storage
     //@Parameter String, String, String, String, int
     //@Return if the article was added to the firebase or not
-    boolean add_News_Article(String ID, String title, String author, String date, String excerpt, String body, ArrayList<String> tags)
+    boolean add_News_Article(String ID, String title, String author, String date, String excerpt, String body, String category, ArrayList<String> tags)
     {
         int likes = 0;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MMdd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date creation = new Date();
         Map<String, Object> newArticle = new HashMap();
 
         newArticle.put("title", title);
         newArticle.put("author", author);
+        newArticle.put("category", category);
         newArticle.put("date", date);
         newArticle.put("likes", likes);
         newArticle.put("created", dateFormat.format(creation));
@@ -45,8 +46,8 @@ class FirebaseController
         newArticle.put("body", body);
         newArticle.put("tags", tags);
 
-        boolean result = fire.collection("Articles").document("category")
-                .collection("News").document(ID).set(newArticle).isSuccessful();
+        //document("category").collection("News").
+        boolean result = fire.collection("Articles").document(ID).set(newArticle).isSuccessful();
 
         if(!result)
         {
@@ -60,15 +61,16 @@ class FirebaseController
         return result;
     }
 
-    boolean add_Art_Article(String ID, String title, String author, String date, String excerpt, String body, ArrayList<String> tags)
+    boolean add_Art_Article(String ID, String title, String author, String date, String excerpt, String body, String category, ArrayList<String> tags)
     {
         int likes = 0;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MMdd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date creation = new Date();
         Map<String, Object> newArticle = new HashMap();
 
         newArticle.put("title", title);
         newArticle.put("author", author);
+        newArticle.put("category", category);
         newArticle.put("date", date);
         newArticle.put("likes", likes);
         newArticle.put("created", dateFormat.format(creation));
@@ -77,8 +79,8 @@ class FirebaseController
         newArticle.put("body", body);
         newArticle.put("tags", tags);
 
-        boolean result = fire.collection("Articles").document("category")
-                .collection("Art & Entertainment").document(ID).set(newArticle).isSuccessful();
+        //document("category").collection("Art & Entertainment").
+        boolean result = fire.collection("Articles").document(ID).set(newArticle).isSuccessful();
 
         if(!result)
         {
@@ -92,15 +94,16 @@ class FirebaseController
         return result;
     }
 
-    boolean add_Opinion_Article(String ID, String title, String author, String date, String excerpt, String body, ArrayList<String> tags)
+    boolean add_Opinion_Article(String ID, String title, String author, String date, String excerpt, String body, String category, ArrayList<String> tags)
     {
         int likes = 0;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MMdd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date creation = new Date();
         Map<String, Object> newArticle = new HashMap();
 
         newArticle.put("title", title);
         newArticle.put("author", author);
+        newArticle.put("category", category);
         newArticle.put("date", date);
         newArticle.put("likes", likes);
         newArticle.put("created", dateFormat.format(creation));
@@ -109,8 +112,8 @@ class FirebaseController
         newArticle.put("body", body);
         newArticle.put("tags", tags);
 
-        boolean result = fire.collection("Articles").document("category")
-                .collection("Opinion").document(ID).set(newArticle).isSuccessful();
+        //document("category").collection("Opinion").
+        boolean result = fire.collection("Articles").document(ID).set(newArticle).isSuccessful();
 
         if(!result)
         {
@@ -124,15 +127,16 @@ class FirebaseController
         return result;
     }
 
-    boolean add_Life_Article(String ID, String title, String author, String date, String excerpt, String body, ArrayList<String> tags)
+    boolean add_Life_Article(String ID, String title, String author, String date, String excerpt, String body, String category, ArrayList<String> tags)
     {
         int likes = 0;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MMdd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date creation = new Date();
         Map<String, Object> newArticle = new HashMap();
 
         newArticle.put("title", title);
         newArticle.put("author", author);
+        newArticle.put("category", category);
         newArticle.put("date", date);
         newArticle.put("likes", likes);
         newArticle.put("created", dateFormat.format(creation));
@@ -141,8 +145,7 @@ class FirebaseController
         newArticle.put("body", body);
         newArticle.put("tags", tags);
 
-        boolean result = fire.collection("Articles").document("category")
-                .collection("Student Life").document(ID).set(newArticle).isSuccessful();
+        boolean result = fire.collection("Articles").document(ID).set(newArticle).isSuccessful(); //document("category").collection("Student Life").
 
         if(!result)
         {
@@ -156,15 +159,16 @@ class FirebaseController
         return result;
     }
 
-    boolean add_Tech_Article(String ID, String title, String author, String date, String excerpt, String body, ArrayList<String> tags)
+    boolean add_Tech_Article(String ID, String title, String author, String date, String excerpt, String body, String category, ArrayList<String> tags)
     {
         int likes = 0;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MMdd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date creation = new Date();
         Map<String, Object> newArticle = new HashMap();
 
         newArticle.put("title", title);
         newArticle.put("author", author);
+        newArticle.put("category", category);
         newArticle.put("date", date);
         newArticle.put("likes", likes);
         newArticle.put("created", dateFormat.format(creation));
@@ -173,8 +177,7 @@ class FirebaseController
         newArticle.put("body", body);
         newArticle.put("tags", tags);
 
-        boolean result = fire.collection("Articles").document("category")
-                .collection("Tech").document(ID).set(newArticle).isSuccessful();
+        boolean result = fire.collection("Articles").document(ID).set(newArticle).isSuccessful();//document("category").collection("Tech").
 
         if(!result)
         {
@@ -194,7 +197,7 @@ class FirebaseController
         String[] liked = new String[100];
         String[] saved = new String[10];
         boolean verified = false;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MMdd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date creation = new Date();
 
         Map<String, Object> newAccount = new HashMap<>();
@@ -222,7 +225,7 @@ class FirebaseController
 
     boolean add_Comment(String ID, String articleID, String accountID, String body)
     {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MMdd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date creation = new Date();
         Map<String, Object> newComment = new HashMap<>();
 
@@ -244,10 +247,11 @@ class FirebaseController
         return result;
     }
 
-    Articles get_News_Article(String ID, Articles[] returned)
+    Articles get_Article(String ID, Articles[] returned)
     {
         final Articles[] temp = returned;
-        fire.collection("Articles").document("category").collection("News").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        //document("category").collection("News").
+        fire.collection("Articles").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()) {
@@ -257,6 +261,7 @@ class FirebaseController
                     if (map != null) {
                         String title = (String) map.get("title");
                         String author = (String) map.get("author");
+                        String category = (String) map.get("category");
                         String date = (String) map.get("date");
                         long likes = (long) map.get("likes");
                         String excerpt = (String) map.get("excerpt");
@@ -264,7 +269,7 @@ class FirebaseController
                         String[] tags = (String[]) map.get("tags");
 
 
-                        Articles article = new Articles(title, author, date, likes, excerpt, body, tags);
+                        Articles article = new Articles(title, author, date, likes, excerpt, body, category, tags);
                         temp[0] = article;
                         Log.d(TAG, "Article returned");
                     }
@@ -278,10 +283,11 @@ class FirebaseController
         return returned[0];
     }
 
-    Articles get_Art_Article(String ID, Articles[] returned)
+    Articles get_News_Article_By_Age(String ID, int age, Articles[] returned)
     {
         final Articles[] temp = returned;
-        fire.collection("Articles").document("category").collection("Art & Entertainment").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        //document("category").collection("News").
+        fire.collection("Articles").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()) {
@@ -291,6 +297,7 @@ class FirebaseController
                     if (map != null) {
                         String title = (String) map.get("title");
                         String author = (String) map.get("author");
+                        String category = (String) map.get("category");
                         String date = (String) map.get("date");
                         long likes = (long) map.get("likes");
                         String excerpt = (String) map.get("excerpt");
@@ -298,7 +305,7 @@ class FirebaseController
                         String[] tags = (String[]) map.get("tags");
 
 
-                        Articles article = new Articles(title, author, date, likes, excerpt, body, tags);
+                        Articles article = new Articles(title, author, date, likes, excerpt, body, category, tags);
                         temp[0] = article;
                         Log.d(TAG, "Article returned");
                     }
@@ -312,10 +319,11 @@ class FirebaseController
         return returned[0];
     }
 
-    Articles get_Opinion_Article(String ID, Articles[] returned)
+    Articles get_Art_Article_By_Age(String ID, int age, Articles[] returned)
     {
         final Articles[] temp = returned;
-        fire.collection("Articles").document("category").collection("Opinion").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        //document("category").collection("Art & Entertainment").
+        fire.collection("Articles").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()) {
@@ -325,6 +333,7 @@ class FirebaseController
                     if (map != null) {
                         String title = (String) map.get("title");
                         String author = (String) map.get("author");
+                        String category = (String) map.get("category");
                         String date = (String) map.get("date");
                         long likes = (long) map.get("likes");
                         String excerpt = (String) map.get("excerpt");
@@ -332,7 +341,7 @@ class FirebaseController
                         String[] tags = (String[]) map.get("tags");
 
 
-                        Articles article = new Articles(title, author, date, likes, excerpt, body, tags);
+                        Articles article = new Articles(title, author, date, likes, excerpt, body, category, tags);
                         temp[0] = article;
                         Log.d(TAG, "Article returned");
                     }
@@ -346,10 +355,11 @@ class FirebaseController
         return returned[0];
     }
 
-    Articles get_Life_Article(String ID, Articles[] returned)
+    Articles get_Opinion_Article_By_Age(String ID, int age, Articles[] returned)
     {
         final Articles[] temp = returned;
-        fire.collection("Articles").document("category").collection("Student Life").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        //document("category").collection("Opinion").
+        fire.collection("Articles").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()) {
@@ -359,6 +369,7 @@ class FirebaseController
                     if (map != null) {
                         String title = (String) map.get("title");
                         String author = (String) map.get("author");
+                        String category = (String) map.get("category");
                         String date = (String) map.get("date");
                         long likes = (long) map.get("likes");
                         String excerpt = (String) map.get("excerpt");
@@ -366,7 +377,7 @@ class FirebaseController
                         String[] tags = (String[]) map.get("tags");
 
 
-                        Articles article = new Articles(title, author, date, likes, excerpt, body, tags);
+                        Articles article = new Articles(title, author, date, likes, excerpt, body, category, tags);
                         temp[0] = article;
                         Log.d(TAG, "Article returned");
                     }
@@ -380,11 +391,11 @@ class FirebaseController
         return returned[0];
     }
 
-    Articles get_Tech_Article(String ID, Articles[] returned)
+    Articles get_Life_Article_By_Age(String ID, int age, Articles[] returned)
     {
         final Articles[] temp = returned;
-        fire.collection("Articles").document("category").collection("News").document(ID)
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        //document("category").collection("Student Life").
+        fire.collection("Articles").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()) {
@@ -394,6 +405,7 @@ class FirebaseController
                     if (map != null) {
                         String title = (String) map.get("title");
                         String author = (String) map.get("author");
+                        String category = (String) map.get("category");
                         String date = (String) map.get("date");
                         long likes = (long) map.get("likes");
                         String excerpt = (String) map.get("excerpt");
@@ -401,7 +413,43 @@ class FirebaseController
                         String[] tags = (String[]) map.get("tags");
 
 
-                        Articles article = new Articles(title, author, date, likes, excerpt, body, tags);
+                        Articles article = new Articles(title, author, date, likes, excerpt, body, category, tags);
+                        temp[0] = article;
+                        Log.d(TAG, "Article returned");
+                    }
+                }
+                else
+                {
+                    Log.v(TAG, "Article retrival failed");
+                }
+            }
+        });
+        return returned[0];
+    }
+
+    Articles get_Tech_Article_By_Age(String ID, int age, Articles[] returned)
+    {
+        final Articles[] temp = returned;
+        //document("category").collection("News").
+        fire.collection("Articles").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot snap = task.getResult();
+                    Map map = snap.getData();
+
+                    if (map != null) {
+                        String title = (String) map.get("title");
+                        String author = (String) map.get("author");
+                        String category = (String) map.get("category");
+                        String date = (String) map.get("date");
+                        long likes = (long) map.get("likes");
+                        String excerpt = (String) map.get("excerpt");
+                        String body = (String) map.get("body");
+                        String[] tags = (String[]) map.get("tags");
+
+
+                        Articles article = new Articles(title, author, date, likes, excerpt, body, category, tags);
                         temp[0] = article;
                         Log.d(TAG, "Article returned");
                     }
@@ -475,8 +523,8 @@ class FirebaseController
 
     boolean remove_News_Article(String ID)
     {
-        boolean result = fire.collection("Articles").document("category")
-                .collection("News").document(ID).delete().isSuccessful();
+        //document("category").collection("News").
+        boolean result = fire.collection("Articles").document(ID).delete().isSuccessful();
 
         if(!result)
         {
@@ -491,8 +539,8 @@ class FirebaseController
 
     boolean remove_Art_Article(String ID)
     {
-        boolean result = fire.collection("Articles").document("category")
-                .collection("Art & Entertainment").document(ID).delete().isSuccessful();
+        //document("category").collection("Art & Entertainment").
+        boolean result = fire.collection("Articles").document(ID).delete().isSuccessful();
 
         if(!result)
         {
@@ -507,8 +555,8 @@ class FirebaseController
 
     boolean remove_Opinion_Article(String ID)
     {
-        boolean result = fire.collection("Articles").document("category")
-                .collection("Opinion").document(ID).delete().isSuccessful();
+        //document("category").collection("Opinion").
+        boolean result = fire.collection("Articles").document(ID).delete().isSuccessful();
 
         if(!result)
         {
@@ -523,8 +571,8 @@ class FirebaseController
 
     boolean remove_Life_Article(String ID)
     {
-        boolean result = fire.collection("Articles").document("category")
-                .collection("Student Life").document(ID).delete().isSuccessful();
+        //document("category").collection("Student Life").
+        boolean result = fire.collection("Articles").document(ID).delete().isSuccessful();
 
         if(!result)
         {
@@ -539,8 +587,8 @@ class FirebaseController
 
     boolean remove_Tech_Article(String ID)
     {
-        boolean result = fire.collection("Articles").document("category")
-                .collection("Tech").document(ID).delete().isSuccessful();
+        //document("category").collection("Tech").
+        boolean result = fire.collection("Articles").document(ID).delete().isSuccessful();
 
         if(!result)
         {
