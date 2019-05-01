@@ -276,7 +276,7 @@ class FirebaseController
                 }
                 else
                 {
-                    Log.v(TAG, "Article retrival failed");
+                    Log.v(TAG, "Article retrieval failed");
                 }
             }
         });

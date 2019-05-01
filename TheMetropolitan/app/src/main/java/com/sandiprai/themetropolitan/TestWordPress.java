@@ -63,14 +63,15 @@ public class TestWordPress extends AppCompatActivity {
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
     FirebaseController controller;
-    Articles[] articleArr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_word_press);
 
-        articleArr = new Articles[1000];
+        final Articles[] returned = new Articles[1];
+        Articles article = new Articles();
+
         sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
         //editor = sharedpreferences.edit();
         editor = sharedpreferences.edit();
@@ -96,9 +97,16 @@ public class TestWordPress extends AppCompatActivity {
         //wpGetArticleByAge(5,134);//thru 84
         //wpGetArticleByAge(1,132);
 
-        String newestID = wpGetArticleIDByAge(1);
-        articleList.append(newestID);
-        articleArr[0] = controller.get_Article(newestID, articleArr);
+        String newestWpID = wpGetArticleIDByAge(1);
+        articleList.append(newestWpID);
+        //returned[0] = "GET FAILED";
+        //article = controller.get_Article(newestWpID, returned);
+        article = controller.get_Art_Article_By_Age("1808", 0, returned);
+        if (article != null) {
+            articleList.append(article.getTitle());
+        } else {
+            articleList.append("\narticle returned null");
+        }
         //articleList.append(articleArr[0].getTitle());
         //articleTitle.append(wpGetArticleIDByAge(1));
 
@@ -324,7 +332,7 @@ public class TestWordPress extends AppCompatActivity {
 
                     } else {
                         Log.i("The MNA - jsonParse","Post category is job. Skipping retrieval");
-                        Toast.makeText(getApplicationContext(), "Cannot retrieve job posts", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "Cannot retrieve job posts", Toast.LENGTH_LONG).show();
                     }
 
             } catch (JSONException e) {

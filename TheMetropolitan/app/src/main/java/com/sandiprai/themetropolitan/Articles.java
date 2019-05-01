@@ -1,15 +1,13 @@
 package com.sandiprai.themetropolitan;
 
-import java.util.Date;
-
 public class Articles {
     String title;
     String author;
     String category;
     String date;
     Long likes;
-    Date created;
-    Date updated;
+    String created;
+    String updated;
     String excerpt;
     String body;
     String[] tags;
@@ -22,8 +20,8 @@ public class Articles {
         this.category = category;
         this.date = date;
         this.likes = likes;
-        this.created = created;
-        this.updated = updated;
+        this.created = "";
+        this.updated = "";
         this.excerpt = excerpt;
         this.body = body;
         this.tags = tags;
@@ -39,11 +37,11 @@ public class Articles {
 
     public Long getLikes() {return likes;}
 
-    public Date getCreated() {return created;}
+    public String getCreated() {return created;}
 
-    public Date getUpdated() {return updated;}
+    public String getUpdated() {return updated;}
 
-    public void setUpdated(Date newTime)
+    public void setUpdated(String newTime)
     {
         updated = newTime;
     }
