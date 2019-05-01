@@ -3,6 +3,7 @@ package com.sandiprai.themetropolitan.UI.NewsCategories;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,38 +14,73 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.sandiprai.themetropolitan.Adapter.ArticleAdapter;
 import com.sandiprai.themetropolitan.Adapter.DummyArticleAdapter;
 import com.sandiprai.themetropolitan.DummyArticle;
 import com.sandiprai.themetropolitan.R;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 
 public class TechFragment extends Fragment {
+    private FirebaseFirestore firestore;
+    private RecyclerView techArticlesRecycler;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_saved, container, false);
+
         //Create the recycler
-        RecyclerView techArticlesRecycler = (RecyclerView) inflater.inflate(R.layout.fragment_saved,
-                container, false);
+        techArticlesRecycler = (RecyclerView) view.findViewById(R.id.saved_articles_recycler);
 
-        //Copy the array contents to the two arrays which are then passed to the adapter
-        String[] articleNames = new String[DummyArticle.articles.length];
-        for(int i = 0; i < articleNames.length; i++){
-            articleNames[i] = DummyArticle.articlesTech[i].getArticleTitle();
-        }
 
-        int[] articleImages = new int[DummyArticle.articles.length];
-        for(int i = 0; i < articleImages.length; i++){
-            articleImages[i] = DummyArticle.articlesTech[i].getImageId();
-        }
+        //Firebase Firestore part below
+        firestore = FirebaseFirestore.getInstance();
 
-        //Pass the two arrays to the adapter and set the adapter to the recycleview
-        DummyArticleAdapter dummyArticleAdapter = new DummyArticleAdapter(articleNames, articleImages);
-        techArticlesRecycler.setAdapter(dummyArticleAdapter);
+        firestore.collection("Articles")
+                .whereEqualTo("category", "Tech")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            //List<Article> articleList = new ArrayList<>();
+                            List<Integer> articleList = new ArrayList<>();
+
+                            for (DocumentSnapshot doc: task.getResult()){
+                                //Get the article, convert it to Article class object, and add to the list
+                                /*Article article = doc.toObject(Article.class);
+                                article.setId(doc.getId());
+                                articleList.add(article);*/
+
+                                articleList.add(Integer.valueOf(doc.getId()));
+                            }
+                            //order the articleList on descending order
+                            Collections.sort(articleList, Collections.reverseOrder());
+
+                            //Pass the two arrays to the adapter and set the adapter to the recycleview
+                            ArticleAdapter articleAdapter = new
+                                    ArticleAdapter(articleList, getActivity(), firestore);
+                            techArticlesRecycler.setAdapter(articleAdapter);
+
+                        } else {
+                            Log.d("Firestore", "ERROR GETTING DOCUMENTS", task.getException());
+                        }
+                    }
+                });
 
         //Set the layout manager
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         techArticlesRecycler.setLayoutManager(layoutManager);
 
-        return techArticlesRecycler;
+        return view;
     }
 }

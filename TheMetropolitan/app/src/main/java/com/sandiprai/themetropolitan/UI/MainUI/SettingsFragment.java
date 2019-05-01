@@ -1,9 +1,14 @@
 package com.sandiprai.themetropolitan.UI.MainUI;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,14 +28,22 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
 
     private View view;
 
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         //Since this is a fragment, we have to get the view first and then can access the
         //buttons, switches and other components
         view = inflater.inflate(R.layout.fragment_settings, container, false);
-        //View view = getView();
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        editor = sharedPreferences.edit();
+
+                //View view = getView();
         Button buttonSignIn = view.findViewById(R.id.buttonSignIn);
         Button buttonSignUp = view.findViewById(R.id.buttonSignUp);
         buttonSignIn.setOnClickListener(this);
@@ -40,11 +53,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
 
         //Set listener to the switches; see the onCheckChangedListener method below
         Switch switchTheme = view.findViewById(R.id.themeSwitch);
-        switchTheme.setChecked(true);
+        switchTheme.setChecked(sharedPreferences.getBoolean("ThemeSwitch", false));
         switchTheme.setOnCheckedChangeListener(this);
 
         Switch switchNotification = view.findViewById(R.id.notificationSwitch);
-        switchNotification.setChecked(false);
+        //switchNotification.setChecked(false);
+        switchNotification.setChecked(sharedPreferences.getBoolean("NotificationSwitch", false));
         switchNotification.setOnCheckedChangeListener(this);
 
         //Setting listener to textviews
@@ -107,13 +121,37 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
         switch (buttonView.getId()){
             case R.id.themeSwitch:
                 if(isChecked){
-//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-//                    getActivity().recreate();
-                    ((MainActivity)getActivity()).themeDarkOn();
+                    editor.putBoolean("ThemeSwitch", true);
+                    editor.commit();
+
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    getActivity().recreate();
+
+                    /*try {
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.frame_saved, SettingsFragment.class.newInstance()).commit();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (java.lang.InstantiationException e) {
+                        e.printStackTrace();
+                    }*/
+                    //((MainActivity)getActivity()).themeDarkOn();
                 } else {
-//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-//                    getActivity().recreate();
-                    ((MainActivity)getActivity()).themeLightOn();
+                    editor.putBoolean("ThemeSwitch", false);
+                    editor.commit();
+
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    /*try {
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.frame_saved, SettingsFragment.class.newInstance()).commit();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (java.lang.InstantiationException e) {
+                        e.printStackTrace();
+                    }*/
+
+                    getActivity().recreate();
+                    //((MainActivity)getActivity()).themeLightOn();
                 }
                 break;
             case R.id.notificationSwitch:
@@ -121,9 +159,16 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
                 if(isChecked){
                     CharSequence text1 = "Notification Switch On!";
                     showToast(text1);
+
+                    editor.putBoolean("NotificationSwitch", true);
+                    editor.commit();
+
                 } else{
                     CharSequence text2 = "Notification Switch Off!";
                     showToast(text2);
+
+                    editor.putBoolean("NotificationSwitch", false);
+                    editor.commit();
                 }
                 break;
         }

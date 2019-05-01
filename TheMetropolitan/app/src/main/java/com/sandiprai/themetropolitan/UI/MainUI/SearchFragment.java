@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputEditText;
+import com.sandiprai.themetropolitan.ArticlePage;
 import com.sandiprai.themetropolitan.R;
 import com.sandiprai.themetropolitan.TestWordPress;
 import com.squareup.picasso.Picasso;
@@ -37,7 +38,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
 
         ImageView imageView1 = view.findViewById(R.id.imageView1);
 
-        Picasso.get().load("https://cybersecuritybysandip.files.wordpress.com/2017/01/pushbullet-encryption-100606774-large.jpg").
+        Picasso.get().load("https://themetropolitan.metrostate.edu/wp-content/uploads/2019/03/190128_Suzanne_001-3.jpg").
                 into(imageView1);
 //https://photoshd.files.wordpress.com/2014/04/new-zealand.jpg
 //        Glide.with(view).load("https://cdn-images-1.medium.com/max/1600/1*VCQULp9m08s4dO2TgXg2Zw.png").into(imageView1);
@@ -57,10 +58,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
                 break;
 
             case R.id.buttonClear:
-                TextInputEditText searchText = getView().findViewById(R.id.textInputSearch);
+                /*TextInputEditText searchText = getView().findViewById(R.id.textInputSearch);
                 searchText.setText("");
                 CharSequence text1 = "Search text cleared!";
-                showToast(text1);
+                showToast(text1);*/
+
+                Intent intent1 = new Intent(view.getContext(), ArticlePage.class);
+                startActivity(intent1);
                 break;
         }
 

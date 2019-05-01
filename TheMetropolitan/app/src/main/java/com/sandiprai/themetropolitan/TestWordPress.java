@@ -32,7 +32,8 @@ import java.util.regex.Pattern;
 
 public class TestWordPress extends AppCompatActivity {
     //String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts?fields=id,excerpt,title,content,date";
-    String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/1489";
+    String url;
+    TextView articleTitle;
     TextView articleList;
     Bitmap articleImg;
     NetworkImageView theImg;
@@ -42,7 +43,7 @@ public class TestWordPress extends AppCompatActivity {
     //private ListView postList;
     private RequestQueue rQueue;
     private ImageLoader mImageLoader;
-    int postID;
+    int postID = 1808;
     String postExerpt[];
     String postTitle[];
     String postContent;
@@ -62,7 +63,8 @@ public class TestWordPress extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_word_press);
 
-        articleList = findViewById(R.id.textViewWordPressTitle);
+        articleTitle = findViewById(R.id.textViewWordPressTitle);
+        articleList = findViewById(R.id.textViewWordPressContent);
         //theImg = (NetworkImageView)findViewById(R.id.imageView);
         rQueue = Volley.newRequestQueue(this);
         //rQueue.start();
@@ -71,7 +73,7 @@ public class TestWordPress extends AppCompatActivity {
         // progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         //progressDialog.show();
         articleList.clearComposingText();
-        jsonParse();
+        jsonParse(postID);
         //String itter = tmpList.iterator().toString();
         //allArticles.set(Integer.parseInt(itter),tmpList.get(Integer.parseInt(itter)));
         //getAuthorFromURL("http://themetropolitan.metrostate.edu/wp-json/wp/v2/users/22");
@@ -130,8 +132,9 @@ public class TestWordPress extends AppCompatActivity {
 
 
 
-    private String jsonParse() {
+    private String jsonParse(int postID) {
         final String[] theArticles = new String[1];
+        url = "https://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/"+postID;
 
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -140,6 +143,8 @@ public class TestWordPress extends AppCompatActivity {
                     response = response.substring(1,response.length()-1);
                 }
 
+                //variable declarations
+                JSONObject mainObject;
                 int id = 0;
                 String titleFull;
                 String title = "";
@@ -148,8 +153,9 @@ public class TestWordPress extends AppCompatActivity {
                 String authorName = null;
                 String dateMain;
                 SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz"); //HH (0-23 hours), hh (normal hrs), a (AM/PM), z (timezone);
-                String date = "";
-                String time = "";
+                String date;
+                String time;
+                String datetimeP = "";
                 //get the current date
                 Date now = new Date();
                 String cat = "";
@@ -160,7 +166,7 @@ public class TestWordPress extends AppCompatActivity {
                 String content = "";
                 Pattern pattern;
                 Matcher matcher;
-                String tisNull;
+                String tmpMainPic[] = new String[2];
                 String txt;
                 String link;
                 String subLink;
@@ -169,10 +175,9 @@ public class TestWordPress extends AppCompatActivity {
                 //articleList.setText(response);
                 try {
                     //turning the full string response from the url get into a JSON object
-                    JSONObject mainObject = new JSONObject(response);
+                    mainObject = new JSONObject(response);
                     //get the first article's ID
                     id = Integer.parseInt(mainObject.getString("id"));
-
 
                     //get the title
                     titleFull = mainObject.getString("title");
@@ -198,6 +203,7 @@ public class TestWordPress extends AppCompatActivity {
                     String dateSub [] = dateMain.split("T");
                     date = dateSub[0];
                     time = dateSub[1];
+                    datetimeP = date + " " + time;
 
 
                     //get the category
@@ -221,6 +227,8 @@ public class TestWordPress extends AppCompatActivity {
                         case "[159]":
                             cat = "Jobs";
                             break;
+                        case "[1]":
+                            cat = "Uncategorized";
                         default:
                             cat = "unknown";
                     }
@@ -247,8 +255,9 @@ public class TestWordPress extends AppCompatActivity {
                     subLink = link.substring(1,link.length()-1);
                     JSONObject link2 = new JSONObject(subLink);
                     picURL = link2.getString("href");
-                    //getImageURL(mainPicURL);//the current implementation without a class does not allow the variable to be set in the scope of the method called here
-                    mainPicURL = picURL;
+                    tmpMainPic = picURL.split(":");
+                    mainPicURL = "https:" + tmpMainPic[1];//the current implementation without a class does not allow the variable to be set in the scope of the method called here
+                    getImageURL(mainPicURL);
 
                 } catch (JSONException e){
                     articleList.append("Error, article URL GET ran into an error.");
@@ -270,23 +279,29 @@ public class TestWordPress extends AppCompatActivity {
                     //picPosStart[count] = content.indexOf("<figure",0); // find picture start position
                     count++;
                 }
+                count++; //offset for the loop starting at 1
                 //strin += count + ", ";
                 //articleList.append(strin);
 
-                for (int i = 0; i <= count; i++) {
+                String regexStart = "768w,\\s"; //srcset=\\\\\"
+                String regexEnd = "\\s1600w"; //w,\\s
+
+                for (int i = 1; i <= count; i++) {
                     if (i != count) {
                         picPosStart[i] = content.indexOf("<figure",lastPicStart+1); // find picture start position
                         picPosEnd[i] = content.indexOf("figure>", lastPicEnd+1); // find picture start position
                         pic[i] = content.substring(picPosStart[i], picPosEnd[i] + 1);
-                        tmpPic = pic[i].split("srcset=");
-                        tmpPic = tmpPic[1].split("w,");
-                        pic[i] = tmpPic[1].substring(1, tmpPic[1].length()-4);
+                        tmpPic = pic[i].split(regexStart);
+                        tmpPic = tmpPic[1].split(regexEnd);
+                        pic[i] = tmpPic[0]; //evaluates for some reason as https which is necessary for pie and above devices
                         //imageArr[i] = getImageFromURL(pic[i]);
+//                        tmpPic = pic[i].split(":");
+//                        pic[i] = "https:" + tmpPic[1];
                     } else {
                         picPosStart[i] = content.length();
                     }
                     // set to be the String of where end is plus 1 of that position
-                    if (i != 0) {
+                    if (i != 1) {
                         lastPicEnd += 7;
                     }
                     //lastPicEnd += 7;
@@ -312,15 +327,6 @@ public class TestWordPress extends AppCompatActivity {
                 //theImg.setImageUrl(pic[0],mImageLoader);
 
 
-                tisNull = "Pic is null";
-                //Bitmap cpyPic = getArticleImg();
-                //theImg.setImageBitmap(cpyPic);
-//                Bitmap bit = getArticleImg();
-//                if (bit != null){ tisNull = "Pic not null\n"; }
-
-                //String outpt = "pic: " + imageArr[1] + ", ";
-                //articleList.append(outpt);
-
                 Spanned str = HtmlCompat.fromHtml(txt, HtmlCompat.FROM_HTML_MODE_LEGACY);
                 content = str.toString();
                 //append the pieces together to print
@@ -328,24 +334,23 @@ public class TestWordPress extends AppCompatActivity {
 //                    output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
 //                    output += "~" + content + "~"+getAuthor()+"~"+pic[0];//output += "~" + content + "~"+tisNull+"~"+pic[0];
 
-                String output = id + "~" + authorName + "~" + title + "~" + date + "~" + time;
+                String output = id + "~" + authorName + "~" + title + "~" + datetimeP;
                 output += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
-                output += "~" + content + "~"+mainPicURL+"~"+pic[1];
+                output += "~" + content;
+                String urls = mainPicURL+"~"+pic[1]+"~"+pic[2];
+                //articleTitle.append(pic[1]);
                 //articleList.append(output+"\n");
 
 
                 //allArticles.set(id, output);
                 //theArticles[0] = output;
                 allArticles.add(output);
-                //articleList.append("This is an inner append\n");
-                //allArticles.add(output);
-//                    if (allArticles.isEmpty()) {
-//                        articleList.append("This inner content is empty\n");
-//                    }
-                printArticle(Integer.toString(id), allArticles);
+
+                //this will be a database insert/update
+                printArticle(Integer.toString(id), allArticles, urls);
 
             }
-        }, new com.android.volley.Response.ErrorListener() {
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getApplicationContext(), "URL GET error occurred", Toast.LENGTH_LONG).show();
@@ -357,16 +362,20 @@ public class TestWordPress extends AppCompatActivity {
         return theArticles[0];
     }
 
-    private void printArticle(String id, ArrayList<String> mainContent){//, Bitmap pic
-//        String output = "Id: " + id + " \nTitle: " + title + " \n\n\nDate made: " + date + " \nTime made: " + time;
-//        output += "\nRetrieved: " + dateFormater.format(now) + "\n\n\n\n\n\n\nCategory: " + cat + "\nExcerpt: " + excerpt;
-//        output += "\n\nContent: " + content + "\n"+tisNull+"\n"+pic[0]+"\n\n\n";
 
-        String theContents[] = new String[11];
+    private void printArticle(String id, ArrayList<String> mainContent, String urls){//, Bitmap pic
+//        mainContent = id + "~" + authorName + "~" + title + "~" + datetimeP;
+//        mainContent += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
+//        mainContent += "~" + content;
+//        urls = mainPicURL+"~"+pic[0]+"~"+pic[1];
+
+        String theContents[] = new String[12];
+        String theLinks[] = new String[3];
 
         //grab the article with the given ID from the List of articles
         for (String article: mainContent) {
             theContents = article.split("~");
+            theLinks = urls.split("~");
             if (theContents[0] == id) {
                 continue;
             }
@@ -384,12 +393,13 @@ public class TestWordPress extends AppCompatActivity {
 //            }
 //        }
 
-        String toPrint = "Id: " + theContents[0] + " \nTitle: " + theContents[2] + " \n\nDate made: " + theContents[3] + " \nTime made: " + theContents[4];
-        toPrint += "\nRetrieved: " + theContents[5] + "\n\n\n"+"Excerpt: " + theContents[7]+"\n\nAuthor: "+theContents[1];
-        toPrint += "                                                Category: " + theContents[6] + "\n\n";
-        toPrint += "\n\nContent: " + theContents[8] +"\n\n";
-        toPrint += "Article Image URL: "+theContents[9]+"\nIn-text pic: "+theContents[10]+"\n\n";
+        String toPrint = "Id: " + theContents[0] + " \n\nDatetime published: " + theContents[3];
+        toPrint += "\nRetrieved: " + theContents[4] + "\n\n\n"+"Excerpt: " + theContents[6]+"\n\nAuthor: "+theContents[1];
+        toPrint += "                                                Category: " + theContents[5] + "\n\n";
+        toPrint += "\n\nContent: " + theContents[7] +"\n\n";
+        toPrint += "Article Image JSON URL: "+theLinks[0]+"\nIn-text pic1: "+theLinks[1]+"\nIn-text pic2: "+ theLinks[2] +"\n\n";
         //String toPrint = "test string";
+        articleTitle.append("Title: " + theContents[2]); //made a separate field for the title so this is writing it there
         articleList.append(toPrint);
     }
 
@@ -428,37 +438,34 @@ public class TestWordPress extends AppCompatActivity {
                     response = response.substring(1,response.length()-1);
                 }
 
-                int id = 0;
                 String picURLFull;
                 String pictureURL;
                 String captionFull;
                 String caption;
-                //String txt;
-                //String pic[] = new String[10];
+                String tmpUrlPieces[];
 
                 //articleList.setText(response);
                 try {
                     //turning the full string response from the url get into a JSON object
                     JSONObject mainObject = new JSONObject(response);
-                    //get the first article's ID
-                    id = Integer.parseInt(mainObject.getString("id"));
 
                     //get the caption
-                    captionFull = mainObject.getString("caption");
-                    JSONObject captionMain = new JSONObject(captionFull);
-                    caption = captionMain.getString("rendered");
-                    Spanned str = HtmlCompat.fromHtml(caption, HtmlCompat.FROM_HTML_MODE_LEGACY);
-                    caption = str.toString();
+//                    captionFull = mainObject.getString("caption");
+//                    JSONObject captionMain = new JSONObject(captionFull);
+//                    caption = captionMain.getString("rendered");
+//                    Spanned str = HtmlCompat.fromHtml(caption, HtmlCompat.FROM_HTML_MODE_LEGACY);
+//                    caption = str.toString();
 
-                    //get the final picture's URL
-                    picURLFull = mainObject.getString("description");
+                    //get the final picture's URL as https
+                    picURLFull = mainObject.getString("guid");
                     JSONObject picMain = new JSONObject(picURLFull);
                     pictureURL = picMain.getString("rendered");
-                    //pictureURL = pictureURL.substring(1,name2.length()-1);
-                    mainPicURL = pictureURL;
-                    //setAuthorURL(name3); //call the name url to get the author's name from it
-                    //getImageFromURL(picURL);
-                    // = articleImg;
+                    //turn url into https from http
+                    tmpUrlPieces = pictureURL.split(":");
+                    pictureURL = "https:"+tmpUrlPieces[1];
+
+                    articleList.append(pictureURL+" stuff\n\n\n\n\n\n\n");
+                    //add the image url to the first spot in the database's article picture array
 
                 } catch (JSONException e){
                     articleList.append("Error, picture URL GET ran into an error.");
