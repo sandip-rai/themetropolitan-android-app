@@ -18,7 +18,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sandiprai.themetropolitan.AboutPageActivity;
+import com.sandiprai.themetropolitan.FontSizeActivity;
 import com.sandiprai.themetropolitan.R;
+import com.sandiprai.themetropolitan.ReportBugsActivity;
 import com.sandiprai.themetropolitan.UI.UserSettings.SignInActivity;
 import com.sandiprai.themetropolitan.UI.UserSettings.SignUpActivity;
 import com.sandiprai.themetropolitan.UI.UserSettings.UserSettingsActivity;
@@ -48,6 +51,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
         Button buttonSignUp = view.findViewById(R.id.buttonSignUp);
         buttonSignIn.setOnClickListener(this);
         buttonSignUp.setOnClickListener(this);
+
+        TextView accountView = view.findViewById(R.id.accountView);
+        accountView.setOnClickListener(this);
 
         //using AppCompatDelegate with a switch in android; still not working
 
@@ -100,16 +106,22 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
             case R.id.fontSizeView:
                 CharSequence text2 = "Font size clicked!";
                 showToast(text2);
+
+                startActivity(new Intent(view.getContext(), FontSizeActivity.class));
                 break;
 
             case R.id.reportBugsView:
                 CharSequence text3 = "Report bugs clicked!";
                 showToast(text3);
+
+                startActivity(new Intent(view.getContext(), ReportBugsActivity.class));
                 break;
 
             case R.id.aboutView:
                 CharSequence text4 = "About clicked!";
                 showToast(text4);
+
+                startActivity(new Intent(view.getContext(), AboutPageActivity.class));
                 break;
         }
 

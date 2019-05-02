@@ -18,12 +18,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.sandiprai.themetropolitan.R;
+import com.sandiprai.themetropolitan.UI.MainUI.MainActivity;
 import com.sandiprai.themetropolitan.UI.MainUI.SettingsFragment;
 
-public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     EditText editTextEmail, editTextPassword;
     private FirebaseAuth mAuth;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +37,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         String appName = "Sign Up";
         toolbarTitle.setText(appName.toUpperCase());
 
-        editTextEmail =  findViewById(R.id.editTextEmailSignUp);
-        editTextPassword =  findViewById(R.id.editTextPasswordSignUp);
+        editTextEmail = findViewById(R.id.editTextEmailSignUp);
+        editTextPassword = findViewById(R.id.editTextPasswordSignUp);
 
         mAuth = FirebaseAuth.getInstance();
 
-        findViewById(R.id.buttonSignUp).setOnClickListener(this);
-        findViewById(R.id.buttonCancelSignIn).setOnClickListener(this);
+        findViewById(R.id.buttonSignUpConfirm).setOnClickListener(this);
+        findViewById(R.id.buttonCancelSignUp).setOnClickListener(this);
+
     }
 
     @Override
@@ -52,56 +53,47 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.buttonSignUpConfirm:
                 registerUser();
                 break;
-         /*   case R.id.textViewLogin:
-                startActivity(new Intent(this, SignIn.class));
-                break; */
             case R.id.buttonCancelSignUp:
                 finish();
-                startActivity(new Intent(this, SettingsFragment.class));
-                break;
+                startActivity(new Intent(view.getContext(), MainActivity.class));
         }
     }
 
-    private void registerUser() {
+    private void registerUser(){
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
-        if (email.isEmpty()) {
+        if(email.isEmpty()){
             editTextEmail.setError("Email is required");
             editTextEmail.requestFocus();
-
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             editTextEmail.setError("Please enter a valid email");
             editTextEmail.requestFocus();
-
         }
-        if (password.isEmpty()) {
+        if(password.isEmpty()){
             editTextPassword.setError("Password is required");
             editTextPassword.requestFocus();
-
         }
-        if (password.length() < 6) {
+        if(password.length() < 6) {
             editTextPassword.setError("Minimum length of password should be 6");
             editTextPassword.requestFocus();
-
         }
 
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
-                new OnCompleteListener<AuthResult>() {
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(getApplicationContext(), "User Registered Successfully",
                             Toast.LENGTH_SHORT).show();
                     finish();
-                    startActivity(new Intent(SignUpActivity.this,
-                            UserSettingsActivity.class));
-                } else {
-                    if(task.getException() instanceof FirebaseAuthUserCollisionException) {
+                    startActivity(new Intent(SignUpActivity.this, UserSettingsActivity.class));
+                }
+                else {
+                    if(task.getException() instanceof FirebaseAuthUserCollisionException){
                         Toast.makeText(getApplicationContext(), "You are already registered",
                                 Toast.LENGTH_SHORT).show();
-                    } else{
+                    } else {
                         Toast.makeText(getApplicationContext(), task.getException().getMessage(),
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -109,6 +101,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-    }
 
+
+    }
 }

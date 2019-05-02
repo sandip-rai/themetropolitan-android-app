@@ -27,65 +27,35 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
-
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="Enter article names or keywords">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/textInputSearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center">
+                android:padding="7dp"
+                android:text="Search articles in issues"
+                android:gravity="center"
+                android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+            <Spinner
+                android:id="@+id/spinnerArticleSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/spinner_article_issues"
+                android:layout_gravity="center_horizontal"/>
+
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonSearch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:insetLeft="130dp"
-                    android:insetRight="10dp"
+                    android:gravity="center"
+                    android:insetLeft="120dp"
                     android:text="Search" />
-
-                <com.google.android.material.button.MaterialButton
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:id="@+id/buttonClear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:insetRight="20dp"
-                    android:text="Clear" />
-
-            </LinearLayout>
 
         </LinearLayout>
 
 
     </com.google.android.material.card.MaterialCardView>
 
-
-<!--Card for recent searches. Data is set here manually. Will be replaced with a ListView
-to accommodate dynamic data-->
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="340dp"
-        android:layout_height="400dp"
-        android:layout_gravity="center_horizontal"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="2dp"
-        app:contentPadding="10dp"
-        android:layout_marginLeft="@dimen/mtrl_card_spacing"
-        android:layout_marginTop="@dimen/mtrl_card_spacing"
-        android:layout_marginRight="@dimen/mtrl_card_spacing">
-        android:layout_marginBottom="@dimen/mtrl_card_spacing">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -96,37 +66,20 @@ to accommodate dynamic data-->
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="7dp"
-                android:text="Recent Searches"
+                android:text="Search Lists"
                 android:gravity="center"
                 android:textAppearance="?attr/textAppearanceHeadline6" />
 
-            <TextView
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/search_recyclerview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="IT alert"
-                android:textAppearance="?attr/textAppearanceBody2" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="President Ginny Arthur"
-                android:textAppearance="?attr/textAppearanceBody2" />
-
-
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                xmlns:android="http://schemas.android.com/apk/res/android" />
 
 
         </LinearLayout>
 
-
-    </com.google.android.material.card.MaterialCardView>
 
 
 

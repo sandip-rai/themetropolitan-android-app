@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.sandiprai.themetropolitan.UI.UserSettings.UserSettingsActivity">
+    tools:context="com.sandiprai.themetropolitan.ReportBugsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -15,13 +15,13 @@
         included here. Remember the id.-->
         <include
             layout="@layout/toolbar_main"
-            android:id="@+id/toolbarInUserSettings" />
+            android:id="@+id/toolbarInReportBugsPage" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="340dp"
-        android:layout_height="400dp"
+        android:layout_height="350dp"
         android:layout_gravity="center_vertical"
         app:cardCornerRadius="4dp"
         app:cardElevation="2dp"
@@ -44,18 +44,12 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:padding="8dp"
-                    android:text="Name:"
-                    android:textSize="20sp" />
+                    android:text="If you have found any issues with the app, please contact us using the contact information listed below. Thank you."
+                    android:textSize="18sp" />
 
-                <EditText
-                    android:id="@+id/textNameinSettings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:textSize="20sp" />
+
 
             </LinearLayout>
 
@@ -65,64 +59,41 @@
                 android:orientation="horizontal">
 
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:text="Email:"
-                    android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/textEmailinSettings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="8dp"
-                    android:textSize="20sp" />
+                    android:text="CONTACT"
+                    android:textSize="23sp" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <TextView
-                    android:text="Verified"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                    android:id="@+id/textViewVerified"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="The Metropolitan@metrostate.edu"
+                    android:textSize="16sp" />
             </LinearLayout>
+
+
+
 
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
-
-            android:id="@+id/buttonSignOut"
+            android:id="@+id/buttonReport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|bottom"
-            android:insetRight="20dp"
-            android:text="Sign Out" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonSaveinUserSettings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:insetRight="20dp"
-            android:text="Save" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonHomeInUserSetting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|bottom"
             android:insetRight="20dp"
             android:text="Got It" />
 
@@ -130,3 +101,4 @@
     </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>
+

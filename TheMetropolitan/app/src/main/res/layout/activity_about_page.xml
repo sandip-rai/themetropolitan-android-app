@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.sandiprai.themetropolitan.UI.UserSettings.UserSettingsActivity">
+    tools:context="com.sandiprai.themetropolitan.AboutPageActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         included here. Remember the id.-->
         <include
             layout="@layout/toolbar_main"
-            android:id="@+id/toolbarInUserSettings" />
+            android:id="@+id/toolbarInAboutPage" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -46,16 +46,10 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="8dp"
-                    android:text="Name:"
-                    android:textSize="20sp" />
+                    android:text="THE METROPOLITAN is the student newspapger of Metropolitan State University. Founded 1992. The Metropolitan is a member of the Associated Collegiate Press."
+                    android:textSize="18sp" />
 
-                <EditText
-                    android:id="@+id/textNameinSettings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:textSize="20sp" />
+
 
             </LinearLayout>
 
@@ -65,64 +59,72 @@
                 android:orientation="horizontal">
 
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:text="Email:"
-                    android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/textEmailinSettings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="8dp"
-                    android:textSize="20sp" />
+                    android:text="CONTACT US"
+                    android:textSize="23sp" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <TextView
-                    android:text="Verified"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                    android:id="@+id/textViewVerified"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="The Metropolitan@metrostate.edu"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="Facebook.com/TheMetropolitanMN/"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="651-793-1553"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
+
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
 
-            android:id="@+id/buttonSignOut"
+
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonAbout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|bottom"
-            android:insetRight="20dp"
-            android:text="Sign Out" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonSaveinUserSettings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:insetRight="20dp"
-            android:text="Save" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonHomeInUserSetting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|bottom"
             android:insetRight="20dp"
             android:text="Got It" />
 
@@ -130,3 +132,6 @@
     </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>
+
+
+
