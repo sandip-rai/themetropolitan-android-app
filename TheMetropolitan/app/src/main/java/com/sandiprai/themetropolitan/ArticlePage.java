@@ -118,10 +118,11 @@ public class ArticlePage extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.like_article:
                 //this.startActivity(commentIntent);
-                fragment = new CommentController();
-                loadFragment(fragment);
-                //CharSequence text1 = articleTitle + " liked!";
-                //showToast(text1);
+                //fragment = new CommentController();
+                //loadFragment(fragment);
+
+                CharSequence text1 = articleTitle + " liked!";
+                showToast(text1);
                 return true;
             case R.id.save_article:
                 //verify login

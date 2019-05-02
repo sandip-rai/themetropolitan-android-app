@@ -2,15 +2,14 @@ package com.sandiprai.themetropolitan.UI.UserSettings;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
 
+import com.sandiprai.themetropolitan.FirebaseController;
 import com.sandiprai.themetropolitan.TestWordPress;
 
 
@@ -22,10 +21,10 @@ public class PeriodicArticleCheck extends JobIntentService {
     public static final String ACTION_FOO = "com.sandiprai.themetropolitan.action.FOO";
     public static final String ACTION_BAZ = "com.sandiprai.themetropolitan.action.BAZ";
     public static final int NOTIFICATION_ID = 5567;
-    SharedPreferences sharedpreferences;
-    //SharedPreferences.Editor editor;
+
     NotificationsHelper helper;
     TestWordPress testWordPress;
+    FirebaseController controller;
 
     public static final int JOB_ID = 1;
     //amounts of time in milliseconds
@@ -44,19 +43,18 @@ public class PeriodicArticleCheck extends JobIntentService {
 
     public void onCreate() {
         super.onCreate();
-        sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
-        //editor = sharedpreferences.edit();
         Log.d(TAG, "onCreate"); //log the string message
     }
 
     //main method called that actually runs the code
     @Override //onHandleWork is equivalent to onHandleIntent
     protected void onHandleWork(@NonNull Intent intent) {
-        testWordPress = new TestWordPress();
+        //testWordPress = new TestWordPress();
+        controller = new FirebaseController(this);
 
         boolean newArticleFound = false;
         String newestIdDatabase = "";
-        String newestIdWordpress;
+        String newestIdWordpress = "1";
         Log.d(TAG,"onHandleWork"); //log the string that we are in this function
 
         //make a notification to display later
@@ -73,14 +71,17 @@ public class PeriodicArticleCheck extends JobIntentService {
             Log.d(TAG, input + " - " + i); //log the string message
 
             //database call for latest entry id
-            newestIdDatabase = sharedpreferences.getString("newestFirebaseID","0"); //insert Firebase method call here
+            newestIdDatabase = controller.get_Newest_Article_Id(); //insert Firebase method call here
 
             // article class call for WordPress latest article info to return id using
             // http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/?orderby=date&per_page=1&page=1
-            newestIdWordpress = testWordPress.wpGetArticleIDByAge(1);
+            //newestIdWordpress = testWordPress.wpGetArticleIDByAge(1);
 
+            Log.d(TAG,"PeriodicArticleCheck -  the newest Firebase article is: "+newestIdDatabase+" and newest Wordpress article is: "+newestIdWordpress);
             if(newestIdDatabase != newestIdWordpress) {
                 helper.getManager().notify(NOTIFICATION_ID, builder.build());
+            } else {
+                Log.d(TAG, "PeriodicArticleCheck -  no new articles  = = = = = = = = = = =    =======================        =====");
             }
         }
 

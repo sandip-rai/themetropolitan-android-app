@@ -1,22 +1,24 @@
 package com.sandiprai.themetropolitan.UI.MainUI;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.sandiprai.themetropolitan.R;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.sandiprai.themetropolitan.R;
+import com.sandiprai.themetropolitan.UI.UserSettings.NotificationsHelper;
+
 public class MainActivity extends AppCompatActivity{
+    NotificationsHelper helper;
+    public static final int NOTIFICATION_ID = 5565;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,14 @@ public class MainActivity extends AppCompatActivity{
 
         setupBottomNavigationView();
 
+        //make a notification to display later
+        helper = new NotificationsHelper(this);
+        String input = "New Metropolitan articles found";
+        String textTitle = "New Articles Found!";
+        String textContent = "New articles were published. Press this to check them out.";
+        NotificationCompat.Builder builder = helper.getChannelNotification(textTitle, textContent);
+
+        //helper.getManager().notify(NOTIFICATION_ID, builder.build());
     }
 
 

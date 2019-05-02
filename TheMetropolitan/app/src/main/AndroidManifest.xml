@@ -15,9 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <receiver
-            android:name=".UI.UserSettings.BootReceiver"
-            android:enabled="true"
-            android:exported="true">
+            android:name=".UI.UserSettings.BootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
@@ -34,6 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ArticlePage" />
         <activity
             android:name=".DummyArticleDetail"

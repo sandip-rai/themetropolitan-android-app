@@ -56,7 +56,7 @@ public class TestWordPress extends AppCompatActivity {
 
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
-    FirebaseController controller = new FirebaseController();
+    FirebaseController controller = new FirebaseController(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +65,6 @@ public class TestWordPress extends AppCompatActivity {
 
         //final Articles[] returned = new Articles[1];
         //Articles article = new Articles();
-
-        sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
-        //editor = sharedpreferences.edit();
-        editor = sharedpreferences.edit();
 
 
         articleTitle = findViewById(R.id.textViewWordPressTitle);
@@ -110,8 +106,12 @@ public class TestWordPress extends AppCompatActivity {
     }
 
     public String wpGetArticleIDByAge (int num) {
+        String newestID = "";
+        sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
         parseID(num);
-        String newestID = sharedpreferences.getString("NewestWPArticle", "");
+        if (num == 1) {
+            newestID = sharedpreferences.getString("NewestWPArticle", "");
+        }
         //on non-articles, returns "invalid post type"
         return newestID;
     }
@@ -405,7 +405,8 @@ public class TestWordPress extends AppCompatActivity {
 
     private void parseID (int postNum) {
         url = "https://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/?orderby=date&per_page=1&page="+postNum;
-
+        sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
+        editor = sharedpreferences.edit();
 
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
