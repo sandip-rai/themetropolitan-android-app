@@ -1,6 +1,9 @@
 package com.sandiprai.themetropolitan.UI.NewsCategories;
 
+import android.content.SharedPreferences.Editor;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,11 +27,15 @@ import java.util.Collections;
 import java.util.List;
 
 public class OpinionFragment extends Fragment {
+    SharedPreferences sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+    Editor editor;
     private FirebaseFirestore firestore;
     private RecyclerView opinionArticlesRecycler;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        //editor = sharedpreferences.edit();
         View view = inflater.inflate(R.layout.fragment_saved, container, false);
 
         //Create the recycler
@@ -46,6 +53,7 @@ public class OpinionFragment extends Fragment {
                         if (task.isSuccessful()){
                             //List<Article> articleList = new ArrayList<>();
                             List<Integer> articleList = new ArrayList<>();
+                            String fireNewestArticleID = "";
 
                             for (DocumentSnapshot doc: task.getResult()){
                                 //Get the article, convert it to Article class object, and add to the list
@@ -57,7 +65,11 @@ public class OpinionFragment extends Fragment {
                             }
                             //order the articleList on descending order
                             Collections.sort(articleList, Collections.reverseOrder());
+                            fireNewestArticleID = articleList.get(0).toString();
 
+                            editor = sharedpreferences.edit();
+                            editor.putString("newestFirebaseID",fireNewestArticleID);
+                            editor.apply();
                             //Pass the two arrays to the adapter and set the adapter to the recycleview
                             ArticleAdapter articleAdapter = new
                                     ArticleAdapter(articleList, getActivity(), firestore);

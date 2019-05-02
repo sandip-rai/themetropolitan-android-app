@@ -56,7 +56,7 @@ public class TestWordPress extends AppCompatActivity {
 
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
-    FirebaseController controller;
+    FirebaseController controller = new FirebaseController();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class TestWordPress extends AppCompatActivity {
         //editor = sharedpreferences.edit();
         editor = sharedpreferences.edit();
 
-        controller = new FirebaseController();
+
         articleTitle = findViewById(R.id.textViewWordPressTitle);
         articleList = findViewById(R.id.textViewWordPressContent);
         //theImg = (NetworkImageView)findViewById(R.id.imageView);
@@ -91,8 +91,8 @@ public class TestWordPress extends AppCompatActivity {
         //wpGetArticleByAge(5,134);//thru 84
         //wpGetArticleByAge(1,131);
 
-        String newestWpID = wpGetArticleIDByAge(1);
-        articleList.append("Newest WP article is: "+newestWpID);
+        //String newestWpID = wpGetArticleIDByAge(1);
+        //articleList.append("Newest WP article is: "+newestWpID);
         //returned[0] = "GET FAILED";
         //article = controller.get_Article(newestWpID, returned);
         //article = controller.get_Article("1808", returned);
@@ -105,8 +105,11 @@ public class TestWordPress extends AppCompatActivity {
 
     }
 
+    public TestWordPress(){
 
-    private String wpGetArticleIDByAge (int num) {
+    }
+
+    public String wpGetArticleIDByAge (int num) {
         parseID(num);
         String newestID = sharedpreferences.getString("NewestWPArticle", "");
         //on non-articles, returns "invalid post type"
