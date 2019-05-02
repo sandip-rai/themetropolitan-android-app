@@ -118,6 +118,14 @@
             android:insetRight="20dp"
             android:text="Save" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonHomeInUserSetting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:insetRight="20dp"
+            android:text="Got It" />
+
 
     </com.google.android.material.card.MaterialCardView>
 
