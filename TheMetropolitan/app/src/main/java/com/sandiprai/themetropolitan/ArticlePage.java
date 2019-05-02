@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -101,6 +103,9 @@ public class ArticlePage extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Fragment fragment;
+        FragmentTransaction fragmentTransaction;
+
         Intent myIntent = new Intent(Intent.ACTION_SEND);
         Intent commentIntent = new Intent(this,CommentController.class);
         commentIntent.putExtra("ARTICLE_ID",articleId);
@@ -112,9 +117,11 @@ public class ArticlePage extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.like_article:
-                this.startActivity(commentIntent);
-                CharSequence text1 = articleTitle + " liked!";
-                showToast(text1);
+                //this.startActivity(commentIntent);
+                fragment = new CommentController();
+                loadFragment(fragment);
+                //CharSequence text1 = articleTitle + " liked!";
+                //showToast(text1);
                 return true;
             case R.id.save_article:
                 //verify login
@@ -139,5 +146,14 @@ public class ArticlePage extends AppCompatActivity {
 
         Toast toast1 = Toast.makeText(getApplicationContext(), text, duration1);
         toast1.show();
+    }
+
+    /*This method loads a passed fragment to the layout frame_saved in the activity_main xml
+     * Will be changed eventually to be more dynamic */
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame_saved, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }
