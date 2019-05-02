@@ -16,7 +16,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -48,19 +47,51 @@ public class FirebaseController
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()){
                             //List<Article> articleList = new ArrayList<>();
+                            String dateStr;
+                            int tmpDateInt;
+                            int tmpID;
+                            String tmpIDStr;
+                            List<String> dateList = new ArrayList<>();
                             List<Integer> articleList = new ArrayList<>();
                             String fireNewestArticleID = "";
+                            //Map map = new TreeMap();
+                            Map<Integer,Integer> map = new HashMap<>();
 
                             for (DocumentSnapshot doc: task.getResult()){
                                 //Get the article, convert it to Article class object, and add to the list
                                 /*Article article = doc.toObject(Article.class);
                                 article.setId(doc.getId());
                                 articleList.add(article);*/
-
+                                dateList.add(doc.getString("date"));
                                 articleList.add(Integer.valueOf(doc.getId()));
                             }
+
+                            while(articleList.iterator().hasNext()){
+                                //                            dateStr =
+//                            dateStr = dateStr.replaceAll("-","");
+//                            dateStr = dateStr.replaceAll(":","");
+//                            tmpDateInt = Integer.parseInt(dateStr);
+//                            tmpID = ;
+//                            map.put(tmpDateInt,tmpID);
+                            }
+
+
+//                            Map<Integer,Integer> sortedMap = new TreeMap<>(Collections.reverseOrder());
+//                            // Get a set of the entries
+//                            Set set = sortedMap.entrySet();
+//
+//                            // Get an iterator
+//                            Iterator i = set.iterator();
+//
+//                            // Display elements
+//                            while(i.hasNext()) {
+//                                Map.Entry me = (Map.Entry)i.next();
+//                                tmpIDStr = me.getValue().toString();
+//                                articleList.add(Integer.valueOf(tmpIDStr));
+//                            }
+                            articleList.add(111111);
                             //order the articleList on descending order
-                            Collections.sort(articleList, Collections.reverseOrder());
+                            //Collections.sort(articleList, Collections.reverseOrder());
                             fireNewestArticleID = articleList.get(0).toString();
 
                             editor.putString("newestFirebaseID",fireNewestArticleID);
