@@ -1,14 +1,24 @@
 package com.sandiprai.themetropolitan;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.ContentValues.TAG;
@@ -19,6 +29,80 @@ class FirebaseController
     //We might need to pass the firebase instance as a parameter
     //For all methods
     FirebaseFirestore fire = FirebaseFirestore.getInstance();
+    SharedPreferences sharedPreferences;
+    Editor editor;
+
+
+    public FirebaseController(Context context){
+        sharedPreferences = context.getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
+        fire.collection("Articles")
+                .whereEqualTo("category", "Opinion")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            //List<Article> articleList = new ArrayList<>();
+                            String dateStr;
+                            int tmpDateInt;
+                            int tmpID;
+                            String tmpIDStr;
+                            List<String> dateList = new ArrayList<>();
+                            List<Integer> articleList = new ArrayList<>();
+                            String fireNewestArticleID = "";
+                            //Map map = new TreeMap();
+                            Map<Integer,Integer> map = new HashMap<>();
+
+                            for (DocumentSnapshot doc: task.getResult()){
+                                //Get the article, convert it to Article class object, and add to the list
+                                /*Article article = doc.toObject(Article.class);
+                                article.setId(doc.getId());
+                                articleList.add(article);*/
+                                dateList.add(doc.getString("date"));
+                                articleList.add(Integer.valueOf(doc.getId()));
+                            }
+
+                            int i = 0;
+//                            while(articleList.iterator().hasNext()){
+//                              dateStr = dateList.get(i);
+//                            dateStr = dateStr.replaceAll("-","");
+//                            dateStr = dateStr.replaceAll(":","");
+//                            tmpDateInt = Integer.parseInt(dateStr);
+//                            tmpID = articleList.get(i);
+//                            map.put(tmpDateInt,tmpID);
+//                            i++;
+//                            }
+
+
+//                            Map<Integer,Integer> sortedMap = new TreeMap<>(Collections.reverseOrder());
+//                            // Get a set of the entries
+//                            Set set = sortedMap.entrySet();
+//
+//                            // Get an iterator
+//                            Iterator i = set.iterator();
+//
+//                            // Display elements
+//                            while(i.hasNext()) {
+//                                Map.Entry me = (Map.Entry)i.next();
+//                                tmpIDStr = me.getValue().toString();
+//                                articleList.add(Integer.valueOf(tmpIDStr));
+//                            }
+                            articleList.add(111111);
+                            //order the articleList on descending order
+                            //Collections.sort(articleList, Collections.reverseOrder());
+                            fireNewestArticleID = articleList.get(0).toString();
+
+                            editor.putString("newestFirebaseID",fireNewestArticleID);
+                            editor.apply();
+
+                        } else {
+                            Log.d("Firestore", "ERROR GETTING DOCUMENTS", task.getException());
+                        }
+                    }
+                });
+    }
 
     //Adds an article to the firebase cloud storage
     //@Parameter String, String, String, String, String, String, String, ArrayList<String>
@@ -130,6 +214,14 @@ class FirebaseController
         }
 
         return result;
+    }
+
+
+    public String get_Newest_Article_Id() {
+        String newestID;
+        newestID = sharedPreferences.getString("newestFirebaseID","0");
+
+        return newestID;
     }
 
 }

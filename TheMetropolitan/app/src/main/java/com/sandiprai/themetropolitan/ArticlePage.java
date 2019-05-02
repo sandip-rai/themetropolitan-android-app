@@ -198,8 +198,8 @@ public class ArticlePage extends AppCompatActivity {
             case R.id.share_article:
                 startActivity(Intent.createChooser(myIntent,"Share to"));
                 //CharSequence text3 = articleId + " shared!";
-                CharSequence text3 = webAddress + " shared!";
-                showToast(text3);
+                //CharSequence text3 = webAddress + " shared!";
+                //showToast(text3);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
