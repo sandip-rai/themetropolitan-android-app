@@ -1,36 +1,40 @@
 package com.sandiprai.themetropolitan;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class ArticlePage extends AppCompatActivity {
     public static final String EXTRA_ARTICLE_ID ="articleId";
     private FirebaseFirestore firestore;
-    private String articleTitle;
-    String articleId;
-    String url = "https://themetropolitan.metrostate.edu/?p=";
-    SharedPreferences sharedpreferences;
-    SharedPreferences.Editor editor;
+    private String articleId;
+    Fragment fragment;
+    FragmentTransaction fragmentTransaction;
+    private SharedPreferenceForSaved sharedPreferenceForSaved;
+    private SharedPreferenceForLiked sharedPreferenceForLiked;
 
 
     @Override
@@ -38,8 +42,9 @@ public class ArticlePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_page);
 
-        sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
-        editor = sharedpreferences.edit();
+        //Used to save the articleId to the savedList
+        sharedPreferenceForSaved = new SharedPreferenceForSaved();
+        sharedPreferenceForLiked = new SharedPreferenceForLiked();
 
         //Get the article toolbar and load it as the main toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_article);
@@ -68,8 +73,7 @@ public class ArticlePage extends AppCompatActivity {
                             DocumentSnapshot doc = task.getResult();
 
                             if(doc.exists()){
-                                String title = doc.getString("title");
-                                textViewArticleTitle.setText(title);
+                                textViewArticleTitle.setText(doc.getString("title"));
 
                                 //For the image
                                 ArrayList<String> imageList = (ArrayList<String>) doc.get("tags");
@@ -81,9 +85,6 @@ public class ArticlePage extends AppCompatActivity {
                                 textViewPhotoCaption.setText(doc.getString("author"));
                                 //textViewPhotoCaption.setText(doc.getId());
                                 textViewArticleContent.setText(doc.getString("body"));
-
-                                editor.putString("currArticleTitle", title);
-                                editor.apply();
                             }
                         } else {
                             Log.d("Firestore", "ERROR GETTING DOCUMENTS", task.getException());
@@ -94,6 +95,20 @@ public class ArticlePage extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        //Check if this article is already liked,saved and update the menuItem color
+        if(checkLikedItem(articleId)){
+            menu.getItem(0).setIcon(R.drawable.like1);
+        }
+
+        if(checkFavoriteItem(articleId)){
+            menu.getItem(1).setIcon(R.drawable.saved1);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_article,menu);
         return super.onCreateOptionsMenu(menu);
@@ -101,32 +116,70 @@ public class ArticlePage extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent myIntent = new Intent(Intent.ACTION_SEND);
-        Intent commentIntent = new Intent(this,CommentController.class);
-        commentIntent.putExtra("ARTICLE_ID",articleId);
-        myIntent.setType("text/plain");
-        String webAddress = url+articleId; //+EXTRA_ARTICLE_ID
-        String shareBody = "share body";
-        myIntent.putExtra(Intent.EXTRA_TEXT,webAddress);
-        String articleTitle = sharedpreferences.getString("currArticleTitle","The Metropolitan Newspaper");
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.like_article:
-                this.startActivity(commentIntent);
-                CharSequence text1 = articleTitle + " liked!";
-                showToast(text1);
+                Boolean liked;
+                if(checkLikedItem(articleId)){
+                    liked = true;
+                } else{
+                    liked = false;
+                }
+
+                if (liked == false){ //If article is not liked yet
+                    item.setIcon(R.drawable.like1);
+
+                    //use the sharedPreferenceForSaved to add this articleId to savedList
+                    sharedPreferenceForLiked.addFavorite(getApplicationContext(), articleId);
+
+                    //increment the likes on the firestore database
+                    firestore.collection("Articles")
+                            .document(articleId).update("likes", FieldValue.increment(1));
+
+                    CharSequence text2 = articleId + " liked!";
+                    showToast(text2);
+                } else {//if it was liked and it is clicked, this will remove the article from savedList
+                    item.setIcon(R.drawable.like);
+                    //use the sharedPreferenceForSaved to delete this articleId from savedList
+                    sharedPreferenceForLiked.removeFavorite(getApplicationContext(), articleId);
+
+                    //Since it was already liked, clicking it again will decrement the likes
+                    firestore.collection("Articles")
+                            .document(articleId).update("likes", FieldValue.increment(-1));
+                }
+
                 return true;
+
             case R.id.save_article:
-                //verify login
-                //save to SQLite
-                //save to Firebase
-                CharSequence text2 = articleTitle + " saved!";
-                showToast(text2);
+                Boolean saved;
+                if(checkFavoriteItem(articleId)){
+                    saved = true;
+                } else{
+                    saved = false;
+                }
+
+                if (saved == false){
+                    /*MenuItem saveArticleItem = findViewById(R.id.save_article);
+                saveArticleItem.setIcon(R.drawable.saved1);*/
+                    item.setIcon(R.drawable.saved1);
+
+                    //use the sharedPreferenceForSaved to add this articleId to savedList
+                    sharedPreferenceForSaved.addFavorite(getApplicationContext(), articleId);
+
+                    CharSequence text2 = articleId + " saved!";
+                    showToast(text2);
+                } else {//if it was saved and it is clicked, this will remove the article from savedList
+                    item.setIcon(R.drawable.saved);
+                    //use the sharedPreferenceForSaved to delete this articleId from savedList
+                    sharedPreferenceForSaved.removeFavorite(getApplicationContext(), articleId);
+                    CharSequence text2 = articleId + " unsaved!";
+                    showToast(text2);
+                }
+
                 return true;
             case R.id.share_article:
-                startActivity(Intent.createChooser(myIntent,"Share to"));
-                //CharSequence text3 = articleTitle + " shared!";
-                //showToast(text3);
+                CharSequence text3 = articleId + " shared!";
+                showToast(text3);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -139,5 +192,44 @@ public class ArticlePage extends AppCompatActivity {
 
         Toast toast1 = Toast.makeText(getApplicationContext(), text, duration1);
         toast1.show();
+    }
+
+    /*This method loads a passed fragment to the layout frame_saved in the activity_main xml
+     * Will be changed eventually to be more dynamic */
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame_saved, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    /*Checks whether a particular product exists in SharedPreferences*/
+    public boolean checkFavoriteItem(String checkArticleId) {
+        boolean check = false;
+        List<String> favorites = sharedPreferenceForSaved.getFavorites(getApplicationContext());
+        if (favorites != null) {
+            for (String articleId : favorites) {
+                if (articleId.equals(checkArticleId)) {
+                    check = true;
+                    break;
+                }
+            }
+        }
+        return check;
+    }
+
+    /*Checks whether a particular product exists in SharedPreferences*/
+    public boolean checkLikedItem(String checkArticleId) {
+        boolean check = false;
+        List<String> favorites = sharedPreferenceForLiked.getFavorites(getApplicationContext());
+        if (favorites != null) {
+            for (String articleId : favorites) {
+                if (articleId.equals(checkArticleId)) {
+                    check = true;
+                    break;
+                }
+            }
+        }
+        return check;
     }
 }

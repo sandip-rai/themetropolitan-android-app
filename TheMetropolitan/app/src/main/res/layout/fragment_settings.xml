@@ -102,7 +102,7 @@
                     android:layout_height="25dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/studentlife"
-                    android:tint="@color/colorPrimary"/>
+                    android:tint="?attr/colorPrimary"/>
 
                 <TextView
                     android:id="@+id/accountView"
@@ -124,7 +124,7 @@
                     android:layout_height="25dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/darktheme"
-                    android:tint="@color/colorPrimary"/>
+                    android:tint="?attr/colorPrimary"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -155,7 +155,7 @@
                     android:layout_height="25dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/notifications"
-                    android:tint="@color/colorPrimary"/>
+                    android:tint="?attr/colorPrimary"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -185,7 +185,7 @@
                 android:layout_height="25dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/fontsize"
-                android:tint="@color/colorPrimary"/>
+                android:tint="?attr/colorPrimary"/>
 
             <TextView
                 android:id="@+id/fontSizeView"
@@ -207,7 +207,7 @@
                     android:layout_height="25dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/reportbug"
-                    android:tint="@color/colorPrimary"/>
+                    android:tint="?attr/colorPrimary"/>
 
                 <TextView
                     android:id="@+id/reportBugsView"
@@ -229,7 +229,7 @@
                     android:layout_height="25dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/about"
-                    android:tint="@color/colorPrimary"/>
+                    android:tint="?attr/colorPrimary"/>
 
                 <TextView
                     android:id="@+id/aboutView"
