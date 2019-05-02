@@ -1,30 +1,31 @@
 package com.sandiprai.themetropolitan;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class ArticlePage extends AppCompatActivity {
@@ -35,6 +36,9 @@ public class ArticlePage extends AppCompatActivity {
     FragmentTransaction fragmentTransaction;
     private SharedPreferenceForSaved sharedPreferenceForSaved;
     private SharedPreferenceForLiked sharedPreferenceForLiked;
+    private SharedPreferences sharedPreferenceForShare;
+    Editor editor;
+    String url = "https://themetropolitan.metrostate.edu/?p=";
 
 
     @Override
@@ -45,6 +49,8 @@ public class ArticlePage extends AppCompatActivity {
         //Used to save the articleId to the savedList
         sharedPreferenceForSaved = new SharedPreferenceForSaved();
         sharedPreferenceForLiked = new SharedPreferenceForLiked();
+        sharedPreferenceForShare = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
+        editor = sharedPreferenceForShare.edit();
 
         //Get the article toolbar and load it as the main toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_article);
@@ -73,7 +79,8 @@ public class ArticlePage extends AppCompatActivity {
                             DocumentSnapshot doc = task.getResult();
 
                             if(doc.exists()){
-                                textViewArticleTitle.setText(doc.getString("title"));
+                                String title = doc.getString("title");
+                                textViewArticleTitle.setText(title);
 
                                 //For the image
                                 ArrayList<String> imageList = (ArrayList<String>) doc.get("tags");
@@ -85,6 +92,9 @@ public class ArticlePage extends AppCompatActivity {
                                 textViewPhotoCaption.setText(doc.getString("author"));
                                 //textViewPhotoCaption.setText(doc.getId());
                                 textViewArticleContent.setText(doc.getString("body"));
+
+                                editor.putString("currArticleTitle", title);
+                                editor.apply();
                             }
                         } else {
                             Log.d("Firestore", "ERROR GETTING DOCUMENTS", task.getException());
@@ -116,6 +126,14 @@ public class ArticlePage extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent myIntent = new Intent(Intent.ACTION_SEND);
+        String webAddress = url + articleId;
+        myIntent.setType("text/plain");
+        String articleTitle = sharedPreferenceForShare.getString("currArticleTitle","The Metropolitan Article");
+        //String shareBody = "share body";
+        myIntent.putExtra(Intent.EXTRA_SUBJECT,articleTitle);
+        myIntent.putExtra(Intent.EXTRA_TEXT,webAddress);
+
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.like_article:
@@ -136,7 +154,7 @@ public class ArticlePage extends AppCompatActivity {
                     firestore.collection("Articles")
                             .document(articleId).update("likes", FieldValue.increment(1));
 
-                    CharSequence text2 = articleId + " liked!";
+                    CharSequence text2 = articleTitle + " liked!";
                     showToast(text2);
                 } else {//if it was liked and it is clicked, this will remove the article from savedList
                     item.setIcon(R.drawable.like);
@@ -166,19 +184,21 @@ public class ArticlePage extends AppCompatActivity {
                     //use the sharedPreferenceForSaved to add this articleId to savedList
                     sharedPreferenceForSaved.addFavorite(getApplicationContext(), articleId);
 
-                    CharSequence text2 = articleId + " saved!";
+                    CharSequence text2 = articleTitle + " saved!";
                     showToast(text2);
                 } else {//if it was saved and it is clicked, this will remove the article from savedList
                     item.setIcon(R.drawable.saved);
                     //use the sharedPreferenceForSaved to delete this articleId from savedList
                     sharedPreferenceForSaved.removeFavorite(getApplicationContext(), articleId);
-                    CharSequence text2 = articleId + " unsaved!";
+                    CharSequence text2 = articleTitle + " unsaved!";
                     showToast(text2);
                 }
 
                 return true;
             case R.id.share_article:
-                CharSequence text3 = articleId + " shared!";
+                startActivity(Intent.createChooser(myIntent,"Share to"));
+                //CharSequence text3 = articleId + " shared!";
+                CharSequence text3 = webAddress + " shared!";
                 showToast(text3);
                 return true;
             default:
