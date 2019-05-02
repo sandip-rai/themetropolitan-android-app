@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.sandiprai.themetropolitan.R;
+import com.sandiprai.themetropolitan.UI.MainUI.MainActivity;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener{
     EditText editTextEmail, editTextPassword;
@@ -106,13 +107,17 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         switch (view.getId()){
             case R.id.buttonSignInConfirm:
                 userLogin();
-                /*Intent intent = new Intent(view.getContext(), UserSettingsActivity.class);
-                startActivity(intent);*/
+
                 break;
 
             case R.id.buttonCancelSignIn:
                 Toast.makeText(getApplicationContext(), "Cancel button clicked!",
                         Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
                 break;
         }
 

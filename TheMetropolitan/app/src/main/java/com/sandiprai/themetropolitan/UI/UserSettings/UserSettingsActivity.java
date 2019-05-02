@@ -48,7 +48,14 @@ public class UserSettingsActivity extends AppCompatActivity implements View.OnCl
         emailAddress = findViewById(R.id.textEmailinSettings);
         textView = findViewById(R.id.textViewVerified);
 
+
+        Button home = findViewById(R.id.buttonHomeInUserSetting);
+        home.setOnClickListener(this);
+
         setUpUserSettings();
+        loadUserInformation();
+
+
     }
 
     @Override
@@ -73,6 +80,38 @@ public class UserSettingsActivity extends AppCompatActivity implements View.OnCl
 
         findViewById(R.id.buttonSaveinUserSettings).setOnClickListener(this);
     }
+
+    private void loadUserInformation(){
+
+        final FirebaseUser user = mAuth.getCurrentUser();
+
+        if(user != null){
+            if(user.getDisplayName() != null && user.getEmail() !=null){
+                username.setText(user.getDisplayName());
+                emailAddress.setText(user.getEmail());
+            }
+
+            if(user.isEmailVerified()){
+                textView.setText("Email Verified");
+            } else{
+                textView.setText("Email Not Verified (Click Text to Verify");
+                textView.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view){
+                        user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(UserSettingsActivity.this, "Verification Email Sent", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+
+    }
+
 
     private void saveUserInformation() {
 
@@ -106,6 +145,8 @@ public class UserSettingsActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -122,6 +163,9 @@ public class UserSettingsActivity extends AppCompatActivity implements View.OnCl
                 saveUserInformation();
                 break;
 
+            case R.id.buttonHomeInUserSetting:
+                startActivity(new Intent(this, MainActivity.class));
+                break;
         }
 
     }
