@@ -15,7 +15,7 @@ public class BootReceiver extends BroadcastReceiver {
         //on boot start the PeriodicArticleCheck service
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
             Log.d(TAG, "onReceive of the BootReceiver.java class - scheduling The Metropolitan new article check service");
-            //PeriodicArticleCheck.enqueueWork(context,new Intent());
+            PeriodicArticleCheck.enqueueWork(context,new Intent());
         }
     }
 }

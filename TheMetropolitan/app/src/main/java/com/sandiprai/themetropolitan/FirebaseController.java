@@ -46,11 +46,13 @@ class FirebaseController
                         if (task.isSuccessful()){
                             //List<Article> articleList = new ArrayList<>();
                             String dateStr;
+                            int dateInt = 0;
                             int tmpDateInt;
-                            int tmpID;
+                            int tmpID = 0;
                             String tmpIDStr;
-                            List<String> dateList = new ArrayList<>();
+                            List<Integer> dateList = new ArrayList<>();
                             List<Integer> articleList = new ArrayList<>();
+                            List<Integer> newArticleList = new ArrayList<>();
                             String fireNewestArticleID = "";
                             //Map map = new TreeMap();
                             Map<Integer,Integer> map = new HashMap<>();
@@ -60,21 +62,34 @@ class FirebaseController
                                 /*Article article = doc.toObject(Article.class);
                                 article.setId(doc.getId());
                                 articleList.add(article);*/
-                                dateList.add(doc.getString("date"));
-                                articleList.add(Integer.valueOf(doc.getId()));
+                                newArticleList.add(Integer.parseInt(doc.getString("author")));
+                                dateStr = doc.getString("date");
+                                dateStr = dateStr.replaceAll("-","");
+                                dateStr = dateStr.replaceAll(":","");
+                                tmpID = Integer.valueOf(doc.getId());
+                                dateList.add(Integer.parseInt(dateStr));
+                                articleList.add(tmpID);
                             }
 
+                            tmpID = 0;
+
                             int i = 0;
-//                            while(articleList.iterator().hasNext()){
-//                              dateStr = dateList.get(i);
-//                            dateStr = dateStr.replaceAll("-","");
-//                            dateStr = dateStr.replaceAll(":","");
+                            //int index = 0;
+                            while(newArticleList.iterator().hasNext()){
+                                tmpDateInt = dateList.get(i);
+                                if(tmpDateInt > dateInt){
+                                    dateInt = tmpDateInt;
+                                    tmpID = articleList.get(i);
+                                    //index = i;
+                                }
 //                            tmpDateInt = Integer.parseInt(dateStr);
 //                            tmpID = articleList.get(i);
 //                            map.put(tmpDateInt,tmpID);
-//                            i++;
-//                            }
-
+                                i++;
+                            }
+                            newArticleList.clear();
+                            //newArticleList.add(0,tmpID);
+                            newArticleList.add(tmpID);
 
 //                            Map<Integer,Integer> sortedMap = new TreeMap<>(Collections.reverseOrder());
 //                            // Get a set of the entries
@@ -89,10 +104,10 @@ class FirebaseController
 //                                tmpIDStr = me.getValue().toString();
 //                                articleList.add(Integer.valueOf(tmpIDStr));
 //                            }
-                            articleList.add(111111);
+                            //articleList.add(111111);
                             //order the articleList on descending order
                             //Collections.sort(articleList, Collections.reverseOrder());
-                            fireNewestArticleID = articleList.get(0).toString();
+                            fireNewestArticleID = newArticleList.get(0).toString();
 
                             editor.putString("newestFirebaseID",fireNewestArticleID);
                             editor.apply();
