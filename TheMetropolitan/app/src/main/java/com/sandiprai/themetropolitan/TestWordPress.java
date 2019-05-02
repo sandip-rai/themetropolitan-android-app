@@ -3,7 +3,6 @@ package com.sandiprai.themetropolitan;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.util.Log;
@@ -32,11 +31,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TestWordPress extends AppCompatActivity {
+
+    final static String TAG = "WordPress Class The MNA";
     //String url = "http://themetropolitan.metrostate.edu/wp-json/wp/v2/posts?fields=id,excerpt,title,content,date";
     String url;
     TextView articleTitle;
     TextView articleList;
-    Bitmap articleImg;
     NetworkImageView theImg;
     ArrayList<String> allArticles = new ArrayList<>();
     //String tmpList;
@@ -45,10 +45,7 @@ public class TestWordPress extends AppCompatActivity {
     private RequestQueue rQueue;
     private ImageLoader mImageLoader;
     int postID = 1751; //1489 and 1768 are odd ones
-    String postExerpt[];
-    String postTitle[];
-    String postContent;
-    String postIDs[] = new String[1000];
+    //String postIDs[] = new String[1000];
     int postIndex;
     String postElements[];
     Date postDate[];
@@ -57,8 +54,6 @@ public class TestWordPress extends AppCompatActivity {
     String picURL = "";
     String mainPicURL = "";
     String titlePic = null;
-
-    String mainArticleContent = null;
 
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
@@ -88,27 +83,26 @@ public class TestWordPress extends AppCompatActivity {
         //progressDialog.show();
         articleList.clearComposingText();
 
-        ArrayList<String> testList = new ArrayList<>();
-        testList.add("url");
+//        ArrayList<String> testList = new ArrayList<>();
+//        testList.add("url");
         //boolean result = controller.add_Tech_Article("id","title","author", "date","excerpt","body",testList);
 
 //        wpGetArticleByID(postID);
         //do not set the amount for wpGetArticleByAge above 10
         //wpGetArticleByAge(5,134);//thru 84
-        //wpGetArticleByAge(1,132);
+        //wpGetArticleByAge(1,131);
 
         String newestWpID = wpGetArticleIDByAge(1);
-        articleList.append(newestWpID);
+        articleList.append("Newest WP article is: "+newestWpID);
         //returned[0] = "GET FAILED";
         //article = controller.get_Article(newestWpID, returned);
-        article = controller.get_Art_Article_By_Age("1808", 0, returned);
-        if (article != null) {
-            articleList.append(article.getTitle());
-        } else {
-            articleList.append("\narticle returned null");
-        }
+        //article = controller.get_Article("1808", returned);
+//        if (article != null) {
+//            articleList.append(article.getTitle());
+//        } else {
+//            articleList.append("\narticle returned null");
+//        }
         //articleList.append(articleArr[0].getTitle());
-        //articleTitle.append(wpGetArticleIDByAge(1));
 
     }
 
@@ -125,6 +119,7 @@ public class TestWordPress extends AppCompatActivity {
     }
 
 
+    //amount = the number of articles to get starting from "number"
     //number = article from the newest to start getting them from, increments, starts at 1 = newest
     private void wpGetArticleByAge (int amount, int number) {
         int max = number + amount;
@@ -136,6 +131,7 @@ public class TestWordPress extends AppCompatActivity {
 
     private void jsonParse(int postID, String type) {
         final String[] theArticles = new String[1];
+        //create the proper URL
         if (type == "age") {
             url = "https://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/?orderby=date&per_page=1&page="+postID;
         } else if (type == "id") {
@@ -193,7 +189,40 @@ public class TestWordPress extends AppCompatActivity {
                         cat = endFirstArray[0]+"]";
                     }
 
-                    if (cat.indexOf("159") == -1) {
+                    switch (cat) {
+                        case "[12]": //Tech
+                            cat = "Tech";
+                            break;
+                        case "[11]": //Student Life
+                            cat = "Student Life";
+                            break;
+                        case "[10]": //Opinion
+                            cat = "Opinion";
+                            break;
+                        case "[5]": //Arts & Entertainment
+                            cat = "Arts & Entertainment";
+                            break;
+                        case "[8]": //News
+                            cat = "News";
+                            break;
+                        case "[159]": //Jobs
+                            cat = "Jobs, invalid type";
+                            Log.i(TAG,"Job post type selected, doing nothing");
+                            //Toast.makeText(getApplicationContext(), "Jobs post, do nothing", Toast.LENGTH_LONG).show();
+                            break;
+                        case "[1]": //Uncategorized
+                            cat = "Uncategorized, invalid type";
+                            Log.i(TAG,"Uncategorized post type selected, doing nothing");
+                            //Toast.makeText(getApplicationContext(), "Uncategorized post, do nothing", Toast.LENGTH_LONG).show();
+                            break;
+                        default: //unknown
+                            cat = "unknown, invalid type";
+                            Log.i(TAG,"Unknown post type selected, doing nothing");
+                            //Toast.makeText(getApplicationContext(), "Unknown post, do nothing", Toast.LENGTH_LONG).show();
+                    }
+
+
+                    if (cat.indexOf("invalid") == -1) {
                         //Toast.makeText(getApplicationContext(), "Not a job post", Toast.LENGTH_LONG).show();
                         //get the title
                         titleFull = mainObject.getString("title");
@@ -328,6 +357,7 @@ public class TestWordPress extends AppCompatActivity {
                         //append the pieces together
                         String articleVals = id + "~" + title + "~" + datetimeP;
                         articleVals += "~" + excerpt + "~" + content + "~" + cat;
+                        //gets the other needed parts then stores in Firebase
                         getImageURL(pic, authorURL, articleVals);
 
                     } else {
@@ -440,80 +470,6 @@ public class TestWordPress extends AppCompatActivity {
     }
 
 
-//    private String isAnArticle (int postID, String type) {
-//        if (type == "age") {
-//            url = "https://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/?orderby=date&per_page=1&page="+postID;
-//        } else if (type == "id") {
-//            url = "https://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/"+postID;
-//        } else {
-//            url = "https://themetropolitan.metrostate.edu/wp-json/wp/v2/posts/?orderby=date&per_page=1&page=1";
-//        }
-//
-//        sharedpreferences = getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE);
-//        editor = sharedpreferences.edit();
-//
-//        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                if (response.charAt(0) == '[') {
-//                    response = response.substring(1, response.length() - 1);
-//                }
-//
-//                //variable declarations
-//                JSONObject mainObject;
-//                String cat = "";
-//
-//                try {
-//                    mainObject = new JSONObject(response);
-//                    //get the category
-//                    cat = mainObject.getString("categories");
-//                    switch (cat) {
-//                        case "[12]":
-//                            cat = "yes"; //Tech
-//                            break;
-//                        case "[11]":
-//                            cat = "yes"; //Student Life
-//                            break;
-//                        case "[10]":
-//                            cat = "yes"; //Opinion
-//                            break;
-//                        case "[5]":
-//                            cat = "yes"; //Arts & Entertainment
-//                            break;
-//                        case "[8]":
-//                            cat = "yes"; //News
-//                            break;
-//                        case "[159]":
-//                            cat = "no"; //Jobs
-//                            break;
-//                        case "[1]":
-//                            cat = "no"; //Uncategorized
-//                            break;
-//                        default:
-//                            cat = "no"; //unknown
-//                    }
-//
-//
-//
-//                } catch (JSONException e){
-//                    articleList.append("Error, article ID URL GET ran into an error.");
-//                }
-//                editor.putString("IsAnArticle", cat);
-//                editor.apply();
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(getApplicationContext(), "ID URL GET error occurred", Toast.LENGTH_LONG).show();
-//            }
-//        });
-//
-//        rQueue.add(request);
-//        articleTitle.append(sharedpreferences.getString("IsAnArticle",""));
-//        return "no";
-//    }
-
-
     private void printArticle(String id, ArrayList<String> mainContent, String urls){//, Bitmap pic
 //        mainContent = id + "~" + authorName + "~" + title + "~" + datetimeP;
 //        mainContent += "~" + dateFormater.format(now) + "~" + cat + "~" + excerpt;
@@ -532,17 +488,6 @@ public class TestWordPress extends AppCompatActivity {
             }
         }
 
-//        String theContents[] = new String[12];
-//        String tmpArticle;
-//        String articleElements[];
-//
-//        for (int i = 0; i < mainContent.size(); i++) {
-//            tmpArticle = mainContent.get(i);
-//            articleElements = tmpArticle.split("~");
-//            if (articleElements[0] == id) {
-//                theContents = articleElements;
-//            }
-//        }
 
         String toPrint = "Id: " + theContents[0] + " \n\nDatetime published: " + theContents[3];
         toPrint += "\nRetrieved: " + theContents[4] + "\n\n\n"+"Excerpt: " + theContents[6]+"\n\nAuthor: "+theContents[1];
@@ -579,56 +524,13 @@ public class TestWordPress extends AppCompatActivity {
                 values = articleVals.split("~");
 
 
-                switch (values[5]) {
-                    case "[12]": //Tech
-                        result = controller.add_Tech_Article(values[0],values[1],name, values[2],values[3],values[4], "Tech",articleURLList);
-                        if (result) {
-                            Toast.makeText(getApplicationContext(), "Error putting article into Firebase - Tech", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Tech article to Firebase", Toast.LENGTH_LONG).show();
-                        }
-                        break;
-                    case "[11]": //Student Life
-                        result = controller.add_Life_Article(values[0],values[1],name, values[2],values[3],values[4], "Student Life",articleURLList);
-                        if (result) {
-                            Toast.makeText(getApplicationContext(), "Error putting article into Firebase - Student Life", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Student Life article to Firebase", Toast.LENGTH_LONG).show();
-                        }
-                        break;
-                    case "[10]": //Opinion
-                        result = controller.add_Opinion_Article(values[0],values[1],name, values[2],values[3],values[4], "Opinion",articleURLList);
-                        if (result) {
-                            Toast.makeText(getApplicationContext(), "Error putting article into Firebase - Opinion", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Opinion article to Firebase", Toast.LENGTH_LONG).show();
-                        }
-                        break;
-                    case "[5]": //Arts & Entertainment
-                        result = controller.add_Art_Article(values[0],values[1],name, values[2],values[3],values[4], "Arts & Entertainment",articleURLList);
-                        if (result) {
-                            Toast.makeText(getApplicationContext(), "Error putting article into Firebase - A & E", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Arts & Entertainment article to Firebase", Toast.LENGTH_LONG).show();
-                        }
-                        break;
-                    case "[8]": //News
-                        result = controller.add_News_Article(values[0],values[1],name, values[2],values[3],values[4], "News",articleURLList);
-                        if (result) {
-                            Toast.makeText(getApplicationContext(), "Error putting article into Firebase - News", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "News article to Firebase", Toast.LENGTH_LONG).show();
-                        }
-                        break;
-                    case "[159]": //Jobs
-                        Toast.makeText(getApplicationContext(), "Jobs post, do nothing", Toast.LENGTH_LONG).show();
-                        break;
-                    case "[1]": //Uncategorized
-                        Toast.makeText(getApplicationContext(), "Uncategorized post, do nothing", Toast.LENGTH_LONG).show();
-                        break;
-                    default: //unknown
-                        Toast.makeText(getApplicationContext(), "Unknown post, do nothing", Toast.LENGTH_LONG).show();
+                result = controller.add_Article(values[0],values[1],name, values[2],values[3],values[4], values[5],articleURLList);
+                if (result) {
+                    Toast.makeText(getApplicationContext(), "Error putting article into Firebase", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Tech article to Firebase", Toast.LENGTH_LONG).show();
                 }
+
                 //setAuthor(name);
                 author = name;
                 //articleList.append(name);

@@ -5,7 +5,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -28,6 +30,39 @@ class FirebaseController
     //Adds an article to the firebase cloud storage
     //@Parameter String, String, String, String, int
     //@Return if the article was added to the firebase or not
+    boolean add_Article(String ID, String title, String author, String date, String excerpt, String body, String category, ArrayList<String> tags)
+    {
+        int likes = 0;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date creation = new Date();
+        Map<String, Object> newArticle = new HashMap();
+
+        newArticle.put("title", title);
+        newArticle.put("author", author);
+        newArticle.put("category", category);
+        newArticle.put("date", date);
+        newArticle.put("likes", likes);
+        newArticle.put("created", dateFormat.format(creation));
+        newArticle.put("update", dateFormat.format(creation));
+        newArticle.put("excerpt", excerpt);
+        newArticle.put("body", body);
+        newArticle.put("tags", tags);
+
+        //document("category").collection("News").
+        boolean result = fire.collection("Articles").document(ID).set(newArticle).isSuccessful();
+
+        if(!result)
+        {
+            Log.d(TAG, "Article added");
+        }
+        else
+        {
+            Log.v(TAG, "Article creation failed");
+        }
+
+        return result;
+    }
+
     boolean add_News_Article(String ID, String title, String author, String date, String excerpt, String body, String category, ArrayList<String> tags)
     {
         int likes = 0;
@@ -247,39 +282,77 @@ class FirebaseController
         return result;
     }
 
-    Articles get_Article(String ID, Articles[] returned)
+    Articles get_Article(final String ID, Articles[] returned)
     {
         final Articles[] temp = returned;
+        final String[] tags = new String[0];
         //document("category").collection("News").
-        fire.collection("Articles").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()) {
-                    DocumentSnapshot snap = task.getResult();
-                    Map map = snap.getData();
-
-                    if (map != null) {
-                        String title = (String) map.get("title");
-                        String author = (String) map.get("author");
-                        String category = (String) map.get("category");
-                        String date = (String) map.get("date");
-                        long likes = (long) map.get("likes");
-                        String excerpt = (String) map.get("excerpt");
-                        String body = (String) map.get("body");
-                        String[] tags = (String[]) map.get("tags");
-
-
-                        Articles article = new Articles(title, author, date, likes, excerpt, body, category, tags);
-                        temp[0] = article;
-                        Log.d(TAG, "Article returned");
-                    }
-                }
-                else
-                {
-                    Log.v(TAG, "Article retrieval failed");
-                }
-            }
-        });
+        DocumentReference ref = fire.collection("Articles").document(ID);
+//        ref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if(task.isSuccessful()) {
+////QuerySnapshot snap = task.getResult();
+//                    List<DocumentSnapshot> articleList = new ArrayList<>();
+//                    String title = null;
+//                    String author = null;
+//                    String category = null;
+//                    String date = null;
+//                    long likes = -1;
+//                    String excerpt = null;
+//                    String body = null;
+//                    Map<String, Object> map = new HashMap<>();
+//
+//                   // DocumentSnapshot doc = task.getResult();
+//
+////                    title = doc.getString("title");
+////                    author = doc.getString("author");
+////                    category = doc.getString("category");
+////                    date = doc.getString("date");
+////                    likes = doc.getLong("likes");
+////                    excerpt = doc.getString("excerpt");
+////                    body = doc.getString("body");
+////                    map = doc.getData();
+//
+//
+//                    if (title != null) {
+////                        String title = (String) map.get("title");
+////                        String author = (String) map.get("author");
+////                        String category = (String) map.get("category");
+////                        String date = (String) map.get("date");
+////                        long likes = (long) map.get("likes");
+////                        String excerpt = (String) map.get("excerpt");
+////                        String body = (String) map.get("body");
+////                        String[] tags = (String[]) map.get("tags");
+//
+////                        String title = articleList.get(0);
+////                        String author = articleList.get(1);
+////                        String category = articleList.get(2);
+////                        String date = articleList.get(3);
+////                        long likes = (long) Integer.parseInt(articleList.get(4));
+////                        String excerpt = articleList.get(5);
+////                        String body = articleList.get(6);
+////                        String[] tags = (String[]) articleList.get(7);
+//                        String[] key = new String[0];
+//                        String[] val = new String[0];
+//                        int i = 0;
+//                        for (Map.Entry<String, Object> entry : map.entrySet()) {
+//                            key[i] = entry.getKey();
+//                            if (key[i] == ID) {
+//                                val[0] = (String) entry.getValue();
+//                            }
+//
+//                            i++;
+//                        }
+//                    }
+//                }
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.d(TAG,"Article retrieval didn't begin to work");
+//            }
+//        });
         return returned[0];
     }
 
@@ -350,6 +423,11 @@ class FirebaseController
                 {
                     Log.v(TAG, "Article retrival failed");
                 }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG,"Article retrieval didn't begin to work");
             }
         });
         return returned[0];
