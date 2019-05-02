@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sandiprai.themetropolitan">
-
     <!-- Internet Permission -->
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".CommentController"></activity>
         <activity android:name=".UI.MainUI.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +28,7 @@
             android:parentActivityName=".UI.MainUI.MainActivity" />
         <activity android:name=".UI.UserSettings.UserSettingsActivity" />
         <activity android:name=".TestWordPress" />
-        <activity android:name=".UI.UserSettings.SignUpActivity"></activity>
+        <activity android:name=".UI.UserSettings.SignUpActivity" />
     </application>
 
 </manifest>
