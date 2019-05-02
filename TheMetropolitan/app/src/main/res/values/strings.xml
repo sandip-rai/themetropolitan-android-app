@@ -22,4 +22,11 @@
     <string name="hello_blank_fragment"></string>
     <string name="title_activity_sign_up">SignUpActivity</string>
 
+    <string-array name="spinner_article_issues">
+        <item>Jan 2019</item>
+        <item>Feb 2019</item>
+        <item>Mar 2019</item>
+        <item>Apr 2019</item>
+    </string-array>
+
 </resources>
