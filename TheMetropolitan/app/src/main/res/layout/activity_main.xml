@@ -35,7 +35,9 @@
         <FrameLayout
             android:id="@+id/frame_saved"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:paddingLeft="15dp"/>
 
     </LinearLayout>
 

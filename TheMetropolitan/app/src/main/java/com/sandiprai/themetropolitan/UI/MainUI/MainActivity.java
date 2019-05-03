@@ -76,6 +76,9 @@ public class MainActivity extends AppCompatActivity{
                 return true;
             }
         });
+
+        //Set the default view in the bottom navigation
+//        bottomNavigationView.setSelectedItemId(R.id.bottom_news);
     }
 
     /*This method loads a passed fragment to the layout frame_saved in the activity_main xml

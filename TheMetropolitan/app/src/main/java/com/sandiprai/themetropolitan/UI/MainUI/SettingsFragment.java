@@ -67,13 +67,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
         switchNotification.setChecked(sharedPreferences.getBoolean("NotificationSwitch", false));
         switchNotification.setOnCheckedChangeListener(this);
 
-        //Setting listener to textviews
+        /*//Setting listener to textviews
         TextView fontSizeOption = view.findViewById(R.id.fontSizeView);
         TextView reportBugsOption = view.findViewById(R.id.reportBugsView);
         TextView aboutOption = view.findViewById(R.id.aboutView);
         fontSizeOption.setOnClickListener(this);
         reportBugsOption.setOnClickListener(this);
-        aboutOption.setOnClickListener(this);
+        aboutOption.setOnClickListener(this);*/
 
         return view;
     }
@@ -103,7 +103,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
                 startActivity(new Intent(view.getContext(), UserSettingsActivity.class));
                 break;
 
-            case R.id.fontSizeView:
+           /* case R.id.fontSizeView:
                 CharSequence text2 = "Font size clicked!";
                 showToast(text2);
 
@@ -122,7 +122,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener,
                 showToast(text4);
 
                 startActivity(new Intent(view.getContext(), AboutPageActivity.class));
-                break;
+                break;*/
         }
 
     }

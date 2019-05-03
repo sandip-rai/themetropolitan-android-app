@@ -56,8 +56,8 @@ public class ArticlePage extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_article);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        /*getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);*/
 
 
         articleId = String.valueOf(getIntent().getExtras().get(EXTRA_ARTICLE_ID));

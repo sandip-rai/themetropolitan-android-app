@@ -96,7 +96,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                                     Picasso.get().load(photoURL).into(imageView);
                                 }
 
-                                textViewIssue.setText(doc.getId());
+                                //textViewIssue.setText(doc.getId());
                             }
                         }
                     }
