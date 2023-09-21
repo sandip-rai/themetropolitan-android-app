@@ -19,3 +19,4 @@ This project is being done as a group project for the ICS 499 class at Metropoli
 
 ![LightDarkTheme](https://user-images.githubusercontent.com/35808377/57185224-1b5c7900-6e8d-11e9-8a39-e291334113b7.gif)
 
+---
